@@ -1,0 +1,44 @@
+@use "sass:map";
+
+@import './../../../../styles-settings';
+
+
+:host .list-wrapper {
+  height: 100%;
+  width: 100%;
+}
+
+:host .list-container {
+  width: 100%;
+}
+
+:host .institution-info {
+  border-collapse: collapse;
+  padding-top: 10px;
+  width: 100%;
+}
+
+:host .institution-info tr:nth-child(odd) {
+  background-color: map.get($mat-icam-primary, 200);
+  color: map.get($mat-icam-primary, 'contrast', 300);
+}
+
+:host .institution-info td:nth-child(1) {
+  white-space: pre;
+}
+
+:host .institution-info td:nth-child(2) {
+  width: 100%;
+}
+
+:host .institution-info td {
+  padding: 3px;
+}
+
+:host .location-container {
+  padding: 3px;
+}
+
+:host .chip-container {
+  padding-top: 5px;
+}

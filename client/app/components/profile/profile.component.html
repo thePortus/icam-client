@@ -1,0 +1,33 @@
+<div class="single-col">
+  <div *ngIf="this.loading == false" class="profile-wrapper flex flex-col justify-start items-center">
+      <mat-card class="profile-container">
+        <div class="flex flex-col justify-center items-center">
+          <mat-card-title>Profile</mat-card-title>
+          <mat-card-content>
+            <div class="flex flex-col justify-center items-center">
+              <table>
+                <tbody>
+                    <tr><td>Username: </td><td>{{ this.protectedData.username }}</td></tr>
+                    <tr><td>Email: </td><td>{{ this.protectedData.email }}</td></tr>
+                    <tr><td>Role: </td><td>{{ this.protectedData.role }}</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </mat-card-content>
+          <mat-card-actions>
+            <div class="flex flex-col justify-center items-center">
+              <button mat-raised-button type="submit" color="primary" (click)="logout()">Logout</button>
+            </div>
+          </mat-card-actions>
+          <div class="policy-links">
+            <div class="flex flex-col justify-center items-center">
+              <span><small><a routerLink='/privacy-policy'>View Privacy Policy</a></small></span>
+            </div>
+          </div>
+        </div>
+      </mat-card>
+      <div *ngIf="this.protectedData.role == 'Owner'">
+          <app-users></app-users>
+      </div>
+  </div>
+</div>

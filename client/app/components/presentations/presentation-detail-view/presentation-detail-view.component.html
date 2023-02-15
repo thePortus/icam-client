@@ -1,0 +1,6 @@
+<div class="single-col" *ngIf="!loading">
+    <button type="button" routerLink="/presentations" color="primary" mat-raised-button aria-label="Back to view presentations">
+        <mat-icon>keyboard_arrow_up</mat-icon>
+    </button>
+    <app-presentation-detail presentationId="{{ presentationId }}"></app-presentation-detail>
+</div>

@@ -1,0 +1,98 @@
+<div *ngIf="!loading" class="list-wrapper flex flex-col justify-start items-center">
+    <div class="list-container">
+      <div class="filter-container">
+        <mat-card>
+          <mat-card-content>
+            <div class="max-sm:text-sm">
+              Filter
+            </div>
+            <div class="flex flex-row justify-start items-center max-sm:flex-col max-sm:items-start max-sm:text-xs">
+              <div class="filter-input-wrapper">
+                <label for="titleFilter">Title: </label>
+                <input type="text" id="titleFilter" (input)="refreshData()" [(ngModel)]="filterByTitle" />
+              </div>
+              <div class="filter-input-wrapper">
+                <label for="panelFilter">Panel: </label>
+                <input type="text" id="panelFilter" (input)="refreshData()" [(ngModel)]="filterByPanelTitle" />
+              </div>
+              <div class="filter-input-wrapper">
+                <label for="conferenceFilter">Conference: </label>
+                <input type="text" id="conferenceFilter" (input)="refreshData()" [(ngModel)]="filterByConferenceTitle" />
+              </div>
+              <div class="filter-input-wrapper">
+                <label for="presenterFilter">Presenter: </label>
+                <input type="text" id="presenterFilter" (input)="refreshData()" [(ngModel)]="filterByPresenterName" />
+              </div>
+              <div class="filter-input-wrapper">
+                <label for="topicFilter">Topic: </label>
+                <input type="text" id="topicFilter" (input)="refreshData()" [(ngModel)]="filterByTopicTitle" />
+              </div>
+              <div class="filter-input-wrapper">
+                <label for="placeFilter">Place: </label>
+                <input type="text" id="placeFilter" (input)="refreshData()" [(ngModel)]="filterByPlaceTitle" />
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <app-pagination [page]="currentPage" [size]="itemsPerPage" [totalItems]="totalItems" (paginationSet)="changePagination($event)"></app-pagination>
+      </div>
+      <div class="presentations-container">
+        <mat-card *ngFor="let presentation of protectedData" (click)="navigate(presentation.id)">
+          <mat-card-content>
+            <div class="flex flex-col justify-start items-start">
+              <mat-card-subtitle class="card-subtitle" *ngIf="presentation.title != '' && presentation.title">{{ presentation.title }}</mat-card-subtitle>
+              <mat-card-subtitle class="card-subtitle" *ngIf="presentation.title == '' || !presentation.title">No Title</mat-card-subtitle>
+              <div class="full-width">
+                <span>
+                  Conference:
+                </span>
+                <span>
+                  <span>
+                    {{ presentation.panel.conference.title }}
+                  </span>
+                  <span>
+                    ({{ presentation.panel.conference.year }})
+                  </span>
+                </span>
+              </div>
+              <mat-divider class="divider"></mat-divider>
+              <div class="full-width">
+                  <span *ngIf="presentation.presenters.length > 1">Presenters: </span>
+                  <span *ngIf="presentation.presenters.length == 1">Presenter: </span>
+                  <span *ngIf="presentation.presenters.length == 0">Presenters: <span>No Presenters</span></span>
+                  <span *ngFor="let presenter of presentation.presenters; last as last">
+                      {{ presenter.name }}<span *ngIf="!last">, </span>
+                  </span>
+              </div>
+              <mat-divider class="divider"></mat-divider>
+              <div class="full-width">
+                  <span>Panel: </span>
+                  <span *ngIf="presentation.panel.title != '' && presentation.panel.title">{{ presentation.panel.title }}</span>
+                  <span *ngIf="presentation.panel.title == '' || !presentation.panel.title">No Title</span>
+              </div>
+              <mat-divider class="divider"></mat-divider>
+              <!-- topics -->
+              <div class="full-width">
+                <span>Topics: </span>
+                <div class="padded-content-dense">
+                  <mat-chip-list class="chip-container" aria-label="Presentation topics">
+                    <mat-chip *ngFor="let topic of presentation.topics" color="primary">{{topic.title}}</mat-chip>
+                  </mat-chip-list>
+                </div>
+              </div>
+              <!-- geographies -->
+              <div class="full-width">
+                <span>Places: </span>
+                <div class="padded-content-dense">
+                  <mat-chip-list class="chip-container" aria-label="Presentation places">
+                    <mat-chip *ngFor="let geography of presentation.geographies" color="primary">{{geography.title}}</mat-chip>
+                  </mat-chip-list>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  

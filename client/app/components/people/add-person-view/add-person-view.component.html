@@ -1,0 +1,7 @@
+<div class="single-col">
+    <button type="button" routerLink="/people" color="primary" mat-raised-button aria-label="Back to view people">
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </button>
+    <app-add-person (successfullyAdded)="personAdded($event)"></app-add-person>
+</div>
+  

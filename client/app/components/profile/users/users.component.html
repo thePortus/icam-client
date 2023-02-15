@@ -1,0 +1,41 @@
+<div *ngIf="!loading">
+  <mat-card>
+    <mat-card-content>
+      <div>
+        <mat-card>
+          <mat-card-content>
+            <mat-card-title>Filter</mat-card-title>
+            <div class="flex flex-row justify-start items-center xs:max-md:flex-col ms:max-md:items-start">
+              <div class="filter-input-wrapper">
+                <label for="titleFilter">Title: </label>
+                <input type="text" id="titleFilter" (input)="refreshData()" [(ngModel)]="filterByUsername" />
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <app-pagination [page]="currentPage" [size]="itemsPerPage" [totalItems]="totalItems" (paginationSet)="changePagination($event)"></app-pagination>
+      </div>
+      <table class="full-width contrast-table">
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Edit User</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let row of protectedData">
+            <td>{{ row.username }}</td>
+            <td>{{ row.email }}</td>
+            <td>{{ row.role }}</td>
+            <td>
+              <button *ngIf="row.role == 'User'" mat-raised-button color="primary" (click)="openDialog(row.username, 'Editor')" aria-label="Promote user to editor">Promote to Editor</button>
+              <button *ngIf="row.role == 'Editor'" mat-raised-button color="primary" (click)="openDialog(row.username, 'User')" aria-label="Demote editor to user">Demote to User</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

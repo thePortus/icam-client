@@ -1,0 +1,55 @@
+@use "sass:map";
+
+@import "../../../../styles-settings";
+:host button a {
+  color: map.get($mat-icam-primary, 900);
+  text-decoration: none;
+}
+
+:host mat-toolbar {
+  padding: 35px;
+  position: fixed;
+  z-index: 9998;
+}
+
+:host button {
+  margin: 5px;
+}
+
+// If the screen size is 601px wide or more, set for large screen
+@media screen and (min-width: 601px) {
+  :host .header-title {
+    font-size: .7em;
+    line-height: 1.5em;
+  }
+
+  :host .header-credit {
+    font-size: 0.4em;
+    line-height: .4em;
+  }
+
+  :host .header-button a {
+    font-size: 1em;
+  }
+}
+
+// If the screen size is 600px wide or less, set for mobile
+@media screen and (max-width: 600px) {
+  :host .header-title {
+    font-size: .3em;
+    line-height: 2.2em;
+  }
+
+  :host .header-credit {
+    font-size: .25em;
+    line-height: .6em;
+  }
+
+  :host .header-button a {
+    font-size: 1em;
+  }
+
+  :host .header-button {
+    font-size: 1em;
+  }
+}

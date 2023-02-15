@@ -1,0 +1,55 @@
+<div *ngIf="!loading" class="list-wrapper flex flex-col justify-start items-center">
+    <div class="list-container">
+      <div class="filter-container">
+        <mat-card>
+          <mat-card-content>
+            <div class="max-sm:text-sm">
+              Filter
+            </div>
+            <div class="flex flex-row justify-start items-center max-sm:flex-col max-sm:items-start max-sm:text-xs">
+              <div class="filter-input-wrapper">
+                <label for="nameFilter">Name: </label>
+                <input type="text" id="nameFilter" (input)="refreshData()" [(ngModel)]="filterByName" />
+              </div>
+              <div class="filter-input-wrapper">
+                <label for="panelFilter">Panel: </label>
+                <input type="text" id="panelFilter" (input)="refreshData()" [(ngModel)]="filterByPanelTitle" />
+              </div>
+              <div class="filter-input-wrapper">
+                <label for="presentationFilter">Presentation: </label>
+                <input type="text" id="presentationFilter" (input)="refreshData()" [(ngModel)]="filterByPresentationTitle" />
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <app-pagination [page]="currentPage" [size]="itemsPerPage" [totalItems]="totalItems" (paginationSet)="changePagination($event)"></app-pagination>
+      </div>
+      <div class="people-container">
+        <mat-card *ngFor="let person of protectedData" (click)="navigate(person.id)">
+          <mat-card-content>
+            <div class="flex flex-col justify-start items-start">
+              <mat-card-subtitle class="card-subtitle" *ngIf="person.name != ''">{{ person.name }}</mat-card-subtitle>
+              <mat-card-subtitle class="card-subtitle" *ngIf="person.name == '' || !person.name">No Name</mat-card-subtitle>
+              <div class="full-width">
+                <div class="full-width">
+                  Totals:  
+                </div>
+                <div class="padded-content-dense">
+                  <span>Panels Chaired: </span><span>{{ person.chairedPanels.length }}</span>
+                </div>
+                <mat-divider class="full-width"></mat-divider>
+                <div class="padded-content-dense">
+                  <span>Presentations: </span><span>{{ person.presentations.length }}</span>
+                </div>
+                <mat-divider class="full-width"></mat-divider>
+                <div class="padded-content-dense">
+                  <span>Institutions: </span><span>{{ totalInstitutions(person) }}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  

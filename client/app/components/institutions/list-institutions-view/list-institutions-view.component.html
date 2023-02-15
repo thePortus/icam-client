@@ -1,0 +1,9 @@
+<div class="single-col" *ngIf="!loading">
+    <app-list-institutions></app-list-institutions>
+    <div class="add-button-container">
+        <button *ngIf="user.role == 'Owner' || user.role == 'Editor'" color="primary" routerLink="/institutions/add" mat-fab aria-label="Add new institution">
+          <mat-icon>add</mat-icon>
+        </button>
+      </div>
+  </div>
+  

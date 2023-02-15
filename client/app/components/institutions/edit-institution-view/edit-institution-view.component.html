@@ -1,0 +1,7 @@
+<div class="single-col" *ngIf="!loading">
+    <button type="button" routerLink="/institutions" color="primary" mat-raised-button aria-label="Back to view institutions">
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </button>
+   <app-edit-institution institutionId="{{ institutionId }}"></app-edit-institution>
+  </div>
+  

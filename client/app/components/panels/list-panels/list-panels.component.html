@@ -1,0 +1,72 @@
+<div *ngIf="!loading" class="list-wrapper flex flex-col justify-start items-center">
+  <div class="list-container">
+    <div class="filter-container">
+      <mat-card>
+        <mat-card-content>
+          <div class="max-sm:text-sm">
+            Filter
+          </div>
+          <div class="flex flex-row justify-start items-center max-sm:flex-col max-sm:items-start max-sm:text-xs">
+            <div class="filter-input-wrapper">
+              <label for="titleFilter">Title: </label>
+              <input type="text" id="titleFilter" (input)="refreshData()" [(ngModel)]="filterByTitle" />
+            </div>
+            <div class="filter-input-wrapper">
+              <label for="conferenceFilter">Conference: </label>
+              <input type="text" id="conferenceFilter" (input)="refreshData()" [(ngModel)]="filterByConference" />
+            </div>
+            <div class="filter-input-wrapper">
+              <label for="titleFilter">Type: </label>
+              <input type="text" id="typeFilter" (input)="refreshData()" [(ngModel)]="filterByType" />
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <app-pagination [page]="currentPage" [size]="itemsPerPage" [totalItems]="totalItems" (paginationSet)="changePagination($event)"></app-pagination>
+    </div>
+    <div class="panels-container">
+      <mat-card *ngFor="let panel of protectedData" (click)="navigate(panel.id)">
+        <mat-card-content>
+          <div class="flex flex-col justify-start items-start">
+            <mat-card-subtitle class="card-subtitle" *ngIf="panel.title != '' && panel.title" >{{ panel.title }}</mat-card-subtitle>
+            <mat-card-subtitle class="card-subtitle" *ngIf="panel.title == '' || !panel.title">No Title</mat-card-subtitle>
+            <div class="full-width">
+              <span>
+                Conference:
+              </span>
+              <span>
+                <span>
+                  {{ panel.conference.title }}
+                </span>
+                <span>
+                  ({{ panel.conference.year }})
+                </span>
+              </span>
+            </div>
+            <mat-divider class="divider"></mat-divider>
+            <div>
+              Type: {{ panel.type }}
+            </div>
+            <mat-divider class="divider"></mat-divider>
+            <div class="full-width">
+              <div class="full-width">
+                Totals:  
+              </div>
+              <div class="padded-content-dense">
+                <span>Presentations: </span><span>{{ panel.presentations.length }}</span>
+              </div>
+              <mat-divider class="full-width"></mat-divider>
+              <div class="padded-content-dense">
+                <span>Chairs: </span><span>{{ panel.chairs.length }}</span>
+              </div>
+              <mat-divider class="full-width"></mat-divider>
+              <div class="padded-content-dense">
+                <span>Presenters: </span><span>{{ totalPresenters(panel) }}</span>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,23 @@
+<mat-card *ngIf="loading == false">
+    <mat-card-content>
+        <div class="flex flex-row justify-center items-center full-width padded-children-content-horizontal max-sm:text-xs">
+            <div class="nav-bar flex flex-row justify-center items-start">
+                <mat-icon (click)="setPageToFirst()">first_page</mat-icon>
+                <mat-icon (click)="decrementPage()">navigate_before</mat-icon>
+                <span>Page</span>
+                <div class="padded-content">
+                    <input class="page-input text-center" matInput type="number" name="page" [(ngModel)]="page">
+                </div>
+                
+                <span>of</span>
+                <span>{{ totalPages }}</span>
+                <mat-icon (click)="incrementPage()">navigate_next</mat-icon>
+                <mat-icon (click)="setPageToLast()">last_page</mat-icon>
+            </div>
+            <div class="flex flex-row max-sm:flex-col justify-center items-center max-sm:text-center">
+                <span>Items per page:</span>
+                <input class="page-input text-center" matInput type="number" name="size" (change)="setSize()" [(ngModel)]="size">
+            </div>
+        </div>
+    </mat-card-content>
+</mat-card>

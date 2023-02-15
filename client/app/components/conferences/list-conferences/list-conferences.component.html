@@ -1,0 +1,108 @@
+<div *ngIf="!loading" class="list-wrapper flex flex-col justify-start items-center">
+  <div class="list-container">
+    <div class="filter-container">
+      <mat-card>
+        <mat-card-content>
+          <mat-card-title>
+            <div class="max-sm:text-sm">
+              Filter
+            </div>
+          </mat-card-title>
+          <div class=" flex flex-row justify-start items-center max-sm:flex-col max-sm:items-start max-sm:text-xs">
+            <div class="filter-input-wrapper">
+              <label for="titleFilter">Title: </label>
+              <input type="text" id="titleFilter" (input)="refreshData()"  [(ngModel)]="filterByTitle" />
+            </div>
+            <div class="filter-input-wrapper">
+              <label for="titleFilter">Institutions: </label>
+              <input type="text" id="institutionFilter" (input)="refreshData()" [(ngModel)]="filterByInstitution" />
+            </div>
+            <div class="filter-input-wrapper">
+              <label for="disciplineFilter">Disciplines: </label>
+              <input type="text" id="disciplineFilter" (input)="refreshData()" [(ngModel)]="filterByDiscipline" />
+            </div>
+            <div class="filter-input-wrapper">
+              <label for="locationFilter">Location: </label>
+              <input type="text" id="locationFilter" (input)="refreshData()" [(ngModel)]="filterByLocation" />
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+      <app-pagination [page]="currentPage" [size]="itemsPerPage" [totalItems]="totalItems" (paginationSet)="changePagination($event)"></app-pagination>
+    </div>
+    <div class="conferences-container">
+      <mat-card *ngFor="let conference of protectedData" (click)="navigate(conference.id)">
+        <mat-card-content>
+          <div class="flex flex-col justify-start items-start">
+            <mat-card-subtitle class="card-subtitle">{{ conference.title }}</mat-card-subtitle>
+            <div class="full-width">
+              <div class="full-width">
+                Location:  
+              </div>
+              <div class="padded-content-dense">
+                {{ conference.location.title }}
+              </div>
+              <mat-divider class="full-width"></mat-divider>
+            </div>
+            <div class="full-width">
+              <div class="full-width">
+                Date:  
+              </div>
+              <div class="padded-content-dense">
+                  <!-- date display if conference begins/ends same day -->
+                  <span *ngIf="conference.startMonth == conference.endMonth && conference.startDay == conference.endDay">
+                    {{ conference.startMonth }}/{{ conference.startDay }}/{{ conference.year }}
+                  </span>
+                  <!-- date display if conference begins/ends same month but different days-->
+                  <span *ngIf="conference.startMonth == conference.endMonth && conference.startDay != conference.endDay">
+                    {{ conference.startMonth }}/{{ conference.startDay }}-{{ conference.endDay }}, {{ conference.year }}
+                  </span>
+                  <!-- date display if conference begins.ends in different month -->
+                  <span *ngIf="conference.startMonth != conference.endMonth && conference.startDay != conference.endDay">
+                    {{ conference.startMonth }}/{{ conference.startDay }} -
+                    {{ conference.endMonth }}/{{ conference.endDay }}, {{ conference.year }}
+                  </span>
+              </div>
+            </div>
+            <mat-divider class="divider"></mat-divider>
+            <!-- statistics -->
+            <div class="full-width">
+              <div class="full-width">
+                Totals:  
+              </div>
+              <div class="padded-content-dense">
+                <span>Institutions: </span><span>{{ conference.institutions.length }}</span>
+              </div>
+              <mat-divider class="full-width"></mat-divider>
+              <div class="padded-content-dense">
+                <span>Panels: </span><span>{{ conference.panels.length }}</span>
+              </div>
+              <mat-divider class="full-width"></mat-divider>
+              <div class="padded-content-dense">
+                <span>Presentations: </span><span>{{ totalPresentations(conference) }}</span>
+              </div>
+              <mat-divider class="full-width"></mat-divider>
+              <div class="padded-content-dense">
+                <span>Chairs: </span><span>{{ totalChairs(conference) }}</span>
+              </div>
+              <mat-divider class="full-width"></mat-divider>
+              <div class="padded-content-dense">
+                <span>Presenters: </span><span>{{ totalPresenters(conference) }}</span>
+              </div>
+            </div>
+            <mat-divider class="divider"></mat-divider>
+            <!-- disciplines -->
+            <div class="full-width">
+              <span>Disciplines: </span>
+              <div class="padded-content-dense">
+                <mat-chip-list class="chip-container" aria-label="Conference disciplines">
+                  <mat-chip *ngFor="let discipline of conference.disciplines" color="primary">{{discipline.title}}</mat-chip>
+                </mat-chip-list>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

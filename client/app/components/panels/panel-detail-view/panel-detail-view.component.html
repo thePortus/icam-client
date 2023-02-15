@@ -1,0 +1,7 @@
+<div class="single-col" *ngIf="!loading">
+  <button type="button" routerLink="/panels" color="primary" mat-raised-button aria-label="Back to view panels">
+    <mat-icon>keyboard_arrow_up</mat-icon>
+  </button>
+  <app-panel-detail panelId="{{ panelId }}"></app-panel-detail>
+</div>
+  

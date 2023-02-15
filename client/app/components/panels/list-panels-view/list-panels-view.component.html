@@ -1,0 +1,8 @@
+<div class="single-col" *ngIf="!loading">
+  <app-list-panels></app-list-panels>
+  <div class="add-button-container">
+      <button *ngIf="user.role == 'Owner' || user.role == 'Editor'" color="primary" routerLink="/panels/add" mat-fab aria-label="Add new panel">
+        <mat-icon>add</mat-icon>
+      </button>
+  </div>
+</div>

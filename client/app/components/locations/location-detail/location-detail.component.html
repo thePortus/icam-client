@@ -1,0 +1,35 @@
+<div *ngIf="!loading" class="list-wrapper flex flex-col justify-start items-center">
+    <div class="list-container">
+      <mat-card>
+        <mat-card-content>
+            <div class="flex flex-col justify-start items-start">
+                <mat-card-subtitle class="card-subtitle">{{ protectedData.title }}</mat-card-subtitle>
+                <div class="full-width flex flex-row justify-start items-center" *ngIf="user.role == 'Owner' || user.role == 'Editor'">
+                    <button class="full-width" routerLink="{{'/locations/edit/' + protectedData.id}}" color="accent" mat-raised-button aria-label="Edit location">
+                        <mat-icon>edit</mat-icon>
+                    </button>
+                    <button (click)="deleteItem()" color="warn" mat-raised-button aria-label="Delete location">
+                        <mat-icon>delete_forever</mat-icon>
+                    </button>
+                </div>
+                <div class="full-width padded-content">
+                    <div class="full-width padded-content">
+                        <span>City:</span>
+                        <span>{{ protectedData.city }}</span>
+                    </div>
+                    <mat-divider class="full-width"></mat-divider>
+                    <div class="full-width padded-content">
+                        <span>State:</span>
+                        <span>{{ protectedData.state }}</span>
+                    </div>
+                    <mat-divider class="full-width"></mat-divider>
+                    <div class="full-width padded-content">
+                        <span>Country:</span>
+                        <span>{{ protectedData.country }}</span>
+                    </div>
+                </div>
+            </div>
+        </mat-card-content>
+    </mat-card>
+  </div>
+</div>

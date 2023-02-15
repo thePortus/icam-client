@@ -1,0 +1,66 @@
+<div *ngIf="!loading" class="list-wrapper flex flex-col justify-start items-center">
+    <div class="list-container">
+      <div class="filter-container">
+        <mat-card>
+          <mat-card-content>
+            <div class="max-sm:text-sm">
+              Filter
+            </div>
+            <div class="flex flex-row justify-start items-center max-sm:flex-col max-sm:items-start max-sm:text-xs">
+              <div class="filter-input-wrapper">
+                <label for="titleFilter">Title: </label>
+                <input type="text" id="titleFilter" (input)="refreshData()" [(ngModel)]="filterByTitle" />
+              </div>
+              <div class="filter-input-wrapper">
+                <label for="locationFilter">Location: </label>
+                <input type="text" id="locationFilter" (input)="refreshData()" [(ngModel)]="filterByLocation" />
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+        <app-pagination [page]="currentPage" [size]="itemsPerPage" [totalItems]="totalItems" (paginationSet)="changePagination($event)"></app-pagination>
+      </div> 
+      <div class="institutions-container">
+        <mat-card *ngFor="let institution of protectedData" (click)="navigate(institution.id)">
+          <mat-card-content >
+            <div class="flex flex-col justify-start items-start">
+              <mat-card-subtitle class="card-subtitle">{{ institution.title }}</mat-card-subtitle>
+              <mat-divider class="full-width"></mat-divider>
+              <div class="full-width">
+                <div class="full-width">
+                  Location:  
+                </div>
+                <div class="padded-content-dense">
+                  {{ institution.location.title }}
+                </div>
+                <mat-divider class="full-width"></mat-divider>
+              </div>
+              <!-- conferences -->
+              <div class="full-width">
+                <div class="full-width">
+                  Conferences:  
+                </div>
+                <div class="padded-content-dense">
+                  <span>Total Conferences: </span><span>{{ institution.chairs.length }}</span>
+                </div>
+              </div>
+              <mat-divider class="full-width"></mat-divider>
+              <div class="full-width">
+                <div class="full-width">
+                  People:  
+                </div>
+                <div class="padded-content-dense">
+                  <span>Affiliated Chairs: </span><span>{{ institution.chairs.length }}</span>
+                </div>
+                <mat-divider class="full-width"></mat-divider>
+                <div class="padded-content-dense">
+                  <span>Affiliated Presenters: </span><span>{{ institution.presenters.length }}</span>
+                </div>
+              </div>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  

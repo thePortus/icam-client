@@ -1,0 +1,6 @@
+<div class="single-col">
+    <button type="button" routerLink="/places" color="primary" mat-raised-button aria-label="Back to view places">
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </button>
+    <app-add-place (successfullyAdded)="placeAdded($event)"></app-add-place>
+</div>

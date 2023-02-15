@@ -1,0 +1,8 @@
+<div class="single-col" *ngIf="!loading">
+  <app-list-conferences></app-list-conferences>
+  <div class="add-button-container">
+      <button *ngIf="user.role == 'Owner' || user.role == 'Editor'" color="primary" routerLink="/conferences/add" mat-fab aria-label="Add new conference">
+        <mat-icon>add</mat-icon>
+      </button>
+    </div>
+</div>
