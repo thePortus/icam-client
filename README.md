@@ -43,7 +43,7 @@ Once successful, run the command again without the dry run flag.
 docker compose run --rm  certbot certonly --webroot --webroot-path /var/www/certbot/ -d example.org -d www.example.org
 ```
 
-Now, bring the containers down with `docker compose down`. Then edit the `/client/nginx/conf/default.conf` file and uncomment out the lower server block to enable HTTPS traffic. Make sure to replace the server_name with your relevant URLs. Then, bring the containers back up with `docker compose up -d`.
+Now, bring the containers down with `docker compose down`. Then edit the `/nginx/conf/default.conf` file and uncomment out the lower server block to enable HTTPS traffic. Make sure to replace the server_name with your relevant URLs. Then, bring the containers back up with `docker compose up -d`.
 
 Finally, set the certbot to autorenew.
 
