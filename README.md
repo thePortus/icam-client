@@ -55,7 +55,7 @@ Finally, set the certbot to autorenew.
 docker compose run --rm certbot renew
 ```
 
-Now uncomment out the second server block code in `/client/nginx/conf/default.conf`. Make SURE to put your URL in each relevant spot or the server will not boot correctly.
+Now uncomment out the second server block code in `/nginx/conf/default.conf`. Make SURE to put your URL in each relevant spot or the server will not boot correctly.
 
 Finally, restart the server!
 
