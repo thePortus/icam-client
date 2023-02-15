@@ -5,5 +5,5 @@ export const Settings = {
   siteUrl: 'https://thePort.us/',
   bodyFont: 'Lato',
   titleFont: 'Julius Sans One',
-  apiUrl: 'http://localhost:3000/api/'
+  apiUrl: 'http://localhost:8080/api/'
 };
