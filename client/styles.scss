@@ -19,8 +19,12 @@
 @import "styles-settings";
 
 /* setting app container */
-html, body { height: 100%; }
-body { margin: 0; }
+html, body {height: 100%; }
+body {
+  margin: 0;
+  background: rgb(238,238,230);
+  background: radial-gradient(circle, rgba(238,238,230,1) 0%, rgba(247,247,243,1) 35%, rgba(255,255,255,1) 100%);
+}
 
 a:link, a:visited {
   color: map.get($mat-icam-primary, A400);
