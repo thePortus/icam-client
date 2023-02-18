@@ -18,7 +18,21 @@ export const Specs = {
       value: 'Angular 14'
     }
   ],
-  repositories: ['https://github.com/thePortus/icam-server', 'https://github.com/thePortus/icam-client'],
+  repositories: [
+    {
+      label: 'Server',
+      link: 'https://github.com/thePortus/icam-server',
+      value: 'icam-server'
+    }, {
+      label: 'Client',
+      link: 'https://github.com/thePortus/icam-client',
+      value: 'icam-client'
+    }, {
+      label: 'Data',
+      link: 'https://github.com/thePortus/icam-data',
+      value: 'icam-data'
+    }
+  ],
   dependencies: {
     frontend: [
       {

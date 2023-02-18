@@ -17,8 +17,8 @@
   <mat-card-content>
     <mat-list dense>
       <mat-list-item *ngFor="let repository of specs.repositories">
-        <span class="label"><strong>Code:</strong></span>
-        <a href="{{ repository }}" target="_blank">{{ repository }}</a>
+        <span class="label"><strong>{{ repository.label }}:</strong></span>
+        <a href="{{ repository.link }}" target="_blank">{{ repository.value }}</a>
       </mat-list-item>
     </mat-list>
   </mat-card-content>
