@@ -1,9 +1,9 @@
 <mat-toolbar class="mat-elevation-z8 flex flex-row justify-center items-center" color="primary">
 
   <!-- Site Header Info -->
-  <div class="justify-center items-center flex flex-col grow" routerLink="">
-    <div class="header-title"><strong>{{ settings.siteName }}</strong></div>
-    <div class="header-credit flex flew-row items-center">By {{ settings.author }} <div class="padded-content">(Copyright, &copy; {{ settings.copyright }})</div></div>
+  <div class="justify-center items-start flex flex-col grow" routerLink="">
+    <div class="header-title">{{ settings.siteName }}</div>
+    <div class="header-credit flex flew-row items-center">{{ settings.author }} <div class="padded-content">(Copyright, &copy; {{ settings.copyright }})</div></div>
   </div>
 
   <!-- Nav Menu -->
