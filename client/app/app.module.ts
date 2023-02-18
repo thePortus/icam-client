@@ -21,6 +21,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+
 
 // service imports
 import { InterceptorService } from './services/interceptor.service';
@@ -249,7 +252,9 @@ import { ExportComponent } from './components/export/export.component';
     MatCheckboxModule,
     MatDialogModule,
     MatTableModule,
-    MatChipsModule
+    MatChipsModule,
+    MatNativeDateModule,
+    MatDatepickerModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
