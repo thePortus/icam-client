@@ -13,28 +13,16 @@
             <span class="padded-content">{{ selectedLocation.title }}</span>
             <span class="padded-content"><mat-icon (click)="selectedLocation = null">cancel</mat-icon></span>
           </div>
-          <mat-divider></mat-divider>
           <mat-form-field appearance="fill">
-            <mat-label>Year</mat-label>
-            <input matInput type="number" name="year" placeholder="2022" [(ngModel)]="protectedData.year">
+            <mat-label>Enter start & end dates</mat-label>
+            <mat-date-range-input [formGroup]="dateRange"  [max]="maxDate" [rangePicker]="picker">
+              <input matStartDate formControlName="start"placeholder="Start date" value="dateRange.value.start">
+              <input matEndDate formControlName="end" placeholder="End date" value="dateRange.value.start">
+            </mat-date-range-input>
+            <mat-hint>MM/DD/YYYY – MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
           </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Start Month</mat-label>
-            <input matInput type="number" name="startMonth" placeholder="1" [(ngModel)]="protectedData.startMonth">
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>Start Day</mat-label>
-            <input matInput type="number" name="startDay" placeholder="1" [(ngModel)]="protectedData.startDay">
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>End Month</mat-label>
-            <input matInput type="number" name="endMonth" placeholder="1" [(ngModel)]="protectedData.endMonth">
-          </mat-form-field>
-          <mat-form-field appearance="fill">
-            <mat-label>End Day</mat-label>
-            <input matInput type="number" name="endDay" placeholder="1" [(ngModel)]="protectedData.endDay">
-          </mat-form-field>
-          <mat-divider></mat-divider>
           <!-- organizations -->
           <h3 class="left-text">Organizations</h3>
           <table class="full-width contrast-table" aria-label="Conference institutions">

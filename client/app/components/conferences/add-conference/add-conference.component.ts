@@ -1,6 +1,6 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
-import { NgForm } from '@angular/forms';
+import { NgForm, FormGroup, FormControl } from '@angular/forms';
 
 import { ApiService } from './../../../services/api.service';
 import { User, UserService } from './../../../services/user.service';
@@ -32,7 +32,7 @@ interface ParticipantAffiliationToLink {
 @Component({
   selector: 'app-add-conference',
   templateUrl: './add-conference.component.html',
-  styleUrls: ['./add-conference.component.scss']
+  styleUrls: ['./add-conference.component.scss'],
 })
 export class AddConferenceComponent implements OnInit {
   @Output() successfullyAdded = new EventEmitter<string>();
@@ -63,6 +63,13 @@ export class AddConferenceComponent implements OnInit {
   acceptableInstitutions: Institution[] = [];
   acceptablePeople: Person[] = [];
   participantAffiliationDepartment: any;
+  // used for the date range picker
+  dateRange = new FormGroup({
+    start: new FormControl(),
+    end: new FormControl()
+  });
+  // allow no date in the future
+  maxDate = new Date();
 
   constructor(
     private _api: ApiService,
@@ -173,6 +180,7 @@ export class AddConferenceComponent implements OnInit {
   }
 
   onSubmit(form: NgForm) {
+    var dateSelected:boolean = false;
     var reqObject = {
       title: '',
       locationId: null,
@@ -195,51 +203,61 @@ export class AddConferenceComponent implements OnInit {
       reqObject.endDay = reqObject.startDay;
     }
     reqObject = this.trimReqObject(reqObject);
-    if (this._validate(reqObject)) {
-      this._api.postTypeRequest('conferences', reqObject).subscribe((conferenceRes: any) => {
-        for (let institutionToLink of this.institutionsToLink) {
-          const institutionLinkReqObject = {
-            conferenceId: conferenceRes.id,
-            institutionId: institutionToLink.id,
-            host: institutionToLink.host,
-            sponsor: institutionToLink.sponsor,
-            society: institutionToLink.society
-          };
-          this._api.postTypeRequest('conference-institutions', institutionLinkReqObject).subscribe();
-        }
-        for (let disciplineToTag of this.disciplinesToTag) {
-          const disciplineTagReqObject = {
-            conferenceId: conferenceRes.id,
-            disciplineId: disciplineToTag.id
-          };
-          this._api.postTypeRequest('conference-disciplines', disciplineTagReqObject).subscribe();
-        }
-        for (let participantToLink of this.participantsToLink) {
-          const participantLinkReqObject = {
-            conferenceId: conferenceRes.id,
-            personId: participantToLink.personId,
-            name: participantToLink.name,
-            role: participantToLink.role
-          };
-          this._api.postTypeRequest('people-participating', participantLinkReqObject).subscribe();
-        }
-        for (let participantAffiliationToLink of this.participantAffiliationsToLink) {
-          const pariticpantAffiliationLinkReqObject = {
-            conferenceId: conferenceRes.id,
-            personId: participantAffiliationToLink.personId,
-            institutionId: participantAffiliationToLink.institutionId,
-            department: participantAffiliationToLink.department
-          };
-          this._api.postTypeRequest('participant-affiliations', pariticpantAffiliationLinkReqObject).subscribe();
-        }
-        if (conferenceRes.status !== 0) {
-          alert('Conference successfully added!');
-          this.successfullyAdded.emit(conferenceRes);
-        }
-        else {
-          this.serverErrorMsgs = conferenceRes.messages;
-        }
-      });
+    if (this.dateRange.value.start && this.dateRange.value.end) {
+      dateSelected = true;
+      reqObject.year = this.dateRange.value.start.getFullYear();
+      reqObject.startDay = this.dateRange.value.start.getDate();
+      reqObject.startMonth = this.dateRange.value.start.getMonth() + 1;
+      reqObject.endDay = this.dateRange.value.end.getDate();
+      reqObject.endMonth = this.dateRange.value.end.getMonth() + 1;
+    }
+    if (dateSelected) {
+      if (this._validate(reqObject)) {
+        this._api.postTypeRequest('conferences', reqObject).subscribe((conferenceRes: any) => {
+          for (let institutionToLink of this.institutionsToLink) {
+            const institutionLinkReqObject = {
+              conferenceId: conferenceRes.id,
+              institutionId: institutionToLink.id,
+              host: institutionToLink.host,
+              sponsor: institutionToLink.sponsor,
+              society: institutionToLink.society
+            };
+            this._api.postTypeRequest('conference-institutions', institutionLinkReqObject).subscribe();
+          }
+          for (let disciplineToTag of this.disciplinesToTag) {
+            const disciplineTagReqObject = {
+              conferenceId: conferenceRes.id,
+              disciplineId: disciplineToTag.id
+            };
+            this._api.postTypeRequest('conference-disciplines', disciplineTagReqObject).subscribe();
+          }
+          for (let participantToLink of this.participantsToLink) {
+            const participantLinkReqObject = {
+              conferenceId: conferenceRes.id,
+              personId: participantToLink.personId,
+              name: participantToLink.name,
+              role: participantToLink.role
+            };
+            this._api.postTypeRequest('people-participating', participantLinkReqObject).subscribe();
+          }
+          for (let participantAffiliationToLink of this.participantAffiliationsToLink) {
+            const pariticpantAffiliationLinkReqObject = {
+              conferenceId: conferenceRes.id,
+              personId: participantAffiliationToLink.personId,
+              institutionId: participantAffiliationToLink.institutionId,
+              department: participantAffiliationToLink.department
+            };
+            this._api.postTypeRequest('participant-affiliations', pariticpantAffiliationLinkReqObject).subscribe();
+          }
+          if (conferenceRes.status !== 0) {
+            alert('Conference successfully added!');
+            this.successfullyAdded.emit(conferenceRes);
+          }
+          else {
+            this.serverErrorMsgs = conferenceRes.messages;
+          }
+        });
+      }
     }
   }
 

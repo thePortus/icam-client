@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { NgForm, FormGroup, FormControl } from '@angular/forms';
 
 import { ApiService } from './../../../services/api.service';
 import { User, UserService } from './../../../services/user.service';
@@ -63,6 +64,10 @@ export class EditConferenceComponent implements OnInit {
   acceptableInstitutions: Institution[] = [];
   acceptablePeople: Person[] = [];
   participantAffiliationDepartment: any;
+  // used for the date range picker
+  dateRange: any;
+  // allow no date in the future
+  maxDate = new Date();
 
   constructor(
     private _api: ApiService,
@@ -78,6 +83,19 @@ export class EditConferenceComponent implements OnInit {
     });
     this._api.getTypeRequest('conferences/' + this.conferenceId).subscribe((res: any) => {
       this.protectedData = res;
+      // copy and covert date for datepicker
+      this.dateRange = new FormGroup({
+        start: new FormControl(new Date(
+          this.protectedData.year,
+          this.protectedData.startMonth - 1,
+          this.protectedData.startDay
+        )),
+        end: new FormControl(new Date(
+          this.protectedData.year,
+          this.protectedData.endMonth - 1,
+          this.protectedData.endDay
+        ))
+      });
       // make a copy of old disciplines & institutions to check at submission time
       this.protectedData.oldDisciplines = res.disciplines;
       this.protectedData.oldInstitutions = res.institutions;
@@ -232,6 +250,7 @@ export class EditConferenceComponent implements OnInit {
   }
 
   onSubmit(form: any) {
+    var dateSelected:boolean = false;
     var reqObject = {
       id: this.protectedData.id,
       locationId: null,
@@ -247,91 +266,93 @@ export class EditConferenceComponent implements OnInit {
     }
     // copy values from form into request object
     Object.assign(reqObject, form.value);
-    // copy start dates to end dates if not provided
-    if (reqObject.endMonth == '') {
-      reqObject.endMonth = reqObject.startMonth;
-    }
-    if (reqObject.endDay == '') {
-      reqObject.endDay = reqObject.startDay;
-    }
     reqObject = this.trimReqObject(reqObject);
-    if (this._validate(reqObject)) {
-      this._api.putTypeRequest('conferences/' + this.protectedData.id.toString(), reqObject).subscribe((res: any) => {
-        if (res.status !== 0) {
-          // remove old disciplines
-          for (let disciplineToRemove of this.protectedData.oldDisciplines) {
-            this._api.deleteTypeRequest('conference-disciplines/' + this.protectedData.id.toString() + '/' + disciplineToRemove.id.toString()).subscribe(() => {
-
-            });
-          }
-          // tag new disciplines
-          for (let disciplineToTag of this.disciplinesToTag) {
-            const disciplineTagReqObject = {
-              conferenceId: this.protectedData.id,
-              disciplineId: disciplineToTag.id
-            };
-            this._api.postTypeRequest('conference-disciplines', disciplineTagReqObject).subscribe(() => {
-
-            });
-          }
-          // remove old institutions
-          for (let institutionToRemove of this.protectedData.oldInstitutions) {
-            this._api.deleteTypeRequest('conference-institutions/' + this.protectedData.id.toString() + '/' + institutionToRemove.id.toString()).subscribe(() => {
-
-            });
-          }
-          // link new institutions
-          for (let institutionToLink of this.institutionsToLink) {
-            const institutionLinkReqObject = {
-              conferenceId: this.protectedData.id,
-              institutionId: institutionToLink.id
-            };
-            this._api.postTypeRequest('conference-institutions', institutionLinkReqObject).subscribe(() => {
-
-            });
-          }
-          // remove old participant affiliations
-          for (let affiliationToRemove of this.protectedData.oldParticipantAffiliations) {
-            this._api.deleteTypeRequest('participant-affiliations/' + this.protectedData.id.toString() + '/' + affiliationToRemove.participantAffillation.personId.toString() + '/' + affiliationToRemove.participantAffillation.institutionId.toString()).subscribe(() => {
-
-            });
-          }
-          // remove old particpants
-          for (let participantToRemove of this.protectedData.oldParticipants) {
-            this._api.deleteTypeRequest('people-presenting/' + this.protectedData.id.toString() + '/' + participantToRemove.PersonParticipating.personId.toString()).subscribe(() => {
-
-            });
-          }
-          // link participants
-          for (let participantToLink of this.participantsToLink) {
-            const participantLinkReqObject = {
-              personId: participantToLink.personId,
-              conferenceId: this.protectedData.id,
-              name: participantToLink.name || null,
-              role: participantToLink.role || null
-            };
-            this._api.postTypeRequest('people-participating', participantLinkReqObject).subscribe();
-          }
-          // link participant affililations
-          for (let affiliationToLink of this.participantAffiliationsToLink) {
-            const affiliationLinkReqObject = {
-              personId: affiliationToLink.personId,
-              conferenceId: this.protectedData.id,
-              institutionId: affiliationToLink.institutionId,
-              department: affiliationToLink.department
-            };
-            this._api.postTypeRequest('participant-affiliations', affiliationLinkReqObject).subscribe();
-          }
-          alert('Item successfully updated!');
-          // navigate to conferences
-          this._router.navigate(['/conferences/' + this.protectedData.id]);
-        }
-        else {
-          this.serverErrorMsgs = res.messages;
-        }
-      });
+    if (this.dateRange.value.start && this.dateRange.value.end) {
+      dateSelected = true;
+      reqObject.year = this.dateRange.value.start.getFullYear();
+      reqObject.startDay = this.dateRange.value.start.getDate();
+      reqObject.startMonth = this.dateRange.value.start.getMonth() + 1;
+      reqObject.endDay = this.dateRange.value.end.getDate();
+      reqObject.endMonth = this.dateRange.value.end.getMonth() + 1;
     }
+    if (dateSelected) {
+      if (this._validate(reqObject)) {
+        this._api.putTypeRequest('conferences/' + this.protectedData.id.toString(), reqObject).subscribe((res: any) => {
+          if (res.status !== 0) {
+            // remove old disciplines
+            for (let disciplineToRemove of this.protectedData.oldDisciplines) {
+              this._api.deleteTypeRequest('conference-disciplines/' + this.protectedData.id.toString() + '/' + disciplineToRemove.id.toString()).subscribe(() => {
 
+              });
+            }
+            // tag new disciplines
+            for (let disciplineToTag of this.disciplinesToTag) {
+              const disciplineTagReqObject = {
+                conferenceId: this.protectedData.id,
+                disciplineId: disciplineToTag.id
+              };
+              this._api.postTypeRequest('conference-disciplines', disciplineTagReqObject).subscribe(() => {
+
+              });
+            }
+            // remove old institutions
+            for (let institutionToRemove of this.protectedData.oldInstitutions) {
+              this._api.deleteTypeRequest('conference-institutions/' + this.protectedData.id.toString() + '/' + institutionToRemove.id.toString()).subscribe(() => {
+
+              });
+            }
+            // link new institutions
+            for (let institutionToLink of this.institutionsToLink) {
+              const institutionLinkReqObject = {
+                conferenceId: this.protectedData.id,
+                institutionId: institutionToLink.id
+              };
+              this._api.postTypeRequest('conference-institutions', institutionLinkReqObject).subscribe(() => {
+
+              });
+            }
+            // remove old participant affiliations
+            for (let affiliationToRemove of this.protectedData.oldParticipantAffiliations) {
+              this._api.deleteTypeRequest('participant-affiliations/' + this.protectedData.id.toString() + '/' + affiliationToRemove.participantAffillation.personId.toString() + '/' + affiliationToRemove.participantAffillation.institutionId.toString()).subscribe(() => {
+
+              });
+            }
+            // remove old particpants
+            for (let participantToRemove of this.protectedData.oldParticipants) {
+              this._api.deleteTypeRequest('people-presenting/' + this.protectedData.id.toString() + '/' + participantToRemove.PersonParticipating.personId.toString()).subscribe(() => {
+
+              });
+            }
+            // link participants
+            for (let participantToLink of this.participantsToLink) {
+              const participantLinkReqObject = {
+                personId: participantToLink.personId,
+                conferenceId: this.protectedData.id,
+                name: participantToLink.name || null,
+                role: participantToLink.role || null
+              };
+              this._api.postTypeRequest('people-participating', participantLinkReqObject).subscribe();
+            }
+            // link participant affililations
+            for (let affiliationToLink of this.participantAffiliationsToLink) {
+              const affiliationLinkReqObject = {
+                personId: affiliationToLink.personId,
+                conferenceId: this.protectedData.id,
+                institutionId: affiliationToLink.institutionId,
+                department: affiliationToLink.department
+              };
+              this._api.postTypeRequest('participant-affiliations', affiliationLinkReqObject).subscribe();
+            }
+            alert('Item successfully updated!');
+            // navigate to conferences
+            this._router.navigate(['/conferences/' + this.protectedData.id]);
+          }
+          else {
+            this.serverErrorMsgs = res.messages;
+          }
+        });
+      }
+    }
   }
 
   linkParticipant(participant: any) {
