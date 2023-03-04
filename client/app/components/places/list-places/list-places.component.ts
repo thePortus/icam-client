@@ -14,7 +14,7 @@ export class ListPlacesComponent implements OnInit {
   filterByTitle: any;
   currentPage = 1;
   itemsPerPage = 5;
-  loading: boolean = false;
+  loading: boolean = true;
 
   constructor(
     private _api: ApiService,
