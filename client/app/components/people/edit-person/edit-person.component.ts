@@ -60,6 +60,7 @@ export class EditPersonComponent implements OnInit {
   @Input() personId = '';
 
   loading: boolean = true;
+  loadingError: boolean = false;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
   userDetails$: Observable<User>;
@@ -216,6 +217,8 @@ export class EditPersonComponent implements OnInit {
           });
         });
       });
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

@@ -15,6 +15,7 @@ export class EditInstitutionComponent implements OnInit {
   @Input() institutionId = '';
 
   loading: boolean = true;
+  loadingError: boolean = false;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
   userDetails$: Observable<User>;
@@ -52,6 +53,8 @@ export class EditInstitutionComponent implements OnInit {
         title: this.protectedData.location.title
       };
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

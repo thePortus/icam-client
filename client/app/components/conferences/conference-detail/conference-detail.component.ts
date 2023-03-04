@@ -16,6 +16,7 @@ export class ConferenceDetailComponent implements OnInit {
   userDetails$: Observable<User>;
   user: any;
   loading: boolean = true;
+  loadingError: boolean = false;
   protectedData: any;
   flattenedData: any;
   totals = {
@@ -56,6 +57,8 @@ export class ConferenceDetailComponent implements OnInit {
       this.getTotals();
       this.flattenData();
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

@@ -16,6 +16,7 @@ export class TopicDetailComponent implements OnInit {
   userDetails$: Observable<User>;
   user: any;
   loading: boolean = true;
+  loadingError: boolean = false;
   protectedData: any;
 
   constructor(
@@ -39,6 +40,8 @@ export class TopicDetailComponent implements OnInit {
     this._api.getTypeRequest('topics/' + this.topicId).subscribe((res: any) => {
       this.protectedData = res;
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

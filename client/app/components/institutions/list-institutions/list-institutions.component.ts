@@ -16,6 +16,7 @@ export class ListInstitutionsComponent implements OnInit {
   currentPage = 1;
   itemsPerPage = 5;
   loading: boolean = true;
+  loadingError: boolean = false;
 
   constructor(
     private _api: ApiService,
@@ -50,6 +51,8 @@ export class ListInstitutionsComponent implements OnInit {
       this.protectedData = res.rows;
       this.totalItems = res.count;
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

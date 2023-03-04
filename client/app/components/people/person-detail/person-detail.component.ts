@@ -15,6 +15,7 @@ export class PersonDetailComponent implements OnInit {
   userDetails$: Observable<User>;
   user: any;
   loading: boolean = true;
+  loadingError: boolean = false;
   protectedData: any;
   toggleDisplay = {
     'panels': false,
@@ -45,6 +46,8 @@ export class PersonDetailComponent implements OnInit {
       this.protectedData = res;
       this.protectedData.institutions = this.getInstitutionsAndDepartments();
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

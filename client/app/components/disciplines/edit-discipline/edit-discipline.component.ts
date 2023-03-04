@@ -15,6 +15,7 @@ export class EditDisciplineComponent implements OnInit {
   @Input() disciplineId = '';
 
   loading: boolean = true;
+  loadingError: boolean = false;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
   userDetails$: Observable<User>;
@@ -36,6 +37,8 @@ export class EditDisciplineComponent implements OnInit {
     this._api.getTypeRequest('disciplines/' + this.disciplineId).subscribe((res: any) => {
       this.protectedData = res;
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

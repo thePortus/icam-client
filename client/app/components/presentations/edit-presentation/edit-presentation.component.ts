@@ -29,6 +29,7 @@ export class EditPresentationComponent implements OnInit {
   @Input() presentationId = '';
 
   loading: boolean = true;
+  loadingError: boolean = false;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
   userDetails$: Observable<User>;
@@ -144,6 +145,8 @@ export class EditPresentationComponent implements OnInit {
           this.loading = false;
         });
       });
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

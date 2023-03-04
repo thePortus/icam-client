@@ -32,6 +32,7 @@ export class EditPanelComponent implements OnInit {
   @Input() panelId = '';
 
   loading: boolean = true;
+  loadingError: boolean = false;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
   userDetails$: Observable<User>;
@@ -131,6 +132,8 @@ export class EditPanelComponent implements OnInit {
           this.loading = false;
         });
       });
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

@@ -16,6 +16,7 @@ export class InstitutionDetailComponent implements OnInit {
   userDetails$: Observable<User>;
   user: any;
   loading: boolean = true;
+  loadingError: boolean = false;
   protectedData: any;
   toggleDisplay = {
     'conferences': false,
@@ -45,6 +46,8 @@ export class InstitutionDetailComponent implements OnInit {
     this._api.getTypeRequest('institutions/' + this.institutionId).subscribe((res: any) => {
       this.protectedData = res;
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 
