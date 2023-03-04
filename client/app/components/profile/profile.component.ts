@@ -14,6 +14,7 @@ export class ProfileComponent implements OnInit {
 
   public protectedData: any;
   public loading: boolean = true;
+  public loadingError: boolean = false;
 
   constructor(
     private _api: ApiService,
@@ -27,6 +28,8 @@ export class ProfileComponent implements OnInit {
     this._api.getTypeRequest('profile/' + userDetails.username).subscribe((res: any) => {
       this.protectedData = res.data;
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

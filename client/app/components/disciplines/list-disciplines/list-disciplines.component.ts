@@ -16,6 +16,7 @@ export class ListDisciplinesComponent implements OnInit {
   currentPage = 1;
   itemsPerPage = 5;
   loading: boolean = true;
+  loadingError: boolean = false;
 
   constructor(
     private _api: ApiService,
@@ -46,6 +47,8 @@ export class ListDisciplinesComponent implements OnInit {
       this.protectedData = res.rows;
       this.totalItems = res.count;
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

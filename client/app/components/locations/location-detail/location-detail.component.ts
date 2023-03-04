@@ -15,6 +15,7 @@ export class LocationDetailComponent implements OnInit {
   userDetails$: Observable<User>;
   user: any;
   loading: boolean = true;
+  loadingError: boolean = false;
   protectedData: any;
 
   constructor(
@@ -39,6 +40,8 @@ export class LocationDetailComponent implements OnInit {
     this._api.getTypeRequest('locations/' + this.locationId).subscribe((res: any) => {
       this.protectedData = res;
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

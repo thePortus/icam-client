@@ -40,6 +40,7 @@ export class EditConferenceComponent implements OnInit {
   @Input() conferenceId = '';
 
   loading: boolean = true;
+  loadingError: boolean = false;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
   userDetails$: Observable<User>;
@@ -182,6 +183,8 @@ export class EditConferenceComponent implements OnInit {
           this.loading = false;
         });
       });
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

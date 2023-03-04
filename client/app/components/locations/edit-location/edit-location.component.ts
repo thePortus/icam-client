@@ -18,6 +18,7 @@ export class EditLocationComponent implements OnInit {
   @Input() locationId = '';
 
   loading: boolean = true;
+  loadingError: boolean = false;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
   userDetails$: Observable<User>;
@@ -45,6 +46,8 @@ export class EditLocationComponent implements OnInit {
       this.selectedState = this.protectedData.state;
       this.selectedCountry = this.protectedData.country;
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

@@ -15,6 +15,7 @@ export class EditPlaceComponent implements OnInit {
   @Input() placeId = '';
 
   loading: boolean = true;
+  loadingError: boolean = false;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
   userDetails$: Observable<User>;
@@ -36,6 +37,8 @@ export class EditPlaceComponent implements OnInit {
     this._api.getTypeRequest('geographies/' + this.placeId).subscribe((res: any) => {
       this.protectedData = res;
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 

@@ -23,6 +23,7 @@ import { MatTableModule } from '@angular/material/table';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 // service imports
@@ -254,7 +255,8 @@ import { ExportComponent } from './components/export/export.component';
     MatTableModule,
     MatChipsModule,
     MatNativeDateModule,
-    MatDatepickerModule
+    MatDatepickerModule,
+    MatProgressSpinnerModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

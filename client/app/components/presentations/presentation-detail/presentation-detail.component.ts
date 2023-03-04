@@ -16,6 +16,7 @@ export class PresentationDetailComponent implements OnInit {
   userDetails$: Observable<User>;
   user: any;
   loading: boolean = true;
+  loadingError: boolean = false;
   protectedData: any;
   toggleDisplay = {
     'chairs': false,
@@ -44,6 +45,8 @@ export class PresentationDetailComponent implements OnInit {
     this._api.getTypeRequest('presentations/' + this.presentationId).subscribe((res: any) => {
       this.protectedData = res;
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 
