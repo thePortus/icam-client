@@ -1,3 +1,8 @@
+<div *ngIf="loading" class="flex flex-col justify-center items-center">
+    <div class="flex flex-row justify-center items-center">
+      Loading
+    </div>
+</div>
 <div *ngIf="!loading" class="edit-wrapper flex flex-col justify-start items-center">
     <form class="edit-container" #myform="ngForm" (ngSubmit)="onSubmit(myform)" *ngIf="user.role == 'Owner' || user.role == 'Editor'">
         <mat-card>

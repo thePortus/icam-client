@@ -19,7 +19,7 @@ export class ListPresentationsComponent implements OnInit {
   filterByPlaceTitle: any;
   currentPage = 1;
   itemsPerPage = 5;
-  loading: boolean = false;
+  loading: boolean = true;
 
   constructor(
     private _api: ApiService,
