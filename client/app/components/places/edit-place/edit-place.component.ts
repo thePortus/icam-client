@@ -11,15 +11,20 @@ import { User, UserService } from './../../../services/user.service';
   styleUrls: ['./edit-place.component.scss']
 })
 export class EditPlaceComponent implements OnInit {
+  // event emitter
   @Output() successfullyAdded = new EventEmitter<string>();
+  // id of item to edit
   @Input() placeId = '';
 
+  // loading flag & error messages
   loading: boolean = true;
   loadingError: boolean = false;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
+  // observable and local object for user data
   userDetails$: Observable<User>;
   user: any;
+  // storage for current item data from server
   protectedData: any;
 
   constructor(
@@ -28,6 +33,10 @@ export class EditPlaceComponent implements OnInit {
     private _router: Router
   ) { }
 
+  /**
+   * Gets user details. Gets current item information from the server,
+   * Sets .loading flag to false.
+   */
   ngOnInit(): void {
     // get user profile details
     this.userDetails$ = this._user.user$;
@@ -42,6 +51,13 @@ export class EditPlaceComponent implements OnInit {
     });
   }
 
+  /**
+   * Ensures request meets basic validation and outputs client-side
+   * error messages if it does not.
+   * 
+   * @param reqObject - The data JSON to be sent
+   * @returns true if object is valid, otherwise null
+   */
   private _validate(reqObject: any): boolean {
     var isValid = true;
     this.errorMsgs = [];
@@ -52,7 +68,13 @@ export class EditPlaceComponent implements OnInit {
     return isValid;
   }
 
-  // cycles through each property in the req object and if it is a string, trim and leading or trailing whitespaces
+  /**
+   * Cycles through each property in the req object and if it is a string,
+   * trim and leading or trailing whitespaces.
+   * 
+   * @param objectToTrim - The request object, with data to send
+   * @returns A request object, with any strings trimmed of leading/trailing whitespace
+   */
   trimReqObject(objectToTrim: any) {
     Object.keys(objectToTrim).forEach(property => {
       if (typeof objectToTrim[property] == 'string') {
@@ -62,6 +84,11 @@ export class EditPlaceComponent implements OnInit {
     return objectToTrim;
   }
 
+  /**
+   * Submits user data to server and stores local user data from server response.
+   * 
+   * @param form Form data
+   */
   onSubmit(form: any) {
     var reqObject = {
       id: this.protectedData.id,

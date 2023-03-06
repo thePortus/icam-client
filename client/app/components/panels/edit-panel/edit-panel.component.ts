@@ -8,6 +8,7 @@ import { User, UserService } from './../../../services/user.service';
 import { Institution } from './../../../interfaces/institution.interface';
 import { Person } from './../../../interfaces/person.interface';
 
+// info for linking chairs to panel
 interface ChairToLink {
   panelId: number;
   personId: number;
@@ -15,6 +16,7 @@ interface ChairToLink {
   title: string;
 }
 
+// info for linking institutions to people as chairs
 interface ChairAffiliationToLink {
   panelId: number;
   personId: number;
@@ -28,30 +30,42 @@ interface ChairAffiliationToLink {
   styleUrls: ['./edit-panel.component.scss']
 })
 export class EditPanelComponent implements OnInit {
+  // event emitter
   @Output() successfullyAdded = new EventEmitter<string>();
+  // id of item to edit
   @Input() panelId = '';
 
+  // loading flag & error messages
   loading: boolean = true;
   loadingError: boolean = false;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
+  // observable and local object for user data
   userDetails$: Observable<User>;
   user: any;
+  // storage for current item data from server
   protectedData: any;
+  // currently selected items for drop down menus
   selectedConference: any = null;
   selectedType = 'General';
+  // acceptable items for drop down menu selection
   acceptableTypes = [
     'General', 'Presidental Address', 'Keynote', 'Plenary', 'Workshop', 'Roundtable',
     'Uncertain', 'Other'
   ];
+  // toggle flags for displaying ui for linking items
   displayLinkChair: boolean = false;
   displayLinkChairAffiliation: boolean = false;
+  // for storing items to link, to be added upon submission
   chairsToLink: ChairToLink[] = [];
   chairAffiliationsToLink: ChairAffiliationToLink[] = [];
+  // currently selected items for linking
   selectedPerson: any;
   selectedInstitution: any;
+  // acceptable items possible for linking
   acceptablePeople: Person[] = [];
   acceptableInstitutions: Institution[] = [];
+  // for the optional department info of an affiliated chair
   affiliationDepartment: string = '';
 
   constructor(
@@ -60,6 +74,12 @@ export class EditPanelComponent implements OnInit {
     private _router: Router
   ) { }
 
+  /**
+   * Gets user details. Gets current item information from the server,
+   * adds info on any linked items to their respective storage spots.
+   * gets all current people and institutions from the server,
+   * for use in selecting people and institutions to link.
+   */
   ngOnInit(): void {
     // get user profile details
     this.userDetails$ = this._user.user$;
@@ -137,6 +157,13 @@ export class EditPanelComponent implements OnInit {
     });
   }
 
+  /**
+   * Ensures request meets basic validation and outputs client-side
+   * error messages if it does not.
+   * 
+   * @param reqObject - The data JSON to be sent
+   * @returns true if object is valid, otherwise null
+   */
   private _validate(reqObject: any): boolean {
     var isValid = true;
     this.errorMsgs = [];
@@ -151,7 +178,13 @@ export class EditPanelComponent implements OnInit {
     return isValid;
   }
 
-  // cycles through each property in the req object and if it is a string, trim and leading or trailing whitespaces
+  /**
+   * Cycles through each property in the req object and if it is a string,
+   * trim and leading or trailing whitespaces.
+   * 
+   * @param objectToTrim - The request object, with data to send
+   * @returns A request object, with any strings trimmed of leading/trailing whitespace
+   */
   trimReqObject(objectToTrim: any) {
     Object.keys(objectToTrim).forEach(property => {
       if (typeof objectToTrim[property] == 'string') {
@@ -161,6 +194,12 @@ export class EditPanelComponent implements OnInit {
     return objectToTrim;
   }
 
+  /**
+   * Submits user data to server and stores local user data from server response.
+   * Also removes all previous linked item information, then re-adds new linked items.
+   * 
+   * @param form Form data
+   */
   onSubmit(form: any) {
     var reqObject = {
       id: this.protectedData.id,
@@ -219,10 +258,23 @@ export class EditPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * Executed upon event emission from the select conference widget.
+   * Gets the selected conferences's data and stores it.
+   * 
+   * @param selectedConference - Object with conference data
+   */
   conferenceSelected(selectedConference: any) {
     this.selectedConference = selectedConference;
   }
 
+  /**
+   * Gets chair info from html fields, ensures it has not already
+   * been added, then adds it to the list of chairs that will be linked
+   * upon submission.
+   * 
+   * @param person - Object with person data
+   */
   linkChair(person: any) {
     let isDuplicate = false;
     for (let chairToLink of this.chairsToLink) {
@@ -260,6 +312,15 @@ export class EditPanelComponent implements OnInit {
     this.toggleDisplayLinkChair();
   }
 
+  /**
+   * Gets affiliation info of a chair from html fields, ensures it has not already
+   * been added, then adds it to the list of chairs that will be linked
+   * upon submission.
+   * 
+   * @param personId - ID of person
+   * @param institutionId - ID of institution
+   * @param affiliationDepartment - String of optional department, string can be empty
+   */
   linkChairAffiliation(personId: number, institutionId: number, affiliationDepartment: string) {
     let isDuplicate = false;
     for (let chairAffiliationToLink of this.chairAffiliationsToLink) {
@@ -279,18 +340,32 @@ export class EditPanelComponent implements OnInit {
     this.toggleDisplayChairAffiliation();
   }
 
+  /**
+   * Removes a chair that was set to be linked. If item was added
+   * by a selection widget, this removes it.
+   * @param id - ID of the item
+   */
   removeChair(id: number) {
     this.chairsToLink = this.chairsToLink.filter(obj => {
       return obj.personId != id;
     });
   }
 
+  /**
+   * Removes an affiliation of a chair that was set to be linked.
+   * 
+   * @param personId - ID of the chair
+   * @param institutionId - ID of the institution
+   */
   removeChairAffiliation(personId: number, institutionId: number) {
     this.chairAffiliationsToLink = this.chairAffiliationsToLink.filter(obj => {
       return obj.personId != personId || obj.institutionId != institutionId;
     });
   }
 
+  /**
+   * Toggles display of UI to link existing chairs
+   */
   toggleDisplayLinkChair() {
     this.displayLinkChair = !this.displayLinkChair;
     if (this.displayLinkChair) {
@@ -298,6 +373,9 @@ export class EditPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * Toggles display of UI to link affiliations of existing chairs
+   */
   toggleDisplayChairAffiliation() {
     this.displayLinkChairAffiliation = !this.displayLinkChairAffiliation;
     if (this.displayLinkChairAffiliation) {
@@ -305,6 +383,13 @@ export class EditPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper method to provide means of getting a chair's name by their ID number.
+   * Used by portions of the template where the item's ID is exposed by not its name.
+   * 
+   * @param personId - ID of the chair
+   * @returns String of the name of the chair, null if not found
+   */
   getChairNameById(personId: number){
     for (let person of this.acceptablePeople) {
       if (personId == person.id) {
@@ -314,6 +399,13 @@ export class EditPanelComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Helper method to provide means of getting an institution's title by its ID number.
+   * Used by portions of the template where the item's ID is exposed by not its name.
+   * 
+   * @param institutionId - ID of the institution
+   * @returns String of the name of the institution, null if not found
+   */
   getInstitutionTitleById(institutionId: number){
     for (let institution of this.acceptableInstitutions) {
       if (institutionId == institution.id) {
@@ -323,7 +415,14 @@ export class EditPanelComponent implements OnInit {
     return null;
   }
 
-  // filters list of acceptable chairs to only those that have been linked
+  /**
+   * Returns a list of data that only includes those who have already been
+   * linked. Used by portions of the HTML template for associating institutions
+   * with chairs. This ensures that institutions can only be linked
+   * with those already added to the chair list.
+   * 
+   * @returns Array of objects, each with a chair's data
+   */
   filterChairsByLinked() {
     let idsToFilter = [];
     let filteredChairs: any[] = [];
@@ -338,6 +437,12 @@ export class EditPanelComponent implements OnInit {
     return filteredChairs;
   }
 
+  /**
+   * Helper function that provides an array of IDs of the current
+   * chairs set to be linked.
+   * 
+   * @returns Array of chair ids
+   */
   linkedChairIds() {
     let idList: number[] = [];
     for (let chairToLink of this.chairsToLink) {

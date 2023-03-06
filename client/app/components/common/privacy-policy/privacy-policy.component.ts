@@ -8,6 +8,7 @@ import { Settings } from '../../../app.settings';
   styleUrls: ['./privacy-policy.component.scss']
 })
 export class PrivacyPolicyComponent implements OnInit {
+  // app settings
   settings = Settings;
   
   constructor() { }

@@ -14,16 +14,20 @@ import { Countries } from '../countries';
   styleUrls: ['./add-location.component.scss']
 })
 export class AddLocationComponent implements OnInit {
-  @Input() simplifiedView: boolean = false;
+  // event emitter
   @Output() successfullyAdded = new EventEmitter<string>();
 
+  // loading flag & error messages
   loading: boolean = true;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
+  // observable and local object for user data
   userDetails$: Observable<User>;
   user: any;
+  // items selected by drop down menus
   selectedState = 'Arizona';
   selectedCountry = 'United States';
+  // list of selectable items for drop down menus
   acceptableStates = States;
   acceptableCountries = Countries;
 
@@ -32,6 +36,9 @@ export class AddLocationComponent implements OnInit {
     private _user: UserService
   ) { }
 
+  /**
+   * Gets user details and sets .loading flag to false.
+   */
   ngOnInit(): void {
     // get user profile details
     this.userDetails$ = this._user.user$;
@@ -41,6 +48,13 @@ export class AddLocationComponent implements OnInit {
     this.loading = false;
   }
 
+  /**
+   * Ensures requests meets basic validation and outputs client-side
+   * error messages if not.
+   * 
+   * @param reqObject - The data JSON to be sent
+   * @returns true if object is valid, otherwise null
+   */
   private _validate(reqObject: any): boolean {
     var isValid = true;
     this.errorMsgs = [];
@@ -55,7 +69,13 @@ export class AddLocationComponent implements OnInit {
     return isValid;
   }
 
-  // cycles through each property in the req object and if it is a string, trim and leading or trailing whitespaces
+  /**
+   * Cycles through each property in the req object and if it is a string,
+   * trim and leading or trailing whitespaces.
+   * 
+   * @param objectToTrim - The request object, with data to send
+   * @returns A request object, with any strings trimmed of leading/trailing whitespace
+   */
   trimReqObject(objectToTrim: any) {
     Object.keys(objectToTrim).forEach(property => {
       if (typeof objectToTrim[property] == 'string') {
@@ -65,6 +85,11 @@ export class AddLocationComponent implements OnInit {
     return objectToTrim;
   }
 
+  /**
+   * Submits user data to server and stores local user data from server response.
+   * 
+   * @param form Form data
+   */
   onSubmit(form: NgForm) {
     var reqObject = {
       title: '',

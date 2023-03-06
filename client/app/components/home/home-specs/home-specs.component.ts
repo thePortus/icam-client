@@ -8,6 +8,7 @@ import { Specs } from './specs';
   styleUrls: ['./home-specs.component.scss']
 })
 export class HomeSpecsComponent implements OnInit {
+  // project specs
   specs = Specs;
   
   constructor() { }

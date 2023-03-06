@@ -1,3 +1,4 @@
+<!-- loading messages -->
 <div *ngIf="loading" class="flex justify-center items-center h-full">
     <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
       <mat-spinner></mat-spinner>
@@ -14,17 +15,20 @@
             <mat-card-title class="card-title">Edit Institution</mat-card-title>
             <mat-card-content>
                 <div class="flex flex-col justify-start items-center">
+                    <!-- title -->
                     <mat-form-field appearance="fill">
                         <mat-label>Title</mat-label>
                         <input matInput type="text" name="title" placeholder="Enter Title"
                             [(ngModel)]="protectedData.title">
                     </mat-form-field>
+                    <!-- type -->
                     <mat-form-field>
                         <mat-label>Type</mat-label>
                         <mat-select [(value)]="selectedType">
                             <mat-option *ngFor="let type of acceptableTypes" [value]="type">{{ type }}</mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <!-- funding -->
                     <mat-form-field>
                         <mat-label>Funding</mat-label>
                         <mat-select [(value)]="selectedFunding">
@@ -32,6 +36,7 @@
                                 }}</mat-option>
                         </mat-select>
                     </mat-form-field>
+                    <!-- location -->
                     <app-select-location *ngIf="!selectedLocation" class="full-width"
                         (successfullyAdded)="locationSelected($event)"></app-select-location>
                     <div *ngIf="selectedLocation" class="full-width flex flex-row">
@@ -40,6 +45,7 @@
                     </div>
                 </div>
             </mat-card-content>
+            <!-- error messages and edit button -->
             <mat-card-actions>
                 <div class="flex flex-col justify-center items-center">
                     <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">

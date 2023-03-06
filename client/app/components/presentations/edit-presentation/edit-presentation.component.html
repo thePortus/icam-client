@@ -1,3 +1,4 @@
+<!-- loading messages -->
 <div *ngIf="loading" class="flex justify-center items-center h-full">
   <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
     <mat-spinner></mat-spinner>
@@ -14,20 +15,24 @@
         <mat-card-title class="card-title">Edit Presentation</mat-card-title>
         <mat-card-content>
           <div class="flex flex-col justify-start items-center">
+            <!-- title -->
             <mat-form-field class="full-width" appearance="fill">
               <mat-label>Title</mat-label>
               <input matInput type="text" name="title" placeholder="Enter Title" [(ngModel)]="protectedData.title">
             </mat-form-field>
+            <!-- panel -->
             <app-select-panel *ngIf="!selectedPanel" class="full-width" (successfullyAdded)="panelSelected($event)"></app-select-panel>
             <div *ngIf="selectedPanel" class="full-width flex flex-row">
               <span class="padded-content">{{ selectedPanel.title }}</span>
               <span class="padded-content"><mat-icon (click)="selectedPanel = null">cancel</mat-icon></span>
             </div>
             <mat-divider></mat-divider>
+            <!-- description -->
             <mat-form-field class="full-width" appearance="fill">
               <mat-label>Description</mat-label>
               <textarea matInput type="text" name="description" placeholder="Enter Description"  [(ngModel)]="protectedData.description"></textarea>
             </mat-form-field>
+            <!-- text -->
             <mat-form-field class="full-width" appearance="fill">
               <mat-label>Text</mat-label>
               <textarea matInput type="text" name="text" placeholder="Enter Text"  [(ngModel)]="protectedData.text"></textarea>
@@ -203,6 +208,7 @@
             </div>
           </div>
         </mat-card-content>
+        <!-- error messages & edit button -->
         <mat-card-actions>
           <div class="flex flex-col justify-center items-center">
             <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">

@@ -14,27 +14,37 @@ import { Institution } from './../../../interfaces/institution.interface';
   styleUrls: ['./add-panel.component.scss']
 })
 export class AddPanelComponent implements OnInit {
+  // event emitter
   @Output() successfullyAdded = new EventEmitter<string>();
 
+  // loading flag & error messages
   loading: boolean = true;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
+  // observable and local object for user data
   userDetails$: Observable<User>;
   user: any;
+  // currently selected items for drop down menus
   selectedConference: any = null;
   selectedType = 'General';
+  // acceptable items for drop down menu selection
   acceptableTypes = [
     'General', 'Presidental Address', 'Keynote', 'Plenary', 'Workshop', 'Roundtable',
     'Uncertain', 'Other'
   ];
+  // toggle flags for displaying ui for linking items
   displayLinkChair: boolean = false;
   displayLinkChairAffiliation: boolean = false;
+  // for storing items to link, to be added upon submission
   chairsToLink: any[] =[];
   chairAffiliationsToLink: any[] = [];
+  // currently selected items for linking
   selectedPerson: any;
   selectedInstitution: any;
+  // acceptable items possible for linking
   acceptablePeople: Person[] = [];
   acceptableInstitutions: Institution[] = [];
+  // for the optional department info of an affiliated chair
   affiliationDepartment: string = '';
 
   constructor(
@@ -42,6 +52,11 @@ export class AddPanelComponent implements OnInit {
     private _user: UserService
   ) { }
 
+  /**
+   * Gets user details, gets all current people and institutions
+   * from the server, for use in selecting people and institutions
+   * to link.
+   */
   ngOnInit(): void {
     // get user profile details
     this.userDetails$ = this._user.user$;
@@ -83,6 +98,13 @@ export class AddPanelComponent implements OnInit {
     });
   }
 
+  /**
+   * Ensures request meets basic validation and outputs client-side
+   * error messages if it does not.
+   * 
+   * @param reqObject - The data JSON to be sent
+   * @returns true if object is valid, otherwise null
+   */
   private _validate(reqObject: any): boolean {
     var isValid = true;
     this.errorMsgs = [];
@@ -97,7 +119,13 @@ export class AddPanelComponent implements OnInit {
     return isValid;
   }
 
-  // cycles through each property in the req object and if it is a string, trim and leading or trailing whitespaces
+  /**
+   * Cycles through each property in the req object and if it is a string,
+   * trim and leading or trailing whitespaces.
+   * 
+   * @param objectToTrim - The request object, with data to send
+   * @returns A request object, with any strings trimmed of leading/trailing whitespace
+   */
   trimReqObject(objectToTrim: any) {
     Object.keys(objectToTrim).forEach(property => {
       if (typeof objectToTrim[property] == 'string') {
@@ -107,6 +135,11 @@ export class AddPanelComponent implements OnInit {
     return objectToTrim;
   }
 
+  /**
+   * Submits user data to server and stores local user data from server response.
+   * 
+   * @param form Form data
+   */
   onSubmit(form: NgForm) {
     var reqObject = {
       title: '',
@@ -152,17 +185,32 @@ export class AddPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * Executed upon event emission from the select conference widget.
+   * Gets the selected conferences's data and stores it.
+   * 
+   * @param selectedConference - Object with conference data
+   */
   conferenceSelected(selectedConference: any) {
     this.selectedConference = selectedConference;
   }
 
+  /**
+   * Gets chair info from html fields, ensures it has not already
+   * been added, then adds it to the list of chairs that will be linked
+   * upon submission.
+   * 
+   * @param person - Object with person data
+   */
   linkChair(person: any) {
+    // ensure no duplication
     let isDuplicate = false;
     for (let chairToLink of this.chairsToLink) {
       if (chairToLink.personId == person.id) {
         isDuplicate = true;
       }
     }
+    // push new object
     if (!isDuplicate) {
       this.chairsToLink.push({
         personId: person.id,
@@ -189,16 +237,28 @@ export class AddPanelComponent implements OnInit {
         this.loading = false;
       });
     }
+    // hide liking UI
     this.toggleDisplayLinkChair();
   }
 
+  /**
+   * Gets affiliation info of a chair from html fields, ensures it has not already
+   * been added, then adds it to the list of chairs that will be linked
+   * upon submission.
+   * 
+   * @param personId - ID of person
+   * @param institutionId - ID of institution
+   * @param affiliationDepartment - String of optional department, string can be empty
+   */
   linkChairAffiliation(personId: number, institutionId: number, affiliationDepartment: string) {
+    // ensure no duplication
     let isDuplicate = false;
     for (let chairAffiliationToLink of this.chairAffiliationsToLink) {
       if (chairAffiliationToLink.personId == personId && chairAffiliationToLink.institutionId == institutionId) {
         isDuplicate = true;
       }
     }
+    // push new object
     if (!isDuplicate) {
       this.chairAffiliationsToLink.push({
         personId: personId,
@@ -206,21 +266,38 @@ export class AddPanelComponent implements OnInit {
         department: affiliationDepartment
       });
     }
+    // hide linking UI
     this.toggleDisplayChairAffiliation();
   }
 
+  /**
+   * Removes a chair that was set to be linked. If item was added
+   * by a selection widget, this removes it.
+   * @param id - ID of the item
+   */
   removeChair(id: number) {
+    // remove the item
     this.chairsToLink = this.chairsToLink.filter(obj => {
       return obj.personId != id;
     });
   }
 
+  /**
+   * Removes an affiliation of a chair that was set to be linked.
+   * 
+   * @param personId - ID of the chair
+   * @param institutionId - ID of the institution
+   */
   removeChairAffiliation(personId: number, institutionId: number) {
+    // remove the item
     this.chairAffiliationsToLink = this.chairAffiliationsToLink.filter(obj => {
       return obj.personId != personId || obj.institutionId != institutionId;
     });
   }
 
+  /**
+   * Toggles display of UI to link existing chairs
+   */
   toggleDisplayLinkChair() {
     this.displayLinkChair = !this.displayLinkChair;
     if (this.displayLinkChair) {
@@ -228,6 +305,9 @@ export class AddPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * Toggles display of UI to link affiliations of existing chairs
+   */
   toggleDisplayChairAffiliation() {
     this.displayLinkChairAffiliation = !this.displayLinkChairAffiliation;
     if (this.displayLinkChairAffiliation) {
@@ -235,6 +315,13 @@ export class AddPanelComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper method to provide means of getting a chair's name by their ID number.
+   * Used by portions of the template where the item's ID is exposed by not its name.
+   * 
+   * @param personId - ID of the chair
+   * @returns String of the name of the chair, null if not found
+   */
   getChairNameById(personId: number){
     for (let person of this.acceptablePeople) {
       if (personId == person.id) {
@@ -244,6 +331,13 @@ export class AddPanelComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Helper method to provide means of getting an institution's title by its ID number.
+   * Used by portions of the template where the item's ID is exposed by not its name.
+   * 
+   * @param institutionId - ID of the institution
+   * @returns String of the name of the institution, null if not found
+   */
   getInstitutionTitleById(institutionId: number){
     for (let institution of this.acceptableInstitutions) {
       if (institutionId == institution.id) {
@@ -253,7 +347,14 @@ export class AddPanelComponent implements OnInit {
     return null;
   }
 
-  // filters list of acceptable chairs to only those that have been linked
+  /**
+   * Returns a list of data that only includes those who have already been
+   * linked. Used by portions of the HTML template for associating institutions
+   * with chairs. This ensures that institutions can only be linked
+   * with those already added to the chair list.
+   * 
+   * @returns Array of objects, each with a chair's data
+   */
   filterChairsByLinked() {
     let idsToFilter = [];
     let filteredChairs: any[] = [];
@@ -268,6 +369,12 @@ export class AddPanelComponent implements OnInit {
     return filteredChairs;
   }
 
+  /**
+   * Helper function that provides an array of IDs of the current
+   * chairs set to be linked.
+   * 
+   * @returns Array of chair ids
+   */
   linkedChairIds() {
     let idList: number[] = [];
     for (let chairToLink of this.chairsToLink) {

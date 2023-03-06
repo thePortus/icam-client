@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./home-credits.component.scss']
 })
 export class HomeCreditsComponent implements OnInit {
+  // bio images, from assets
   imgs = {
     davidjthomas: '/assets/images/davidjthomas.jpg',
     mattking: '/assets/images/mattking.jpg'

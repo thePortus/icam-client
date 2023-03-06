@@ -1,3 +1,4 @@
+// object definition for locations
 export interface Location {
     id: number;
     title: string;

@@ -9,11 +9,16 @@ export interface User {
   loggedIn: boolean
 }
 
+/**
+ * UserService stores login info for later user by the application. It also registers
+ * whether a user has logged in, and thus has a JSON Web Token for server authentication.
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class UserService {
 
+  // create private subject and observables
   private _user = new BehaviorSubject<User>({
     username: '',
     email: '',
@@ -32,6 +37,11 @@ export class UserService {
 
   constructor() { }
 
+  /**
+   * Stores user login info for later use and sets login state, given a JSON of user data
+   * 
+   * @param userDetails - JSON containing username, email, role, and JSON web token
+   */
   login(userDetails: any) {
     this.user.username = userDetails.username;
     this.user.email = userDetails.email;
@@ -41,6 +51,9 @@ export class UserService {
     this._user.next(Object.assign({}, this.user));
   }
 
+  /**
+   * Logs the user out and removes user data.
+   */
   logout() {
     this.user.username = '';
     this.user.email = '';

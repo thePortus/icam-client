@@ -1,3 +1,4 @@
+// external imports
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
@@ -25,13 +26,11 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
-
 // service imports
 import { InterceptorService } from './services/interceptor.service';
 
 // pipe imports
 import { FilterPipe } from './pipes/filter.pipe';
-import { FilterTwoLayerPipe } from './pipes/filter-two-layer.pipe';
 
 // component imports
 import { HeaderComponent } from './components/common/header/header.component';
@@ -135,7 +134,6 @@ import { ExportComponent } from './components/export/export.component';
   declarations: [
     AppComponent,
     FilterPipe,
-    FilterTwoLayerPipe,
     HeaderComponent,
     HomeComponent,
     NotFoundComponent,

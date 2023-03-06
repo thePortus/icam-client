@@ -3,6 +3,7 @@
     <mat-card>
       <mat-card-title class="card-title">Add New Discipline</mat-card-title>
       <mat-card-content>
+        <!-- title -->
         <div class="flex flex-col justify-start items-center">
           <mat-form-field appearance="fill">
             <mat-label>Title</mat-label>
@@ -10,6 +11,7 @@
           </mat-form-field>
         </div>
       </mat-card-content>
+      <!-- erorr messages and add button -->
       <mat-card-actions>
         <div class="flex flex-col justify-center items-center">
           <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">

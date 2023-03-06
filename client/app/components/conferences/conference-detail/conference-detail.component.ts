@@ -11,20 +11,27 @@ import { User, UserService } from './../../../services/user.service';
   styleUrls: ['./conference-detail.component.scss']
 })
 export class ConferenceDetailComponent implements OnInit {
+  // id of item to view
   @Input() conferenceId = '';
 
+  // observable and local object for user data
   userDetails$: Observable<User>;
   user: any;
+  // loading flag & error messages
   loading: boolean = true;
   loadingError: boolean = false;
+  // storage for current item data from server
   protectedData: any;
+  // for storing flattened form on related item info in this.protectedData on presentations, chairs, and presenters
   flattenedData: any;
+  // for storing item counts
   totals = {
     'panels': 0,
     'presentations': 0,
     'chairs': 0,
     'presenters': 0
   };
+  // toggle flags for displaying ui for linking items
   toggleDisplay = {
     'panels': false,
     'presentations': false,
@@ -39,6 +46,9 @@ export class ConferenceDetailComponent implements OnInit {
     private _router: Router
   ) { }
 
+  /**
+   * Gets user details, fetches data from server.
+   */
   ngOnInit(): void {
     this.userDetails$ = this._user.user$;
     this.userDetails$.subscribe(result => {
@@ -47,10 +57,19 @@ export class ConferenceDetailComponent implements OnInit {
     this.update();
   }
 
+  /**
+   * On component changes, re-fetch data from server.
+   * 
+   * @param changes - Data on nature of component changes (unnecessary)
+   */
   ngOnChanges(changes: SimpleChanges) {
     this.update();
   }
 
+  /**
+   * Fetch item data from server, perform calculation of item totals, flattening of data,
+   * and set .loading flag to false.
+   */
   update() {
     this._api.getTypeRequest('conferences/' + this.conferenceId).subscribe((res: any) => {
       this.protectedData = res;
@@ -62,6 +81,10 @@ export class ConferenceDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * iterates over related items (panels, presentations, presenters, chairs),
+   * tallies them, and stores them in this.totals.
+   */
   getTotals() {
     this.totals = {
       'panels': 0,
@@ -83,6 +106,12 @@ export class ConferenceDetailComponent implements OnInit {
     }
   }
 
+  /**
+   * Asks to confirm via alert. Then unlinks all linked items and finally
+   * deletes the item itself. Navigates back to list of items.
+   * 
+   * @returns true
+   */
   deleteItem() {
     if (confirm('Are you sure you delete this item? WARNING: CANNOT BE UNDONE!')) {
       for (let discipline of this.protectedData.disciplines) {
@@ -99,9 +128,13 @@ export class ConferenceDetailComponent implements OnInit {
     return true;
   }
 
+  /**
+   * Cyles through protectedData nested data and gets info on presentations,
+   * chairs, and presenters in flattened form. Stores in this.flattenedData.
+   * 
+   * @returns true
+   */
   flattenData() {
-    /* cyles through protectedData nested data and gets info on presentations,
-    chairs, and presenters in flattened form */
     this.flattenedData = {
       presentations: [],
       chairs: [],

@@ -1,3 +1,4 @@
+<!-- loading messages -->
 <div *ngIf="loading" class="flex justify-center items-center h-full">
   <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
     <mat-spinner></mat-spinner>
@@ -9,23 +10,25 @@
   </div>
 </div>
 <div *ngIf="!loading" class="edit-wrapper flex flex-col justify-start items-center">
-    <form class="edit-container" #myform="ngForm" (ngSubmit)="onSubmit(myform)"
-        *ngIf="user.role == 'Owner' || user.role == 'Editor'">
+    <form class="edit-container" #myform="ngForm" (ngSubmit)="onSubmit(myform)" *ngIf="user.role == 'Owner' || user.role == 'Editor'">
         <mat-card>
             <mat-card-title class="card-title">Edit Panel</mat-card-title>
             <mat-card-content>
+              <!-- title -->
               <div class="flex flex-col justify-start items-center">
                 <mat-form-field appearance="fill">
                   <mat-label>Title</mat-label>
                   <input matInput type="text" name="title" placeholder="Enter Title"
                       [(ngModel)]="protectedData.title">
                 </mat-form-field>
+                <!-- type -->
                 <mat-form-field>
                     <mat-label>Type</mat-label>
                     <mat-select [(value)]="selectedType">
                         <mat-option *ngFor="let type of acceptableTypes" [value]="type">{{ type }}</mat-option>
                     </mat-select>
                 </mat-form-field>
+                <!-- conference -->
                 <app-select-conference *ngIf="!selectedConference" class="full-width"
                     (successfullyAdded)="conferenceSelected($event)"></app-select-conference>
                 <div *ngIf="selectedConference" class="full-width flex flex-row">
@@ -149,6 +152,7 @@
                 </div>
               </div>
             </mat-card-content>
+            <!-- error messages & edit button -->
             <mat-card-actions>
               <div class="flex flex-col justify-center items-center">
                 <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">

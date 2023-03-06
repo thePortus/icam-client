@@ -11,12 +11,18 @@ import { User, UserService } from './../../../services/user.service';
   styleUrls: ['./person-detail.component.scss']
 })
 export class PersonDetailComponent implements OnInit {
+  // id of item to view
   @Input() personId = '';
+
+  // observable and local object for user data
   userDetails$: Observable<User>;
   user: any;
+  // loading flag & error messages
   loading: boolean = true;
   loadingError: boolean = false;
+  // storage for current item data from server
   protectedData: any;
+  // toggle flags for displaying ui for linking items
   toggleDisplay = {
     'panels': false,
     'presentations': false,
@@ -29,6 +35,9 @@ export class PersonDetailComponent implements OnInit {
     private _router: Router
   ) { }
 
+  /**
+   * Gets user details, fetches data from server.
+   */
   ngOnInit(): void {
     this.userDetails$ = this._user.user$;
     this.userDetails$.subscribe(result => {
@@ -37,10 +46,18 @@ export class PersonDetailComponent implements OnInit {
     this.update();
   }
 
+  /**
+   * On component changes, re-fetch data from server.
+   * 
+   * @param changes - Data on nature of component changes (unnecessary)
+   */
   ngOnChanges(changes: SimpleChanges) {
     this.update();
   }
 
+  /**
+   * Fetch item data from server, and set .loading flag to false.
+   */
   update() {
     this._api.getTypeRequest('people/' + this.personId).subscribe((res: any) => {
       this.protectedData = res;
@@ -51,6 +68,12 @@ export class PersonDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * Asks to confirm via alert. Then unlinks all linked items and finally
+   * deletes the item itself. Navigates back to list of items.
+   * 
+   * @returns true
+   */
   deleteItem() {
     if (confirm('Are you sure you delete this item? WARNING: CANNOT BE UNDONE!')) {
       this._api.deleteTypeRequest('people/' + this.personId).subscribe((res:any) => {
@@ -61,7 +84,13 @@ export class PersonDetailComponent implements OnInit {
     return true;
   }
 
-  // returns an array objects, with institution id as keys, at each value is a { institution: {}, departments: [] } object
+  /**
+   * Helper function called by parts of the HTML template. Returns an array objects,
+   * with institution id as keys, at each value is a
+   * { institution: {}, departments: [] } object.
+   * 
+   * @returns Array of objects with institution and department data
+   */
   getInstitutionsAndDepartments() {
     // object to store institution info by institution id as key... will be converted into an array for return
     let institutionsAndDepartments: any = {};

@@ -1,3 +1,4 @@
+// object definition for presentations
 export interface Presentation {
   id: number;
   title: string;

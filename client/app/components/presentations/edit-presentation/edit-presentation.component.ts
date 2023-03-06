@@ -8,11 +8,13 @@ import { User, UserService } from './../../../services/user.service';
 import { Institution } from './../../../interfaces/institution.interface';
 import { Person } from './../../../interfaces/person.interface';
 
+// info for linking people to panel
 interface PresenterToLink {
   panelId: number;
   personId: number;
 }
 
+// info for linking people to panel as a presenter
 interface PresenterAffiliationToLink {
   panelId: number;
   personId: number;
@@ -25,33 +27,45 @@ interface PresenterAffiliationToLink {
   styleUrls: ['./edit-presentation.component.scss']
 })
 export class EditPresentationComponent implements OnInit {
+  // event emitter
   @Output() successfullyAdded = new EventEmitter<string>();
+  // id of item to edit
   @Input() presentationId = '';
 
+  // loading flag & error messages
   loading: boolean = true;
   loadingError: boolean = false;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
+  // observable and local object for user data
   userDetails$: Observable<User>;
   user: any;
+  // storage for current item data from server
   protectedData: any;
+  // currently selected panel
   selectedPanel: any = null;
+  // toggle flags for displaying ui for linking items
   displayLinkPresenter: boolean = false;
   displayLinkPresenterAffiliation: boolean = false;
   displayLinkPlace: boolean = false;
   displayLinkTopic: boolean = false;
+  // for storing items to link, to be added upon submission
   presentersToLink: any[] =[];
   presenterAffiliationsToLink: any[] = [];
   placesToLink: any[] = [];
   topicsToLink: any[] = [];
+  // stores selected items for adding to linked items
   selectedTopic: any;
   selectedPlace: any;
   selectedPerson: any;
   selectedInstitution: any;
+  // stores ids of alraedy selected items
   selectedPlaceIds: number[] = [];
   selectedTopicIds: number[] = [];
+  // for storing list of possible items to select from
   acceptablePeople: Person[] = [];
   acceptableInstitutions: Institution[] = [];
+  // for the optional department info of an affiliated presenter
   affiliationDepartment: string = '';
 
   constructor(
@@ -60,6 +74,12 @@ export class EditPresentationComponent implements OnInit {
     private _router: Router
   ) { }
 
+  /**
+   * Gets user details. Gets current item information from the server,
+   * adds info on any linked items to their respective storage spots.
+   * Gets all current people and institutions from the server, for
+   * use in selecting people and institutions to link.
+   */
   ngOnInit(): void {
     // get user profile details
     this.userDetails$ = this._user.user$;
@@ -150,6 +170,13 @@ export class EditPresentationComponent implements OnInit {
     });
   }
 
+  /**
+   * Ensures request meets basic validation and outputs client-side
+   * error messages if it does not.
+   * 
+   * @param reqObject - The data JSON to be sent
+   * @returns true if object is valid, otherwise null
+   */
   private _validate(reqObject: any): boolean {
     var isValid = true;
     this.errorMsgs = [];
@@ -160,7 +187,13 @@ export class EditPresentationComponent implements OnInit {
     return isValid;
   }
 
-  // cycles through each property in the req object and if it is a string, trim and leading or trailing whitespaces
+  /**
+   * Cycles through each property in the req object and if it is a string,
+   * trim and leading or trailing whitespaces.
+   * 
+   * @param objectToTrim - The request object, with data to send
+   * @returns A request object, with any strings trimmed of leading/trailing whitespace
+   */
   trimReqObject(objectToTrim: any) {
     Object.keys(objectToTrim).forEach(property => {
       if (typeof objectToTrim[property] == 'string') {
@@ -170,6 +203,12 @@ export class EditPresentationComponent implements OnInit {
     return objectToTrim;
   }
 
+  /**
+   * Submits user data to server and stores local user data from server response.
+   * Also removes all previous linked item information, then re-adds new linked items.
+   * 
+   * @param form Form data
+   */
   onSubmit(form: any) {
     var reqObject = {
       id: this.protectedData.id,
@@ -257,10 +296,22 @@ export class EditPresentationComponent implements OnInit {
     }
   }
 
+  /**
+   * Executed upon event emission from the select panel widget.
+   * Gets the selected panels's data and stores it.
+   * 
+   * @param selectedPanel - Object with panel data
+   */
   panelSelected(selectedPanel: any) {
     this.selectedPanel = selectedPanel;
   }
 
+  /**
+   * Executed upon event emission from the select topic widget.
+   * Gets the selected topics's data and stores it.
+   * 
+   * @param selectedTopic - Object with panel data
+   */
   topicSelected(selectedTopic: any) {
     this.topicsToLink.push({
       id: selectedTopic.id,
@@ -272,6 +323,12 @@ export class EditPresentationComponent implements OnInit {
     this.displayLinkTopic = false;
   }
 
+  /**
+   * Executed upon event emission from the select place widget.
+   * Gets the selected place's data and stores it.
+   * 
+   * @param selectedPlace - Object with panel data
+   */
   placeSelected(selectedPlace: any) {
     this.placesToLink.push({
       id: selectedPlace.id,
@@ -283,6 +340,13 @@ export class EditPresentationComponent implements OnInit {
     this.displayLinkPlace = false;
   }
 
+  /**
+   * Gets presenter info from html fields, ensures it has not already
+   * been added, then adds it to the list of presenters that will be linked
+   * upon submission.
+   * 
+   * @param person - Object with person data
+   */
   linkPresenter(person: any) {
     let isDuplicate = false;
     for (let presenterToLink of this.presentersToLink) {
@@ -318,6 +382,15 @@ export class EditPresentationComponent implements OnInit {
     this.toggleDisplayLinkPresenter();
   }
 
+  /**
+   * Gets affiliation info of a presenter from html fields, ensures it has not already
+   * been added, then adds it to the list of presenters that will be linked
+   * upon submission.
+   * 
+   * @param personId - ID of person
+   * @param institutionId - ID of institution
+   * @param affiliationDepartment - String of optional department, string can be empty
+   */
   linkPresenterAffiliation(personId: number, institutionId: number, affiliationDepartment: string) {
     let isDuplicate = false;
     for (let presenterAffiliationToLink of this.presenterAffiliationsToLink) {
@@ -335,18 +408,34 @@ export class EditPresentationComponent implements OnInit {
     this.toggleDisplayPresenterAffiliation();
   }
 
+  /**
+   * Removes a presenter that was set to be linked. If item was added
+   * by a selection widget, this removes it.
+   * @param id - ID of the item
+   */
   removePresenter(id: number) {
     this.presentersToLink = this.presentersToLink.filter(obj => {
       return obj.personId != id;
     });
   }
 
+  /**
+   * Removes an affiliation of a presenter that was set to be linked.
+   * 
+   * @param personId - ID of the presenter
+   * @param institutionId - ID of the institution
+   */
   removePresenterAffiliation(personId: number, institutionId: number) {
     this.presenterAffiliationsToLink = this.presenterAffiliationsToLink.filter(obj => {
       return obj.personId != personId || obj.institutionId != institutionId;
     });
   }
 
+  /**
+   * Removes a topic that was set to be linked. If item was added
+   * by a selection widget, this removes it.
+   * @param id - ID of the item
+   */
   removeTopic(id: number) {
     this.topicsToLink = this.topicsToLink.filter(obj => {
       return obj.id != id;
@@ -356,6 +445,11 @@ export class EditPresentationComponent implements OnInit {
     });
   }
 
+  /**
+   * Removes a place that was set to be linked. If item was added
+   * by a selection widget, this removes it.
+   * @param id - ID of the item
+   */
   removePlace(id: number) {
     this.placesToLink = this.placesToLink.filter(obj => {
       return obj.id != id;
@@ -365,6 +459,9 @@ export class EditPresentationComponent implements OnInit {
     });
   }
 
+  /**
+   * Toggles display of UI to link existing presenters
+   */
   toggleDisplayLinkPresenter() {
     this.displayLinkPresenter = !this.displayLinkPresenter;
     if (this.displayLinkPresenter) {
@@ -372,6 +469,9 @@ export class EditPresentationComponent implements OnInit {
     }
   }
 
+  /**
+   * Toggles display of UI to link affiliations of existing presenters
+   */
   toggleDisplayPresenterAffiliation() {
     this.displayLinkPresenterAffiliation = !this.displayLinkPresenterAffiliation;
     if (this.displayLinkPresenterAffiliation) {
@@ -379,10 +479,16 @@ export class EditPresentationComponent implements OnInit {
     }
   }
 
+  /**
+   * Toggles display of UI to link existing topics
+   */
   toggleDisplayLinkTopic() {
     this.displayLinkTopic = !this.displayLinkTopic;
   }
 
+  /**
+   * Toggles display of UI to link existing plaecs
+   */
   toggleDisplayLinkPlace() {
     this.displayLinkPlace = !this.displayLinkPlace;
   }
@@ -396,6 +502,13 @@ export class EditPresentationComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Helper method to provide means of getting a presenters's name by their ID number.
+   * Used by portions of the template where the item's ID is exposed by not its name.
+   * 
+   * @param personId - ID of the presenter
+   * @returns String of the name of the presenter, null if not found
+   */
   getInstitutionTitleById(institutionId: number){
     for (let institution of this.acceptableInstitutions) {
       if (institutionId == institution.id) {
@@ -405,7 +518,14 @@ export class EditPresentationComponent implements OnInit {
     return null;
   }
 
-  // filters list of acceptable presenters to only those that have been linked
+  /**
+   * Returns a list of data that only includes those who have already been
+   * linked. Used by portions of the HTML template for associating institutions
+   * with presenters. This ensures that institutions can only be linked
+   * with those already added to the presenters list.
+   * 
+   * @returns Array of objects, each with a presenter's data
+   */
   filterPresentersByLinked() {
     let idsToFilter = [];
     let filteredPresenters: any[] = [];
@@ -420,6 +540,12 @@ export class EditPresentationComponent implements OnInit {
     return filteredPresenters;
   }
 
+  /**
+   * Helper function that provides an array of IDs of the current
+   * presenters set to be linked.
+   * 
+   * @returns Array of presenter's ids
+   */
   linkedPresenterIds() {
     let idList: number[] = [];
     for (let presenterToLink of this.presentersToLink) {
