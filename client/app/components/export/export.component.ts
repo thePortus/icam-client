@@ -29,8 +29,12 @@ interface jsonHrefs {
   styleUrls: ['./export.component.scss']
 })
 export class ExportComponent implements OnInit {
+  // flags to store whether component has loaded fully and is error free
   loading: boolean = true;
+  loadingError: boolean = false;
+  // property to store data retreived from server
   protectedData: any;
+  // stores generated links for jsons created with downloaded server data
   downloadJsonHrefs: jsonHrefs = {
     conferences: [],
     disciplines: [],
@@ -56,14 +60,23 @@ export class ExportComponent implements OnInit {
     private sanitizer: DomSanitizer
   ) { }
 
+  /**
+   * Makes server request for export data, stores it, creates
+   * download links for JSONs from data, and .loading to false.
+   */
   ngOnInit(): void {
     this._api.getTypeRequest('export/').subscribe((res: any) => {
       this.protectedData = res;
       this.generateDownloadJsonUri();
       this.loading = false;
+    }, (error: any) => {
+      this.loadingError = true;
     });
   }
 
+  /**
+   * Creates an object with links for each of the data tables
+   */
   generateDownloadJsonUri() {
     var theJSON = null;
     var uri = null;

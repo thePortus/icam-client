@@ -1,3 +1,4 @@
+<!-- general project specs -->
 <mat-card>
   <mat-card-title>Project Specifications</mat-card-title>
   <mat-card-subtitle><i>Technical Information</i></mat-card-subtitle>
@@ -11,6 +12,7 @@
   </mat-card-content>
 </mat-card>
 
+<!-- repositories -->
 <mat-card>
   <mat-card-title>GitHub Repository</mat-card-title>
   <mat-card-subtitle><i>Code & Data</i></mat-card-subtitle>
@@ -24,10 +26,12 @@
   </mat-card-content>
 </mat-card>
 
+<!-- project dependencies -->
 <mat-card>
   <mat-card-title>Project Modules</mat-card-title>
   <mat-card-subtitle><i>Dependencies from npm</i></mat-card-subtitle>
   <mat-card-content>
+    <!-- frontend -->
     <h3>Frontend:</h3>
     <mat-list dense>
       <mat-list-item *ngFor="let frontendDependency of specs.dependencies.frontend">
@@ -35,6 +39,7 @@
       </mat-list-item>
     </mat-list>
     <mat-divider></mat-divider>
+    <!-- backend -->
     <h3>Backend:</h3>
     <mat-list dense>
       <mat-list-item *ngFor="let backendDependency of specs.dependencies.backend">
@@ -42,6 +47,7 @@
       </mat-list-item>
     </mat-list>
     <mat-divider></mat-divider>
+    <!-- developer -->
     <h3>Developer:</h3>
     <mat-list dense>
       <mat-list-item *ngFor="let devoperDependency of specs.dependencies.developer">
@@ -51,6 +57,7 @@
   </mat-card-content>
 </mat-card>
 
+<!-- ERD diagram-->
 <mat-card>
   <mat-card-title>Database Schema</mat-card-title>
   <mat-card-subtitle><i>Entity Relationship Diagram</i></mat-card-subtitle>

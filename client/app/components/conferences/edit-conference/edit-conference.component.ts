@@ -6,10 +6,10 @@ import { NgForm, FormGroup, FormControl } from '@angular/forms';
 import { ApiService } from './../../../services/api.service';
 import { User, UserService } from './../../../services/user.service';
 import { Discipline } from './../../../interfaces/discipline.interface';
-import { Location } from './../../../interfaces/location.interface';
 import { Institution } from './../../../interfaces/institution.interface';
 import { Person } from './../../../interfaces/person.interface';
 
+// info for linking institutions to conference
 interface InstitutionToLink {
   id: number;
   title: string;
@@ -18,12 +18,14 @@ interface InstitutionToLink {
   society: boolean;
 }
 
+// info for linking people to conference as a participant
 interface ParticipantToLink {
   personId: number;
   name: string | null;
   role: string | null;
 }
 
+// info for linking affiliation info about a person linked as participant
 interface ParticipantAffiliationToLink {
   personId: number;
   institutionId: number;
@@ -36,34 +38,45 @@ interface ParticipantAffiliationToLink {
   styleUrls: ['./edit-conference.component.scss']
 })
 export class EditConferenceComponent implements OnInit {
+  // event emitter
   @Output() successfullyAdded = new EventEmitter<string>();
+  // id of item to edit
   @Input() conferenceId = '';
 
+  // loading flag & error messages
   loading: boolean = true;
   loadingError: boolean = false;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
+  // observable and local object for user data
   userDetails$: Observable<User>;
   user: any;
+  // storage for current item data from server
   protectedData: any;
+  // toggle flags for displaying ui for linking items
   displayLinkInstitution: boolean = false;
   displayAddInstitution: boolean = false;
   displayAddLocation: boolean = false;
   displayTagDiscipline: boolean = false;
   displayLinkParticipant: boolean = false;
   displayLinkParticipantAffiliation: boolean = false;
+  // currently selected items
   selectedLocation: any = null;
+  // stores affiliated institutions and discplines
   selectedInstitutionIds: number[] = [];
   selectedDisciplineIds: number[] = [];
   // seperate from conference affiliation, this stores participant affiliation
   selectedInstitution: any;
   selectedPerson: any;
+  // for storing items to link, to be added upon submission
   disciplinesToTag: Discipline[] = [];
   institutionsToLink: InstitutionToLink[] = [];
   participantsToLink: ParticipantToLink[] = [];
   participantAffiliationsToLink: ParticipantAffiliationToLink[] = [];
+  // for storing list of possible items to select from
   acceptableInstitutions: Institution[] = [];
   acceptablePeople: Person[] = [];
+  // for the optional department info of an affiliated participant
   participantAffiliationDepartment: any;
   // used for the date range picker
   dateRange: any;
@@ -76,6 +89,12 @@ export class EditConferenceComponent implements OnInit {
     private _router: Router
   ) { }
 
+  /**
+   * Gets user details. Gets current item information from the server,
+   * adds info on any linked items to their respective storage spots.
+   * Gets all current people and institutions from the server,
+   * for use in selecting people and institutions to link.
+   */
   ngOnInit(): void {
     // get user profile details
     this.userDetails$ = this._user.user$;
@@ -188,6 +207,13 @@ export class EditConferenceComponent implements OnInit {
     });
   }
 
+  /**
+   * Ensures request meets basic validation and outputs client-side
+   * error messages if it does not.
+   * 
+   * @param reqObject - The data JSON to be sent
+   * @returns true if object is valid, otherwise null
+   */
   private _validate(reqObject: any): boolean {
     var isValid = true;
     this.errorMsgs = [];
@@ -242,7 +268,13 @@ export class EditConferenceComponent implements OnInit {
     return isValid;
   }
 
-  // cycles through each property in the req object and if it is a string, trim and leading or trailing whitespaces
+  /**
+   * Cycles through each property in the req object and if it is a string,
+   * trim and leading or trailing whitespaces.
+   * 
+   * @param objectToTrim - The request object, with data to send
+   * @returns A request object, with any strings trimmed of leading/trailing whitespace
+   */
   trimReqObject(objectToTrim: any) {
     Object.keys(objectToTrim).forEach(property => {
       if (typeof objectToTrim[property] == 'string') {
@@ -252,6 +284,12 @@ export class EditConferenceComponent implements OnInit {
     return objectToTrim;
   }
 
+  /**
+   * Submits user data to server and stores local user data from server response.
+   * Also removes all previous linked item information, then re-adds new linked items.
+   * 
+   * @param form Form data
+   */
   onSubmit(form: any) {
     var dateSelected:boolean = false;
     var reqObject = {
@@ -358,6 +396,13 @@ export class EditConferenceComponent implements OnInit {
     }
   }
 
+  /**
+   * Gets participant info from html fields, ensures it has not already
+   * been added, then adds it to the list of participants that will be linked
+   * upon submission.
+   * 
+   * @param participant - Object with participant data
+   */
   linkParticipant(participant: any) {
     let isDuplicate = false;
     for (let participantToLink of this.participantsToLink) {
@@ -375,6 +420,16 @@ export class EditConferenceComponent implements OnInit {
     this.toggleDisplayLinkParticipant();
   }
 
+  /**
+   * Gets affiliation info of a participant from html fields, ensures it has not already
+   * been added, then adds it to a list of affiliation of participants that will be
+   * linked upon submission. Similar to above function, but receives data as series
+   * of parameters rather than in a single object.
+   * 
+   * @param personId - ID of the participant
+   * @param institutionId - ID of the institutution to affiliate
+   * @param affiliationDepartment - String of the department of the participant (can be blank string)
+   */
   linkParticipantAffiliation(personId: number, institutionId: number, affiliationDepartment: string) {
     let isDuplicate = false;
     for (let participantAffiliationToLink of this.participantAffiliationsToLink) {
@@ -392,6 +447,12 @@ export class EditConferenceComponent implements OnInit {
     this.toggleDisplayParticipantAffiliation();
   }
 
+  /**
+   * Removes an institution that was set to be linked. If item was added
+   * by a selection widget, this removes it.
+   * 
+   * @param id - ID of the item
+   */
   removeInstitution(id: number) {
     this.institutionsToLink = this.institutionsToLink.filter(obj => {
       return obj.id != id;
@@ -401,6 +462,12 @@ export class EditConferenceComponent implements OnInit {
     });
   }
 
+  /**
+   * Removes an disicpline that was set to be linked. If item was added
+   * by a selection widget, this removes it.
+   * 
+   * @param id - ID of the item
+   */
   removeDiscipline(discipline: Discipline) {
     this.disciplinesToTag = this.protectedData.disciplines.filter(function(obj:any) {
       return obj.id != discipline.id;
@@ -410,34 +477,61 @@ export class EditConferenceComponent implements OnInit {
     });
   }
 
+  /**
+   * Removes an participant that was set to be linked. If item was added by the
+   * above linking method, this removes it.
+   * 
+   * @param id - ID of the item
+   */
   removeParticipant(id: number) {
     this.participantsToLink = this.participantsToLink.filter(obj => {
       return obj.personId != id;
     });
   }
 
+  /**
+   * Removes an participant affiliation that was set to be linked. If item was added
+   * by the above linking method, this removes it.
+   * 
+   * @param id - ID of the item
+   */
   removeParticipantAffiliation(personId: number, institutionId: number) {
     this.participantAffiliationsToLink = this.participantAffiliationsToLink.filter(obj => {
       return obj.personId != personId || obj.institutionId != institutionId;
     });
   }
 
+  /**
+   * Toggles display of UI to link existing institutions
+   */
   toggleDisplayLinkInstitution() {
     this.displayLinkInstitution = !this.displayLinkInstitution;
   }
 
+  /**
+   * Toggles display of UI to add a new institution
+   */
   toggleDisplayAddInstitution() {
     this.displayAddInstitution = !this.displayAddInstitution;
   }
 
+  /**
+   * Toggles display of UI to link existing disciplines
+   */
   toggleDisplayTagDiscipline() {
     this.displayTagDiscipline = !this.displayTagDiscipline;
   }
 
+  /**
+   * Toggles display of UI to add a new location
+   */
   toggleDisplayAddLocation() {
     this.displayAddLocation = !this.displayAddLocation;
   }
 
+  /**
+   * Toggles display of UI to link existing participants
+   */
   toggleDisplayLinkParticipant() {
     this.displayLinkParticipant = !this.displayLinkParticipant;
     if (this.displayLinkParticipant) {
@@ -445,6 +539,9 @@ export class EditConferenceComponent implements OnInit {
     }
   }
 
+  /**
+   * Toggles display of UI to link existing participant affiliations
+   */
   toggleDisplayParticipantAffiliation() {
     this.displayLinkParticipantAffiliation = !this.displayLinkParticipantAffiliation;
     if (this.displayLinkParticipantAffiliation) {
@@ -452,6 +549,13 @@ export class EditConferenceComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper method to provide means of getting a participant's name by their ID number.
+   * Used by portions of the template where the item's ID is exposed by not its name.
+   * 
+   * @param participantId - ID of the participant
+   * @returns String of the name of the participant, null if not found
+   */
   getParticipantNameById(participantId: number){
     for (let participant of this.acceptablePeople) {
       if (participantId == participant.id) {
@@ -461,6 +565,13 @@ export class EditConferenceComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Helper method to provide means of getting an institution's title by its ID number.
+   * Used by portions of the template where the item's ID is exposed by not its name.
+   * 
+   * @param institutionId - ID of the institution
+   * @returns String of the name of the institution, null if not found
+   */
   getInstitutionTitleById(institutionId: number){
     for (let institution of this.acceptableInstitutions) {
       if (institutionId == institution.id) {
@@ -470,6 +581,13 @@ export class EditConferenceComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Executed upon event emission from the select institution widget.
+   * Gets the selected institution's data and adds it to the list of
+   * institutions to be linked upon creation.
+   * 
+   * @param selectedInstitution - Object with institution and role data
+   */
   institutionSelected(selectedInstitution: any) {
     this.institutionsToLink.push({
       id: selectedInstitution.id,
@@ -484,6 +602,13 @@ export class EditConferenceComponent implements OnInit {
     this.displayLinkInstitution = false;
   }
 
+  /**
+   * Executed upon event emission from the select discipline widget.
+   * Gets the selected disciplines's data and adds it to the list of
+   * institutions to be linked upon creation.
+   * 
+   * @param selectedDiscipline - Object with discipline
+   */
   disciplineSelected(selectedDiscipline: any) {
     this.disciplinesToTag.push({
       id: selectedDiscipline.id,
@@ -495,12 +620,25 @@ export class EditConferenceComponent implements OnInit {
     this.displayTagDiscipline = false;
   }
 
+  /**
+   * Executed upon event emission from the select location widget.
+   * Gets the select location's data stores it.
+   * 
+   * @param selectedLocation - Object with data on the selected location
+   */
   locationSelected(selectedLocation: any) {
     this.selectedLocation = selectedLocation;
     this.displayAddLocation = false;
   }
 
-  // filters list of acceptable people to only those that have been linked
+  /**
+   * Returns a list of data that only includes those who have already been
+   * linked. Used by portions of the HTML template for associating institutions
+   * with participants. This ensures that institutions can only be linked
+   * with those already added to the participant list.
+   * 
+   * @returns Array of objects, each with a participant's data
+   */
   filterParticipantsByLinked() {
     let idsToFilter = [];
     let filteredParticipants: any[] = [];

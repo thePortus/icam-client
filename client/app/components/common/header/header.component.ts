@@ -13,7 +13,10 @@ import { User, UserService } from './../../../services/user.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  // general app settings, for title and credit info
   settings = Settings;
+  // links for the nav menu, label is what displays, path is where it points
+  // and booleans on if path requires user to be login, editor, or owner
   menuLinks = [{
     'label': 'Home',
     'path': '',
@@ -81,6 +84,7 @@ export class HeaderComponent implements OnInit {
     'requiresEditor': true,
     'requiresOwner': false
   }];
+  // observable and local object for user data
   userDetails$: Observable<User>;
   user: any;
 
@@ -90,7 +94,12 @@ export class HeaderComponent implements OnInit {
     private _user: UserService
   ) { }
 
+  /**
+   * Checks if the user is logged in, and gets user details as an
+   * observable if so.
+   */
   ngOnInit(): void {
+    // check local storage data whether user is already logged in
     this.isUserLogin();
     this.userDetails$ = this._user.user$;
     this.userDetails$.subscribe(result => {
@@ -98,6 +107,11 @@ export class HeaderComponent implements OnInit {
     });
   }
 
+  /**
+   * Uses auth service to see if user already has stored login data
+   * in local storage. If so, then uses the user service to
+   * store that data for the application.
+   */
   isUserLogin() {
     if(this._auth.getUserDetails() != null) {
       const userDetails = JSON.parse(this._auth.getUserDetails()!);
@@ -110,10 +124,18 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  /**
+   * Navigates router to specified path
+   * 
+   * @param path - URL of desired route
+   */
   navigate(path: string) {
     this._router.navigate([path]);
   }
 
+  /**
+   * Clears user data both from user service and from local storage
+   */
   logout() {
     this._auth.clearStorage();
     this._user.logout();

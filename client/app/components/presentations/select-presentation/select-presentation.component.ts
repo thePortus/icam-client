@@ -10,22 +10,31 @@ import { Presentation } from './../../../interfaces/presentation.interface';
   styleUrls: ['./select-presentation.component.scss']
 })
 export class SelectPresentationComponent implements OnInit {
+  // event emitter
   @Output() successfullyAdded = new EventEmitter<string>();
+  // optional, if provided only allow selection from items with matching ids
   @Input() idsToRestrictTo: number[] = [];
+  // optional, if provided filter items with matching ids from selection
   @Input() restrictedIds: number[] = [];
-  // for linking people
+  // toggle to display/hide name data
   @Input() includeName: boolean = false;
 
+  // loading flag & error messages
   loading: boolean = true;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
+  // selected item
   selectedPresentation: any;
+  // acceptable items
   acceptablePresentations: any[] = [];
+  // add new item flag
   displayAddPresentation: boolean = false;
+  // filters
   filterByTitle: string = '';
   filterByConferenceTitle: string = '';
   filterByPanelTitle: string = '';
   filterByPresenterName: string = '';
+  // optional person name info
   personName: string = '';
 
   constructor(
@@ -36,6 +45,11 @@ export class SelectPresentationComponent implements OnInit {
     this.refreshData();
   }
 
+  /**
+   * Refreshes data from server and stores in acceptable items. Uses
+   * pagination and filter information to only retrieve pertinent items.
+   * Also calculates total number of items and sets loading to false.
+   */
   refreshData() {
     let requestString: string = 'presentations/?';
     if (this.filterByTitle) {
@@ -70,6 +84,9 @@ export class SelectPresentationComponent implements OnInit {
     });
   }
 
+  /**
+   * On selection, emits the data of the selected item.
+   */
   onSubmit() {
     let presentationToAdd: any;
     for (let presentation of this.acceptablePresentations) {
@@ -83,14 +100,25 @@ export class SelectPresentationComponent implements OnInit {
     this.successfullyAdded.emit(presentationToAdd);
   }
 
+  /**
+   * Toggles whether to display/hide the add item widget.
+   */
   toggleDisplayAddPresentation() {
     this.displayAddPresentation = !this.displayAddPresentation;
   }
 
+  /**
+   * Executes when add item widget emits an event handler. Refreshes data,
+   * sets the selected item to the added item, toggles the display add item
+   * to false, and itself emits the selection to any parent.
+   * 
+   * @param presentation - the data of the added item, emitted by a child widget
+   */
   presentationAdded(presentation: any) {
     this.refreshData();
     this.selectedPresentation = presentation.id;
     this.displayAddPresentation = false;
+    // emit selection
     this.successfullyAdded.emit(presentation);
   }
 

@@ -9,16 +9,23 @@ import { Place } from './../../../interfaces/place.interface';
   styleUrls: ['./select-place.component.scss']
 })
 export class SelectPlaceComponent implements OnInit {
+  // event emitter
   @Output() successfullyAdded = new EventEmitter<string>();
+  // optional, if provided only allow selection from items with matching ids
   @Input() idsToRestrictTo: number[] = [];
+  // optional, if provided filter items with matching ids from selection
   @Input() restrictedIds: number[] = [];
 
+  // loading flag & error messages
   loading: boolean = true;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
+  // selected item
   selectedPlace: any;
   acceptablePlaces: Place[] = [];
+  // add new item flag
   displayAddPlace: boolean = false;
+  // filter
   filterByTitle: string = '';
 
   constructor(
@@ -29,6 +36,11 @@ export class SelectPlaceComponent implements OnInit {
     this.refreshData();
   }
 
+  /**
+   * Refreshes data from server and stores in acceptable items. Uses
+   * pagination and filter information to only retrieve pertinent items.
+   * Also calculates total number of items and sets loading to false.
+   */
   refreshData() {
     let requestString: string = 'geographies/?';
     if (this.filterByTitle) {
@@ -45,6 +57,9 @@ export class SelectPlaceComponent implements OnInit {
     });
   }
 
+  /**
+   * On selection, emits the data of the selected item.
+   */
   onSubmit() {
     let placeToAdd: any;
     for (let place of this.acceptablePlaces) {
@@ -55,14 +70,25 @@ export class SelectPlaceComponent implements OnInit {
     this.successfullyAdded.emit(placeToAdd);
   }
 
+  /**
+   * Toggles whether to display/hide the add item widget.
+   */
   toggleDisplayAddPlace() {
     this.displayAddPlace = !this.displayAddPlace;
   }
 
+  /**
+   * Executes when add item widget emits an event handler. Refreshes data,
+   * sets the selected item to the added item, toggles the display add item
+   * to false, and itself emits the selection to any parent.
+   * 
+   * @param place - the data of the added item, emitted by a child widget
+   */
   placeAdded(place: any) {
     this.refreshData();
     this.selectedPlace = place.id;
     this.displayAddPlace = false;
+    // emit selection
     this.successfullyAdded.emit(place);
   }
 

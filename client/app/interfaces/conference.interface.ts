@@ -1,3 +1,4 @@
+// object definition for conferences
 export interface Conference {
   id: number;
   title: string;

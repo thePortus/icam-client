@@ -6,6 +6,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./not-found.component.scss']
 })
 export class NotFoundComponent implements OnInit {
+  // 404 image, from assets
   imgs = {
     404: '/assets/images/404.jpg'
   };

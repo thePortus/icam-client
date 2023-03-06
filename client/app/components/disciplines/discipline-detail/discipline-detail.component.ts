@@ -11,11 +11,16 @@ import { User, UserService } from './../../../services/user.service';
   styleUrls: ['./discipline-detail.component.scss']
 })
 export class DisciplineDetailComponent implements OnInit {
+  // id of item to view
   @Input() disciplineId = '';
+
+  // observable and local object for user data
   userDetails$: Observable<User>;
   user: any;
+  // loading flag & error messages
   loading: boolean = true;
   loadingError: boolean = false;
+  // storage for current item data from server
   protectedData: any;
 
   constructor(
@@ -24,6 +29,9 @@ export class DisciplineDetailComponent implements OnInit {
     private _router: Router
   ) { }
 
+  /**
+   * Gets user details, fetches data from server.
+   */
   ngOnInit(): void {
     this.userDetails$ = this._user.user$;
     this.userDetails$.subscribe(result => {
@@ -32,10 +40,18 @@ export class DisciplineDetailComponent implements OnInit {
     this.update();
   }
 
+  /**
+   * On component changes, re-fetch data from server.
+   * 
+   * @param changes - Data on nature of component changes (unnecessary)
+   */
   ngOnChanges(changes: SimpleChanges) {
     this.update();
   }
 
+  /**
+   * Fetch item data from server and set .loading flag to false.
+   */
   update() {
     this._api.getTypeRequest('disciplines/' + this.disciplineId).subscribe((res: any) => {
       this.protectedData = res;
@@ -45,6 +61,12 @@ export class DisciplineDetailComponent implements OnInit {
     });
   }
 
+  /**
+   * Asks to confirm via alert. Then unlinks all linked items and finally
+   * deletes the item itself. Navigates back to list of items.
+   * 
+   * @returns true
+   */
   deleteItem() {
     if (confirm('Are you sure you delete this item? WARNING: CANNOT BE UNDONE!')) {
       for (let conference of this.protectedData.conferences) {

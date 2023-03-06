@@ -1,4 +1,5 @@
 <div class="single-col">
+  <!-- loading and error indicators -->
   <div *ngIf="loading" class="flex justify-center items-center h-full">
     <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
       <mat-spinner></mat-spinner>
@@ -14,6 +15,7 @@
         <div class="flex flex-col justify-center items-center">
           <mat-card-title>Profile</mat-card-title>
           <mat-card-content>
+            <!-- basic user infomation -->
             <div class="flex flex-col justify-center items-center">
               <table>
                 <tbody>
@@ -24,11 +26,13 @@
               </table>
             </div>
           </mat-card-content>
+          <!-- logout button -->
           <mat-card-actions>
             <div class="flex flex-col justify-center items-center">
               <button mat-raised-button type="submit" color="primary" (click)="logout()">Logout</button>
             </div>
           </mat-card-actions>
+          <!-- privacy policy -->
           <div class="policy-links">
             <div class="flex flex-col justify-center items-center">
               <span><small><a routerLink='/privacy-policy'>View Privacy Policy</a></small></span>
@@ -36,6 +40,7 @@
           </div>
         </div>
       </mat-card>
+      <!-- if user is site owner, show list of other users-->
       <div *ngIf="this.protectedData.role == 'Owner'">
           <app-users></app-users>
       </div>

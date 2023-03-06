@@ -9,6 +9,7 @@ import { Panel } from './../../../interfaces/panel.interface';
 import { Presentation } from './../../../interfaces/presentation.interface';
 import { Conference } from './../../../interfaces/conference.interface';
 
+// info for linking panels to person
 interface ChairToLink {
   panelId: number;
   personId: number;
@@ -16,12 +17,14 @@ interface ChairToLink {
   title: string | null;
 }
 
+// info for linking presentations to person
 interface PresenterToLink {
   presentationId: number;
   personId: number;
   name: string | null;
 }
 
+// info for linking conferences to person
 interface ConferenceToLink {
   conferenceId: number,
   personId: number,
@@ -29,6 +32,7 @@ interface ConferenceToLink {
   role: string | null;
 }
 
+// info for linking affiliation info about a person linked as chair
 interface ChairAffiliationToLink {
   panelId: number;
   personId: number;
@@ -36,6 +40,7 @@ interface ChairAffiliationToLink {
   department: string;
 }
 
+// info for linking affiliation info about a person linked as presenter
 interface PresenterAffiliationToLink {
   presentationId: number;
   personId: number;
@@ -43,6 +48,7 @@ interface PresenterAffiliationToLink {
   department: string | null;
 }
 
+// info for linking affiliation info about a person linked as participant
 interface ParticipantAffiliationToLink {
   conferenceId: number;
   personId: number;
@@ -56,36 +62,46 @@ interface ParticipantAffiliationToLink {
   styleUrls: ['./edit-person.component.scss']
 })
 export class EditPersonComponent implements OnInit {
+  // event emitter
   @Output() successfullyAdded = new EventEmitter<string>();
+  // id of item to edit
   @Input() personId = '';
 
+  // loading flag & error messages
   loading: boolean = true;
   loadingError: boolean = false;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
+  // observable and local object for user data
   userDetails$: Observable<User>;
   user: any;
+  // storage for current item data from server
   protectedData: any;
+  // toggle flags for displaying ui for linking items
   displayLinkConference: boolean = false;
   displayLinkPanel: boolean = false;
   displayLinkPresentation: boolean = false;
   displayLinkChairAffiliation: boolean = false;
   displayLinkPresenterAffiliation: boolean = false;
   displayLinkParticipantAffiliation: boolean = false;
+  // for storing items to link, to be added upon submission
   conferencesToLink: ConferenceToLink[] = [];
   panelsToLink: ChairToLink[] = [];
   presentationsToLink: PresenterToLink[] = [];
   chairAffiliationsToLink: ChairAffiliationToLink[] = [];
   presenterAffiliationsToLink: PresenterAffiliationToLink[] = [];
   participantAffiliationsToLink: ParticipantAffiliationToLink[] = [];
+  // currently selected items
   selectedConference: any;
   selectedPanel: any;
   selectedPresentation: any;
   selectedInstitution: any;
+  // for storing list of possible items to select from
   acceptableConferences: Conference[] = [];
   acceptablePanels: Panel[] = [];
   acceptablePresentations: Presentation[] = [];
   acceptableInstitutions: Institution[] = [];
+  // for the optional department info of an affiliated person
   chairAffiliationDepartment: string = '';
   presenterAffiliationDepartment: string = '';
   participantAffiliationDepartment: string = '';
@@ -96,6 +112,12 @@ export class EditPersonComponent implements OnInit {
     private _router: Router
   ) { }
 
+  /**
+   * Gets user details. Gets current item data from server.
+   * Copies info on linked items into respective storage lists.
+   * Gets all current panels, presentations, and conferences
+   * for using in selecting items to link.
+   */
   ngOnInit(): void {
     // get user profile details
     this.userDetails$ = this._user.user$;
@@ -106,6 +128,7 @@ export class EditPersonComponent implements OnInit {
       this.protectedData = res;
       // copy chaired panels, presentations, attended conferences, and institutional affiliations, both into copies to remove at submission and for working list of new links
       this.protectedData.oldChairedPanels = res.chairedPanels;
+      // copy chaired panels
       for (let chairedPanel of res.chairedPanels) {
         this.panelsToLink.push({
           panelId: chairedPanel.id,
@@ -114,6 +137,7 @@ export class EditPersonComponent implements OnInit {
           title: chairedPanel.chairPanelLink.title
         });
       }
+      // copy presentations
       this.protectedData.oldPresentations = res.presentations;
       for (let presentation of res.presentations) {
         this.presentationsToLink.push({
@@ -122,6 +146,7 @@ export class EditPersonComponent implements OnInit {
           name: presentation.presenterLink.name
         });
       }
+      // copy affiliations as participant
       this.protectedData.oldParticipantConferences = res.participantConferences;
       for (let participantConference of res.participantConferences) {
         this.conferencesToLink.push({
@@ -131,6 +156,7 @@ export class EditPersonComponent implements OnInit {
           role: participantConference.conferenceLink.role
         });
       }
+      // copy affiliations as chair
       this.protectedData.oldChairAffiliations = res.affiliationsAsChair;
       for (let chairAffiliation of res.affiliationsAsChair) {
         this.chairAffiliationsToLink.push({
@@ -140,6 +166,7 @@ export class EditPersonComponent implements OnInit {
           department: chairAffiliation.chairAffiliationLink.department
         });
       }
+      // copy affiliations as presenter
       this.protectedData.oldPresenterAffiliations = res.affiliationsAsPresenter;
       for (let presenterAffiliation of res.affiliationsAsPresenter) {
         this.presenterAffiliationsToLink.push({
@@ -149,6 +176,7 @@ export class EditPersonComponent implements OnInit {
           department: presenterAffiliation.presenterAffiliationLink.department
         });
       }
+      // copy affiliations as participant
       this.protectedData.oldParticipantAffiliations = res.affiliationsAsParticipant;
       for (let participantAffiliation of res.affiliationsAsParticipant) {
         this.participantAffiliationsToLink.push({
@@ -158,6 +186,7 @@ export class EditPersonComponent implements OnInit {
           department: participantAffiliation.participantAffiliationLink.department
         });
       }
+      // get all institutions
       this._api.getTypeRequest('institutions/').subscribe((institutionRes: any) => {
         this.acceptableInstitutions = institutionRes.sort(function(a:any, b:any) {
           // sort list of institutions alphabetically by title
@@ -172,6 +201,7 @@ export class EditPersonComponent implements OnInit {
           return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
         });
         this.selectedInstitution = this.acceptableInstitutions[0] || null;
+        // get all panels
         this._api.getTypeRequest('panels/').subscribe((panelsRes: any) => {
           this.acceptablePanels = panelsRes.sort(function(a:any, b:any) {
             // sort list of panels alphabetically by title
@@ -185,6 +215,7 @@ export class EditPersonComponent implements OnInit {
             }
             return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
           });
+          // get all presentations
           this._api.getTypeRequest('presentations/').subscribe((presentationsRes: any) => {
             this.acceptablePresentations = presentationsRes.sort(function(a:any, b:any) {
               // sort list of presentations alphabetically by title
@@ -198,6 +229,7 @@ export class EditPersonComponent implements OnInit {
               }
               return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
             });
+            // get all conferences
             this._api.getTypeRequest('conferences/').subscribe((conferenceRes: any) => {
               this.acceptableConferences = conferenceRes.sort(function(a:any, b:any) {
                 // sort list of institutions alphabetically by title
@@ -222,6 +254,13 @@ export class EditPersonComponent implements OnInit {
     });
   }
 
+  /**
+   * Ensures request meets basic validation and outputs client-side
+   * error messages if it does not.
+   * 
+   * @param reqObject - The data JSON to be sent
+   * @returns true if object is valid, otherwise null
+   */
   private _validate(reqObject: any): boolean {
     var isValid = true;
     this.errorMsgs = [];
@@ -232,7 +271,13 @@ export class EditPersonComponent implements OnInit {
     return isValid;
   }
 
-  // cycles through each property in the req object and if it is a string, trim and leading or trailing whitespaces
+  /**
+   * Cycles through each property in the req object and if it is a string,
+   * trim and leading or trailing whitespaces.
+   * 
+   * @param objectToTrim - The request object, with data to send
+   * @returns A request object, with any strings trimmed of leading/trailing whitespace
+   */
   trimReqObject(objectToTrim: any) {
     Object.keys(objectToTrim).forEach(property => {
       if (typeof objectToTrim[property] == 'string') {
@@ -242,6 +287,12 @@ export class EditPersonComponent implements OnInit {
     return objectToTrim;
   }
 
+  /**
+   * Submits user data to server and stores local user data from server response.
+   * Also removes all previous linked item information, then re-adds new linked items.
+   * 
+   * @param form Form data
+   */
   onSubmit(form: any) {
     var reqObject = {
       id: this.protectedData.id,
@@ -361,6 +412,13 @@ export class EditPersonComponent implements OnInit {
 
   }
 
+  /**
+   * Gets conference info from html fields, ensures it has not already
+   * been added, then adds it to the list of conferences that will be linked
+   * upon submission.
+   * 
+   * @param conference - Object with conference data
+   */
   linkConference(conference: any) {
     let isDuplicate = false;
     for (let conferenceToLink of this.conferencesToLink) {
@@ -379,6 +437,13 @@ export class EditPersonComponent implements OnInit {
     this.toggleDisplayLinkConference();
   }
 
+  /**
+   * Gets panel info from html fields, ensures it has not already
+   * been added, then adds it to the list of panel that will be linked
+   * upon submission.
+   * 
+   * @param panel - Object with panel data
+   */
   linkPanel(panel: any) {
     let isDuplicate = false;
     for (let panelToLink of this.panelsToLink) {
@@ -397,6 +462,13 @@ export class EditPersonComponent implements OnInit {
     this.toggleDisplayLinkPanel();
   }
 
+  /**
+   * Gets presentation info from html fields, ensures it has not already
+   * been added, then adds it to the list of presentations that will be linked
+   * upon submission.
+   * 
+   * @param presentation - Object with presentation data
+   */
   linkPresentation(presentation: any) {
     let isDuplicate = false;
     for (let presentationToLink of this.presentationsToLink) {
@@ -414,6 +486,15 @@ export class EditPersonComponent implements OnInit {
     this.toggleDisplayLinkPresentation();
   }
 
+  /**
+   * Gets chair affiliation info from html fields, ensures it has not already
+   * been added, then adds it to the list of affiliations that will be linked
+   * upon submission.
+   * 
+   * @param panelId - ID of panel
+   * @param institutionId - ID of department
+   * @param affiliationDepartment - String of department, can be an empty string
+   */
   linkChairAffiliation(panelId: number, institutionId: number, affiliationDepartment: string) {
     let isDuplicate = false;
     for (let chairAffiliationToLink of this.chairAffiliationsToLink) {
@@ -432,6 +513,15 @@ export class EditPersonComponent implements OnInit {
     this.toggleDisplayChairAffiliation();
   }
 
+  /**
+   * Gets presenter affiliation info from html fields, ensures it has not already
+   * been added, then adds it to the list of affiliations that will be linked
+   * upon submission.
+   * 
+   * @param presentationId - ID of the presentation
+   * @param institutionId - ID of the institution
+   * @param affiliationDepartment - String of department, can be an empty string
+   */
   linkPresenterAffiliation(presentationId: number, institutionId: number, affiliationDepartment: string) {
     let isDuplicate = false;
     for (let presenterAffiliationToLink of this.presenterAffiliationsToLink) {
@@ -450,6 +540,15 @@ export class EditPersonComponent implements OnInit {
     this.toggleDisplayPresenterAffiliation();
   }
 
+  /**
+   * Gets participant affiliation info from html fields, ensures it has not already
+   * been added, then adds it to the list of affiliations that will be linked
+   * upon submission.
+   * 
+   * @param conferenceId - ID of conference
+   * @param institutionId - ID of institution
+   * @param affiliationDepartment - String of department, can be an empty string
+   */
   linkParticipantAffiliation(conferenceId: number, institutionId: number, affiliationDepartment: string) {
     let isDuplicate = false;
     for (let participantAffiliationToLink of this.participantAffiliationsToLink) {
@@ -468,12 +567,22 @@ export class EditPersonComponent implements OnInit {
     this.toggleDisplayParticipantAffiliation();
   }
 
+  /**
+   * Removes a conference that was set to be linked.
+   * 
+   * @param id - ID of the item
+   */
   removeConference(id: number) {
     this.conferencesToLink = this.conferencesToLink.filter(obj => {
       return obj.conferenceId != id;
     });
   }
 
+  /**
+   * Removes a panel that was set to be linked.
+   * 
+   * @param id - ID of the item
+   */
   removePanel(id: number) {
     this.panelsToLink = this.panelsToLink.filter(obj => {
       return obj.panelId != id;
@@ -484,6 +593,11 @@ export class EditPersonComponent implements OnInit {
     });
   }
 
+  /**
+   * Removes a presentation that was set to be linked.
+   * 
+   * @param id - ID of the item
+   */
   removePresentation(id: number) {
     this.presentationsToLink = this.presentationsToLink.filter(obj => {
       return obj.presentationId != id;
@@ -494,24 +608,45 @@ export class EditPersonComponent implements OnInit {
     });
   }
 
+  /**
+   * Removes the affiliation of a chair that was set to be linked.
+   * 
+   * @param panelId - ID of the panel
+   * @param institutionId - ID of the institution
+   */
   removeChairAffiliation(panelId: number, institutionId: number) {
     this.chairAffiliationsToLink = this.chairAffiliationsToLink.filter(obj => {
       return obj.panelId != panelId || obj.institutionId != institutionId;
     });
   }
 
+  /**
+   * Removes the affiliation of a presenter that was set to be linked.
+   * 
+   * @param presentationId - ID of the presentation
+   * @param institutionId - ID of the institution
+   */
   removePresentationAffiliation(presentationId: number, institutionId: number) {
     this.presenterAffiliationsToLink = this.presenterAffiliationsToLink.filter(obj => {
       return obj.presentationId != presentationId || obj.institutionId != institutionId;
     });
   }
 
+  /**
+   * Removes the affiliation of a participant that was set to be linked.
+   * 
+   * @param conferenceId - ID of the conference
+   * @param institutionId - ID of the institution
+   */
   removeParticipantAffiliation(conferenceId: number, institutionId: number) {
     this.participantAffiliationsToLink = this.participantAffiliationsToLink.filter(obj => {
       return obj.conferenceId != conferenceId || obj.institutionId != institutionId;
     });
   }
 
+  /**
+   * Toggles display of UI to link existing conferences
+   */
   toggleDisplayLinkConference() {
     this.displayLinkConference = !this.displayLinkConference;
     if (this.displayLinkConference) {
@@ -522,6 +657,9 @@ export class EditPersonComponent implements OnInit {
     }
   }
 
+  /**
+   * Toggles display of UI to link existing panels
+   */
   toggleDisplayLinkPanel() {
     this.displayLinkPanel = !this.displayLinkPanel;
     if (this.displayLinkPanel) {
@@ -533,6 +671,9 @@ export class EditPersonComponent implements OnInit {
     }
   }
 
+  /**
+   * Toggles display of UI to link existing presentations
+   */
   toggleDisplayLinkPresentation() {
     this.displayLinkPresentation = !this.displayLinkPresentation;
     if (this.displayLinkPresentation) {
@@ -544,6 +685,9 @@ export class EditPersonComponent implements OnInit {
     }
   }
 
+  /**
+   * Toggles display of UI to link chair affiliations
+   */
   toggleDisplayChairAffiliation() {
     this.displayLinkChairAffiliation = !this.displayLinkChairAffiliation;
     if (this.displayLinkChairAffiliation) {
@@ -555,6 +699,9 @@ export class EditPersonComponent implements OnInit {
     }
   }
 
+  /**
+   * Toggles display of UI to link presenter affiliations
+   */
   toggleDisplayPresenterAffiliation() {
     this.displayLinkPresenterAffiliation = !this.displayLinkPresenterAffiliation;
     if (this.displayLinkPresenterAffiliation) {
@@ -566,6 +713,9 @@ export class EditPersonComponent implements OnInit {
     }
   }
 
+  /**
+   * Toggles display of UI to link participant affiliations
+   */
   toggleDisplayParticipantAffiliation() {
     this.displayLinkParticipantAffiliation = !this.displayLinkParticipantAffiliation;
     if (this.displayLinkParticipantAffiliation) {
@@ -577,6 +727,13 @@ export class EditPersonComponent implements OnInit {
     }
   }
 
+  /**
+   * Helper method to provide means of getting a conferences's title by its ID number.
+   * Used by portions of the template where the item's ID is exposed by not its name.
+   * 
+   * @param conferenceId - ID of the conference
+   * @returns String of the name of the conference, null if not found
+   */
   getConferenceTitleById(conferenceId: number){
     for (let conference of this.acceptableConferences) {
       if (conferenceId == conference.id) {
@@ -586,6 +743,13 @@ export class EditPersonComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Helper method to provide means of getting a panel's title by its ID number.
+   * Used by portions of the template where the item's ID is exposed by not its name.
+   * 
+   * @param panelId - ID of the panel
+   * @returns String of the name of the panel, null if not found
+   */
   getPanelTitleById(panelId: number){
     for (let panel of this.acceptablePanels) {
       if (panelId == panel.id) {
@@ -595,6 +759,13 @@ export class EditPersonComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Helper method to provide means of getting a presentation's title by its ID number.
+   * Used by portions of the template where the item's ID is exposed by not its name.
+   * 
+   * @param presentationId - ID of the presentation
+   * @returns String of the name of the presentation, null if not found
+   */
   getPresentationTitleById(presentationId: number){
     for (let presentation of this.acceptablePresentations) {
       if (presentationId == presentation.id) {
@@ -604,6 +775,13 @@ export class EditPersonComponent implements OnInit {
     return null;
   }
 
+  /**
+   * Helper method to provide means of getting a institution's title by its ID number.
+   * Used by portions of the template where the item's ID is exposed by not its name.
+   * 
+   * @param institutionId - ID of the institution
+   * @returns String of the name of the institution, null if not found
+   */
   getInstitutionTitleById(institutionId: number){
     for (let institution of this.acceptableInstitutions) {
       if (institutionId == institution.id) {
@@ -613,7 +791,14 @@ export class EditPersonComponent implements OnInit {
     return null;
   }
 
-  // filters list of acceptable conferences to only those that have been linked
+  /**
+   * Returns a list of data that only includes conferences who have already been
+   * linked. Used by portions of the HTML template for associating items with person.
+   * This ensures that people can only be affiliated with those items already
+   * added to set to be linked.
+   * 
+   * @returns Array of objects, each with a participant's data
+   */
   filterConferencesByLinked() {
     let idsToFilter = [];
     let filteredConferences: any[] = [];
@@ -628,7 +813,14 @@ export class EditPersonComponent implements OnInit {
     return filteredConferences;
   }
 
-  // filters list of acceptable panels to only those that have been linked
+  /**
+   * Returns a list of data that only includes panels who have already been
+   * linked. Used by portions of the HTML template for associating items with person.
+   * This ensures that people can only be affiliated with those items already
+   * added to set to be linked.
+   * 
+   * @returns Array of objects, each with a participant's data
+   */
   filterPanelsByLinked() {
     let idsToFilter = [];
     let filteredPanels: any[] = [];
@@ -643,7 +835,14 @@ export class EditPersonComponent implements OnInit {
     return filteredPanels;
   }
 
-  // filters list of acceptable presentations to only those that have been linked
+  /**
+   * Returns a list of data that only includes presentations who have already been
+   * linked. Used by portions of the HTML template for associating items with person.
+   * This ensures that people can only be affiliated with those items already
+   * added to set to be linked.
+   * 
+   * @returns Array of objects, each with a participant's data
+   */
   filterPresentationsByLinked() {
     let idsToFilter = [];
     let filteredPresentations: any[] = [];

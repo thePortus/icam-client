@@ -1,6 +1,8 @@
+// external imports
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
+// component imports
 import { HomeComponent } from './components/home/home.component';
 import { NotFoundComponent } from './components/common/not-found/not-found.component';
 import { PrivacyPolicyComponent } from './components/common/privacy-policy/privacy-policy.component';
@@ -45,11 +47,12 @@ import { LocationDetailViewComponent } from './components/locations/location-det
 import { EditLocationViewComponent } from './components/locations/edit-location-view/edit-location-view.component';
 import { ExportComponent } from './components/export/export.component';
 
-
+// service imports
 import { AuthGuardService } from './services/auth-guard.service';
 import { IsAdminService } from './services/is-admin.service';
 
 const routes: Routes = [
+  // Set routes, designating middleware to check if user is logged in/an admin for certain routes
   { path: 'home', component: HomeComponent },
   { path: 'login', component: LoginComponent },
   { path: 'register', component: RegisterComponent },
@@ -92,7 +95,9 @@ const routes: Routes = [
   { path: 'locations/:id', canActivate: [AuthGuardService, IsAdminService], component: LocationDetailViewComponent },
   { path: 'locations/edit/:id', canActivate: [AuthGuardService, IsAdminService], component: EditLocationViewComponent },
   { path: 'export', canActivate: [AuthGuardService, IsAdminService], component: ExportComponent },
+  // redirects root to home
   { path: '', redirectTo: '/home', pathMatch: 'full' },
+  // set 404 component and redirect all other entered routes to 404
   { path: '404', component: NotFoundComponent },
   { path: '**', redirectTo: '/404' },
 

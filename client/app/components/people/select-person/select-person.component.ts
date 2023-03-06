@@ -9,25 +9,37 @@ import { Person } from './../../../interfaces/person.interface';
   styleUrls: ['./select-person.component.scss']
 })
 export class SelectPersonComponent implements OnInit {
+  // event emitter
   @Output() successfullyAdded = new EventEmitter<string>();
+  // optional, if provided only allow selection from items with matching ids
   @Input() idsToRestrictTo: number[] = [];
+  // optional, if provided filter items with matching ids from selection
   @Input() restrictedIds: number[] = [];
+  // toggle to show/hide title, name, and role data
   @Input() includeTitle: boolean = false;
   @Input() includeName: boolean = false;
   @Input() includeRole: boolean = false;
 
+  // loading flag & error messages
   loading: boolean = true;
   errorMsgs: string[] = [];
   serverErrorMsgs: string[] = [];
+  // selected item
   selectedPerson: any;
+  // all possible items
   acceptablePeople: Person[] = [];
+  // add new item flag
   displayAddPerson: boolean = false;
+  // optional person title/name info
   personTitle: string = '';
   personName: string = '';
+  // filters
   filterByName: string = '';
   filterByPanelTitle: string = '';
   filterByPresentationTitle: string = '';
+  // flag if person was added (to force refresh to people data)
   newPersonWasAdded: boolean = false;
+  // role
   role: string = '';
 
   constructor(
@@ -38,6 +50,11 @@ export class SelectPersonComponent implements OnInit {
     this.refreshData();
   }
 
+  /**
+   * Refreshes data from server and stores in acceptable items. Uses
+   * pagination and filter information to only retrieve pertinent items.
+   * Also calculates total number of items and sets loading to false.
+   */
   refreshData() {
     let requestString: string = 'people/?';
     if (this.filterByName) {
@@ -66,6 +83,9 @@ export class SelectPersonComponent implements OnInit {
     });
   }
 
+  /**
+   * On selection, emits the data of the selected item.
+   */
   onSubmit() {
     let personToAdd: any;
     for (let person of this.acceptablePeople) {
@@ -88,15 +108,27 @@ export class SelectPersonComponent implements OnInit {
     this.successfullyAdded.emit(personToAdd);
   }
 
+  /**
+   * Toggles whether to display/hide the add item widget.
+   */
   toggleDisplayAddPerson() {
     this.displayAddPerson = !this.displayAddPerson;
   }
 
+  /**
+   * Executes when add item widget emits an event handler. Refreshes data,
+   * sets the selected item to the added item, toggles the display add item
+   * to false, and itself emits the selection to any parent (but only
+   * if the includeTitle & includeRole inputs are false).
+   * 
+   * @param person - the data of the added item, emitted by a child widget
+   */
   personAdded(person: any) {
     this.refreshData();
     this.newPersonWasAdded = true;
     this.selectedPerson = person.id;
     this.displayAddPerson = false;
+    // emit selection, but only if includeTitle and includeRoles inputs are false
     if (!this.includeName && !this.includeTitle && !this.includeRole) {
       this.successfullyAdded.emit(person);
     }

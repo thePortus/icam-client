@@ -1,3 +1,4 @@
+<!-- loading messages -->
 <div *ngIf="loading" class="flex justify-center items-center h-full">
     <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
       <mat-spinner></mat-spinner>
@@ -12,9 +13,11 @@
     <div class="list-container">
         <mat-card>
             <mat-card-content>
+                <!-- title -->
                 <div class="flex flex-col justify-start items-start">
                     <mat-card-subtitle class="card-subtitle" *ngIf="protectedData.title !== null && protectedData.title !== ''">{{ protectedData.title }}</mat-card-subtitle>
                     <mat-card-subtitle class="card-subtitle" *ngIf="protectedData.title === null || protectedData.title == ''">No Title</mat-card-subtitle>
+                <!-- edit / delete buttons -->
                 <div class="button-container flex flex-row justify-start items-center"  *ngIf="user.role == 'Owner' || user.role == 'Editor'">
                     <button class="full-width" routerLink="{{'/presentations/edit/' + protectedData.id}}" color="accent" mat-raised-button aria-label="Edit presentation">
                         <mat-icon>edit</mat-icon>

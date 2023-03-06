@@ -5,6 +5,7 @@
           <div class="flex flex-col justify-start items-center">
             <mat-card class="filter-container">
               <mat-card-content>
+                <!-- header -->
                 <mat-card-title>
                   <div class="text-base">
                     Select Place
@@ -14,6 +15,7 @@
                     Filter
                   </div>
                 </mat-card-title>
+                <!-- filter -->
                 <div class="flex flex-row justify-start items-center max-sm:flex-col max-sm:items-start max-sm:text-xs">
                   <div class="filter-input-wrapper">
                     <label for="titleFilter">Title: </label>
@@ -23,6 +25,7 @@
               </mat-card-content>
             </mat-card>
             <div class="full-width flex flex-row max-sm:flex-col">
+              <!-- select items -->
               <div class="full-width">
                 <mat-form-field class="full-width">
                   <mat-label>Select Place</mat-label>
@@ -31,6 +34,7 @@
                   </mat-select>
                 </mat-form-field>
               </div>
+              <!-- force refresh data from server -->
               <div class="padded-content">
                 <button type="button" mat-raised-button color="primary" (click)="refreshData()">
                   <mat-icon >refresh</mat-icon>
@@ -38,6 +42,7 @@
               </div>
             </div>
             <mat-divider></mat-divider>
+            <!-- add/hide a create new item button-->
             <button type="button" *ngIf="!displayAddPlace" (click)="toggleDisplayAddPlace()" mat-raised-button aria-label="Add new place button">Add New Place</button>
             <button type="button" *ngIf="displayAddPlace" (click)="toggleDisplayAddPlace()" mat-raised-button aria-label="Hide new place button">Cancel New Place</button>
             <div class="full-width" *ngIf="displayAddPlace">
@@ -45,6 +50,7 @@
             </div>
           </div>
         </mat-card-content>
+        <!-- error messages & select button -->
         <mat-card-actions>
           <div class="flex flex-col justify-center items-center">
             <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">

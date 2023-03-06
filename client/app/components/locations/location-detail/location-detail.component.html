@@ -1,3 +1,4 @@
+<!-- loading messages -->
 <div *ngIf="loading" class="flex justify-center items-center h-full">
     <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
       <mat-spinner></mat-spinner>
@@ -13,8 +14,10 @@
       <mat-card>
         <mat-card-content>
             <div class="flex flex-col justify-start items-start">
+                <!-- title -->
                 <mat-card-subtitle class="card-subtitle">{{ protectedData.title }}</mat-card-subtitle>
                 <div class="full-width flex flex-row justify-start items-center" *ngIf="user.role == 'Owner' || user.role == 'Editor'">
+                    <!-- edit / delete buttons -->
                     <button class="full-width" routerLink="{{'/locations/edit/' + protectedData.id}}" color="accent" mat-raised-button aria-label="Edit location">
                         <mat-icon>edit</mat-icon>
                     </button>
@@ -23,15 +26,18 @@
                     </button>
                 </div>
                 <div class="full-width padded-content">
+                    <!-- city -->
                     <div class="full-width padded-content">
                         <span>City:</span>
                         <span>{{ protectedData.city }}</span>
                     </div>
+                    <!-- state -->
                     <mat-divider class="full-width"></mat-divider>
                     <div class="full-width padded-content">
                         <span>State:</span>
                         <span>{{ protectedData.state }}</span>
                     </div>
+                    <!-- country -->
                     <mat-divider class="full-width"></mat-divider>
                     <div class="full-width padded-content">
                         <span>Country:</span>

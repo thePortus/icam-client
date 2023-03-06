@@ -2,6 +2,7 @@
   <mat-card>
     <mat-card-content>
       <div>
+        <!-- item filter -->
         <mat-card>
           <mat-card-content>
             <mat-card-title>Filter</mat-card-title>
@@ -13,9 +14,12 @@
             </div>
           </mat-card-content>
         </mat-card>
+        <!-- item pagination -->
         <app-pagination [page]="currentPage" [size]="itemsPerPage" [totalItems]="totalItems" (paginationSet)="changePagination($event)"></app-pagination>
       </div>
+      <!-- users table -->
       <table class="full-width contrast-table">
+        <!-- header -->
         <thead>
           <tr>
             <th>Username</th>
@@ -24,6 +28,7 @@
             <th>Edit User</th>
           </tr>
         </thead>
+        <!-- data rows -->
         <tbody>
           <tr *ngFor="let row of protectedData">
             <td>{{ row.username }}</td>

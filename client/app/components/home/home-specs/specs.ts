@@ -1,4 +1,5 @@
 export const Specs = {
+  // general specs for the project
   specs: [
     {
       link: 'https://nodejs.org/',
@@ -18,6 +19,7 @@ export const Specs = {
       value: 'Angular 14'
     }
   ],
+  // github repositories
   repositories: [
     {
       label: 'Server',
@@ -33,6 +35,7 @@ export const Specs = {
       value: 'icam-data'
     }
   ],
+  // project dependenceis
   dependencies: {
     frontend: [
       {
@@ -134,5 +137,6 @@ export const Specs = {
       }
     ]
   },
+  // ERD diagram
   erd: 'assets/images/erd.png',
 };
