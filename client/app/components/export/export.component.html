@@ -10,9 +10,9 @@
         <p class="red-text">Error: problem connecting to server</p>
       </div>
     </div>
-    <div *ngIf="!loading" class="export-wrapper h-full flex justify-start items-center">
+    <div *ngIf="!loading" class="export-wrapper h-full flex justify-center items-start">
       <!-- download links -->
-      <div class="export-container flex flex-col justify-start items-center">
+      <div class="export-container flex flex-col justify-center items-start">
         <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.conferences" download="conferences.json">Download conferences.json</a></button>
         <mat-divider class="padded-content-dense"></mat-divider>
         <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.disciplines" download="disciplines.json">Download disciplines.json</a></button>
