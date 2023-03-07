@@ -30,9 +30,11 @@ Thenm, modify the following files with your desired accounts/passwords/ports
 
 ``` sh
 # you must change the server_name and redirect to have the url to which you are deploying
-/nginx/conf/default.conf
+sudo nano nginx/conf/default.conf
 # client angular settings file MUST contain the IP of the backend
-/client/app/app.settings.ts
+sudo nano client/app/app.settings.ts
+# the docker config file MUST contain your domain main in the certbot command line
+sudo nano docker-compose.yml
 ```
 
 Run `docker compose up -d`.
