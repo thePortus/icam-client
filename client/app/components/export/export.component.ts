@@ -18,9 +18,11 @@ interface jsonHrefs {
   conferenceInstitutions: any;
   peopleChairing: any;
   peoplePresenting: any;
+  peopleParticipating: any;
   presentationGeographies: any;
   presentationTopics: any;
   presenterAffiliations: any;
+  participantAffiliations: any;
 }
 
 @Component({
@@ -50,9 +52,11 @@ export class ExportComponent implements OnInit {
     conferenceInstitutions: [],
     peopleChairing: [],
     peoplePresenting: [],
+    peopleParticipating: [],
     presentationGeographies: [],
     presentationTopics: [],
-    presenterAffiliations: []
+    presenterAffiliations: [],
+    participantAffiliations: []
   };
 
   constructor(
@@ -123,6 +127,9 @@ export class ExportComponent implements OnInit {
     theJSON = JSON.stringify(this.protectedData.peoplePresenting);
     uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHrefs.peoplePresenting = uri;
+    theJSON = JSON.stringify(this.protectedData.peopleParticipating);
+    uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
+    this.downloadJsonHrefs.peopleParticipating = uri;
     theJSON = JSON.stringify(this.protectedData.presentationGeographies);
     uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHrefs.presentationGeographies = uri;
@@ -132,6 +139,9 @@ export class ExportComponent implements OnInit {
     theJSON = JSON.stringify(this.protectedData.presenterAffiliations);
     uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHrefs.presenterAffiliations = uri;
+    theJSON = JSON.stringify(this.protectedData.participantAffiliations);
+    uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
+    this.downloadJsonHrefs.participantAffiliations = uri;
   }
 
 }
