@@ -162,6 +162,10 @@ input {
   margin: 20px;
 }
 
+.margin-content-top {
+  margin: 10px 0px 0px 0px;
+}
+
 .side-margins {
   margin-left: 10px;
   margin-right: 10px;
@@ -253,4 +257,18 @@ input {
   padding: 10px 5px 10px 5px;
   font-family: $title-typography-family;
   width: 100%;
+}
+
+// for encapsulating details
+.framed-content {
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  padding: 5px;
+  border-color: map.get($mat-icam-primary, 50);
+}
+
+// for grid list backgrounds
+.grid-bg {
+  background-color: map.get($mat-icam-primary, 50);
 }

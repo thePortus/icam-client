@@ -48,63 +48,78 @@
           <div class="flex flex-col justify-start items-start">
             <!-- title -->
             <mat-card-subtitle class="card-subtitle">{{ conference.title }}</mat-card-subtitle>
-            <!-- location -->
-            <div class="full-width">
-              <div class="full-width">
-                Location:  
+            <div class="framed-content full-width flex flex-row max-sm:flex-col justify-center items-center max-sm:items-start">
+              <!-- location -->
+              <div class="full-width flex flex-row max-sm:flex-col justify-center items-center max-sm:items-start">
+                <div>
+                  Location:  
+                </div>
+                <div class="full-width padded-content-dense">
+                  {{ conference.location.title }}
+                </div>
+                <mat-divider class="full-width invisible max-sm:visible"></mat-divider>
               </div>
-              <div class="padded-content-dense">
-                {{ conference.location.title }}
-              </div>
-              <mat-divider class="full-width"></mat-divider>
-            </div>
-            <!-- date -->
-            <div class="full-width">
-              <div class="full-width">
-                Date:  
-              </div>
-              <div class="padded-content-dense">
-                  <!-- date display if conference begins/ends same day -->
-                  <span *ngIf="conference.startMonth == conference.endMonth && conference.startDay == conference.endDay">
-                    {{ conference.startMonth }}/{{ conference.startDay }}/{{ conference.year }}
-                  </span>
-                  <!-- date display if conference begins/ends same month but different days-->
-                  <span *ngIf="conference.startMonth == conference.endMonth && conference.startDay != conference.endDay">
-                    {{ conference.startMonth }}/{{ conference.startDay }}-{{ conference.endDay }}, {{ conference.year }}
-                  </span>
-                  <!-- date display if conference begins.ends in different month -->
-                  <span *ngIf="conference.startMonth != conference.endMonth && conference.startDay != conference.endDay">
-                    {{ conference.startMonth }}/{{ conference.startDay }} -
-                    {{ conference.endMonth }}/{{ conference.endDay }}, {{ conference.year }}
-                  </span>
-              </div>
-            </div>
-            <mat-divider class="divider"></mat-divider>
-            <!-- statistics -->
-            <div class="full-width">
-              <div class="full-width">
-                Totals:  
-              </div>
-              <div class="padded-content-dense">
-                <span>Institutions: </span><span>{{ conference.institutions.length }}</span>
-              </div>
-              <mat-divider class="full-width"></mat-divider>
-              <div class="padded-content-dense">
-                <span>Panels: </span><span>{{ conference.panels.length }}</span>
-              </div>
-              <mat-divider class="full-width"></mat-divider>
-              <div class="padded-content-dense">
-                <span>Presentations: </span><span>{{ totalPresentations(conference) }}</span>
-              </div>
-              <mat-divider class="full-width"></mat-divider>
-              <div class="padded-content-dense">
-                <span>Chairs: </span><span>{{ totalChairs(conference) }}</span>
-              </div>
-              <mat-divider class="full-width"></mat-divider>
-              <div class="padded-content-dense">
-                <span>Presenters: </span><span>{{ totalPresenters(conference) }}</span>
+              <!-- date -->
+              <div class="full-width flex flex-row max-sm:flex-col justify-center items-center max-sm:items-start">
+                <div>
+                  Date:  
+                </div>
+                <div class="full-width padded-content-dense">
+                    <!-- date display if conference begins/ends same day -->
+                    <span *ngIf="conference.startMonth == conference.endMonth && conference.startDay == conference.endDay">
+                      {{ conference.startMonth }}/{{ conference.startDay }}/{{ conference.year }}
+                    </span>
+                    <!-- date display if conference begins/ends same month but different days-->
+                    <span *ngIf="conference.startMonth == conference.endMonth && conference.startDay != conference.endDay">
+                      {{ conference.startMonth }}/{{ conference.startDay }}-{{ conference.endDay }}, {{ conference.year }}
+                    </span>
+                    <!-- date display if conference begins.ends in different month -->
+                    <span *ngIf="conference.startMonth != conference.endMonth && conference.startDay != conference.endDay">
+                      {{ conference.startMonth }}/{{ conference.startDay }} -
+                      {{ conference.endMonth }}/{{ conference.endDay }}, {{ conference.year }}
+                    </span>
+                </div>
               </div>
             </div>
+            <mat-divider class="padded-content-dense"></mat-divider>
+            <mat-grid-list class="flex full-width" cols="3" rowHeight="3em">
+              <mat-grid-tile class="grid-bg">
+                <div class="flex flex-col justify-center items-center">
+                  <div>{{ conference.panels.length }}</div>
+                  <div>Panel<span *ngIf="conference.panels.length > 1 || conference.panels.length === 0">s</span></div>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile class="grid-bg">
+                <div class="flex flex-col justify-center items-center">
+                  <div>{{ totalPresentations(conference) }}</div>
+                  <div>Presentation<span *ngIf="totalPresentations(conference) > 1 || totalPresentations(conference) === 0">s</span></div>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile class="grid-bg">
+                <div class="flex flex-col justify-center items-center">
+                  <div>{{ conference.institutions.length }}</div>
+                  <div>Institution<span *ngIf="conference.institutions.length > 1 || conference.institutions.length === 0">s</span></div>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile class="grid-bg">
+                <div class="flex flex-col justify-center items-center">
+                  <div>{{ totalChairs(conference) }}</div>
+                  <div>Chair<span *ngIf="totalChairs(conference) > 1 || totalChairs(conference) === 0">s</span></div>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile class="grid-bg">
+                <div class="flex flex-col justify-center items-center">
+                  <div>{{ totalPresenters(conference) }}</div>
+                  <div>Presenter<span *ngIf="totalPresenters(conference) > 1 || totalPresenters(conference) === 0">s</span></div>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile class="grid-bg">
+                <div class="flex flex-col justify-center items-center">
+                  <div>{{ conference.participants.length }}</div>
+                  <div>Participant<span *ngIf="conference.participants.length > 1 || conference.participants.length === 0">s</span></div>
+                </div>
+              </mat-grid-tile>
+            </mat-grid-list>
             <mat-divider class="divider"></mat-divider>
             <!-- disciplines -->
             <div class="full-width">
