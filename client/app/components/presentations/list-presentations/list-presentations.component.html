@@ -55,54 +55,58 @@
               <!-- title -->
               <mat-card-subtitle class="card-subtitle" *ngIf="presentation.title != '' && presentation.title">{{ presentation.title }}</mat-card-subtitle>
               <mat-card-subtitle class="card-subtitle" *ngIf="presentation.title == '' || !presentation.title">No Title</mat-card-subtitle>
-              <!-- conference -->
-              <div class="full-width">
-                <span>
-                  Conference:
-                </span>
-                <span>
+              <!-- details -->
+              <div class="full-width framed-content">
+                <!-- conference -->
+                <div class="full-width">
                   <span>
-                    {{ presentation.panel.conference.title }}
+                    Conference:
                   </span>
                   <span>
-                    ({{ presentation.panel.conference.year }})
+                    <span>
+                      {{ presentation.panel.conference.title }}
+                    </span>
+                    <span>
+                      ({{ presentation.panel.conference.year }})
+                    </span>
                   </span>
-                </span>
-              </div>
-              <mat-divider class="divider"></mat-divider>
-              <!-- presenters -->
-              <div class="full-width">
+                </div>
+                <mat-divider class="full-width padded-content-dense"></mat-divider>
+                <!-- presenters -->
+                <div class="full-width">
                   <span *ngIf="presentation.presenters.length > 1">Presenters: </span>
                   <span *ngIf="presentation.presenters.length == 1">Presenter: </span>
                   <span *ngIf="presentation.presenters.length == 0">Presenters: <span>No Presenters</span></span>
                   <span *ngFor="let presenter of presentation.presenters; last as last">
                       {{ presenter.name }}<span *ngIf="!last">, </span>
                   </span>
-              </div>
-              <mat-divider class="divider"></mat-divider>
-              <!-- panel -->
-              <div class="full-width">
-                  <span>Panel: </span>
-                  <span *ngIf="presentation.panel.title != '' && presentation.panel.title">{{ presentation.panel.title }}</span>
-                  <span *ngIf="presentation.panel.title == '' || !presentation.panel.title">No Title</span>
-              </div>
-              <mat-divider class="divider"></mat-divider>
-              <!-- topics -->
-              <div class="full-width">
-                <span>Topics: </span>
-                <div class="padded-content-dense">
-                  <mat-chip-list class="chip-container" aria-label="Presentation topics">
-                    <mat-chip *ngFor="let topic of presentation.topics" color="primary">{{topic.title}}</mat-chip>
-                  </mat-chip-list>
+                </div>
+                <mat-divider class="divider"></mat-divider>
+                <!-- panel -->
+                <div class="full-width">
+                    <span>Panel: </span>
+                    <span *ngIf="presentation.panel.title != '' && presentation.panel.title">{{ presentation.panel.title }}</span>
+                    <span *ngIf="presentation.panel.title == '' || !presentation.panel.title">No Title</span>
                 </div>
               </div>
-              <!-- geographies -->
-              <div class="full-width">
-                <span>Places: </span>
-                <div class="padded-content-dense">
-                  <mat-chip-list class="chip-container" aria-label="Presentation places">
-                    <mat-chip *ngFor="let geography of presentation.geographies" color="primary">{{geography.title}}</mat-chip>
-                  </mat-chip-list>
+              <div class="margin-content-top">
+                <!-- topics -->
+                <div *ngIf="presentation.topics.length > 0" class="full-width">
+                  <span>Topics: </span>
+                  <div class="padded-content-dense">
+                    <mat-chip-list class="chip-container" aria-label="Presentation topics">
+                      <mat-chip *ngFor="let topic of presentation.topics" color="primary">{{topic.title}}</mat-chip>
+                    </mat-chip-list>
+                  </div>
+                </div>
+                <!-- geographies -->
+                <div *ngIf="presentation.geographies.length > 0" class="full-width">
+                  <span>Places: </span>
+                  <div class="padded-content-dense">
+                    <mat-chip-list class="chip-container" aria-label="Presentation places">
+                      <mat-chip *ngFor="let geography of presentation.geographies" color="primary">{{geography.title}}</mat-chip>
+                    </mat-chip-list>
+                  </div>
                 </div>
               </div>
             </div>
