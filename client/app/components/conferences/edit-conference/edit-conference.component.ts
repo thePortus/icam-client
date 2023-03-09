@@ -144,8 +144,8 @@ export class EditConferenceComponent implements OnInit {
       this.protectedData.oldParticipants = res.participants;
       for (let participant of res.participants) {
         this.participantsToLink.push({
-          personId: this.protectedData.id,
-          name: participant.PersonParticipating.name,
+          personId: participant.id,
+          name: participant.PersonParticipating.name ? participant.PersonParticipating.name : participant.name,
           role: participant.PersonParticipating.role
         });
         if (this.participantsToLink.length > 0) {
@@ -200,6 +200,7 @@ export class EditConferenceComponent implements OnInit {
           });
           this.selectedInstitution = this.acceptableInstitutions[0] ? this.acceptableInstitutions[0].id : null;
           this.loading = false;
+          console.log(this.participantAffiliationsToLink);
         });
       });
     }, (error: any) => {

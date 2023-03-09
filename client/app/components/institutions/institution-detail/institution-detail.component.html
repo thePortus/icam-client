@@ -38,7 +38,7 @@
                         <mat-card-content class="full-width">
                         <div (click)="toggleDisplay.conferences = !toggleDisplay.conferences" class="full-width flex flex-row">
                             <span class="flex grow">Conferenes:</span>
-                            <button type="button" color="primary" mat-raised-button aria-label="Show/Hide Panels">
+                            <button type="button" color="primary" mat-raised-button aria-label="Show/Hide Conferences">
                             <mat-icon *ngIf="toggleDisplay.conferences">keyboard_arrow_down</mat-icon>
                             <mat-icon *ngIf="!toggleDisplay.conferences">keyboard_arrow_up</mat-icon>
                             </button>
@@ -87,13 +87,13 @@
                     <!-- chairs -->
                     <mat-card *ngIf="protectedData.chairs.length > 0" class="full-width-sans-wide-padding">
                         <mat-card-content class="full-width">
-                        <div (click)="toggleDisplay.chairs = !toggleDisplay.chairs" class="full-width flex flex-row">
-                            <span span="flex grow">Chairs:</span>
-                            <button type="button" color="primary" mat-raised-button aria-label="Show/Hide Panels">
-                            <mat-icon *ngIf="toggleDisplay.chairs">keyboard_arrow_down</mat-icon>
-                            <mat-icon *ngIf="!toggleDisplay.chairs">keyboard_arrow_up</mat-icon>
-                            </button>
-                        </div>
+                            <div (click)="toggleDisplay.chairs = !toggleDisplay.chairs" class="full-width flex flex-row">
+                                <span class="flex grow">Chairs:</span>
+                                <button type="button" color="primary" mat-raised-button aria-label="Show/Hide Chairs">
+                                <mat-icon *ngIf="toggleDisplay.chairs">keyboard_arrow_down</mat-icon>
+                                <mat-icon *ngIf="!toggleDisplay.chairs">keyboard_arrow_up</mat-icon>
+                                </button>
+                            </div>
                         <div *ngIf="toggleDisplay.chairs" class="full-width">
                             <mat-card routerLink="/people/{{ person.id }}" *ngFor="let person of protectedData.chairs">
                             <mat-card-content>
@@ -111,7 +111,7 @@
                         <mat-card-content class="full-width">
                         <div (click)="toggleDisplay.presenters = !toggleDisplay.presenters" class="full-width flex flex-row">
                             <span class="flex grow">Presenters:</span>
-                            <button type="button" color="primary" mat-raised-button aria-label="Show/Hide Panels">
+                            <button type="button" color="primary" mat-raised-button aria-label="Show/Hide Presenters">
                             <mat-icon *ngIf="toggleDisplay.presenters">keyboard_arrow_down</mat-icon>
                             <mat-icon *ngIf="!toggleDisplay.presenters">keyboard_arrow_up</mat-icon>
                             </button>
