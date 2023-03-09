@@ -38,6 +38,7 @@ export class ConferenceDetailComponent implements OnInit {
     'chairs': false,
     'presenters': false,
     'institutions': false,
+    'participants': false
   };
 
   constructor(

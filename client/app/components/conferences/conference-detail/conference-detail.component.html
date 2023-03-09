@@ -195,8 +195,30 @@
                 <mat-card routerLink="/people/{{ presenter.id }}" *ngFor="let presenter of flattenedData.presenters">
                   <mat-card-content>
                     <div class="flex flex-col justify-start items-start">
-                      <mat-card-subtitle *ngIf="presenter.name !== null && presenter.title !== ''">{{ presenter.name }}</mat-card-subtitle>
-                      <mat-card-subtitle *ngIf="presenter.name == null || presenter.title == ''">No Name</mat-card-subtitle>
+                      <mat-card-subtitle *ngIf="presenter.name !== null && presenter.name !== ''">{{ presenter.name }}</mat-card-subtitle>
+                      <mat-card-subtitle *ngIf="presenter.name == null || presenter.name == ''">No Name</mat-card-subtitle>
+                    </div>
+                  </mat-card-content>
+                </mat-card>
+              </div>
+            </mat-card-content>
+          </mat-card>
+          <!-- participants -->
+          <mat-card *ngIf="protectedData.participants.length > 0" class="full-width-sans-wide-padding">
+            <mat-card-content class="full-width">
+              <div (click)="toggleDisplay.participants = !toggleDisplay.participants" class="full-width flex flex-row">
+                <span class="flex grow">Participants:</span>
+                <button type="button" color="primary" mat-raised-button aria-label="Show/Hide Presenters">
+                  <mat-icon *ngIf="toggleDisplay.participants">keyboard_arrow_down</mat-icon>
+                  <mat-icon *ngIf="!toggleDisplay.participants">keyboard_arrow_up</mat-icon>
+                </button>
+              </div>
+              <div *ngIf="toggleDisplay.participants" class="full-width">
+                <mat-card routerLink="/people/{{ participant.id }}" *ngFor="let participant of protectedData.participants">
+                  <mat-card-content>
+                    <div class="flex flex-col justify-start items-start">
+                      <mat-card-subtitle *ngIf="participant.name !== null && participant.name !== ''">{{ participant.name }}</mat-card-subtitle>
+                      <mat-card-subtitle *ngIf="participant.name == null || participant.name == ''">No participant</mat-card-subtitle>
                     </div>
                   </mat-card-content>
                 </mat-card>
