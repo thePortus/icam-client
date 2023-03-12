@@ -1,6 +1,7 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {PageEvent} from '@angular/material/paginator';
 
 import { ApiService } from './../../../services/api.service';
 import { User, UserService } from './../../../services/user.service';
@@ -72,14 +73,15 @@ export class UsersComponent implements OnInit {
   }
 
   /**
-   * Called whenever pagination widget emits a pagination change.
-   * Updates pagination info and refreshes data from the server.
+   * Executed upon event emission from child pagination widget.
+   * Gets PageEvent from child widget and applies it to
+   * component, then refreshes data.
    * 
-   * @param paginationData - Object containing the current 'page' and 'size' (items per page)
+   * @param e - PageEvent containing new index and size
    */
-  changePagination(paginationData: any) {
-    this.currentPage = paginationData.page;
-    this.itemsPerPage = paginationData.size;
+  changePagination(e: PageEvent) {
+    this.currentPage = e.pageIndex + 1;
+    this.itemsPerPage = e.pageSize;
     this.refreshData();
   }
 

@@ -128,7 +128,6 @@ import { AddPresentationComponent } from './components/presentations/add-present
 import { EditPresentationViewComponent } from './components/presentations/edit-presentation-view/edit-presentation-view.component';
 import { EditPresentationComponent } from './components/presentations/edit-presentation/edit-presentation.component';
 import { SelectPresentationComponent } from './components/presentations/select-presentation/select-presentation.component';
-import { PaginationComponent } from './components/common/pagination/pagination.component';
 import { ExportComponent } from './components/export/export.component';
 
 
@@ -229,7 +228,6 @@ import { ExportComponent } from './components/export/export.component';
     EditPresentationViewComponent,
     EditPresentationComponent,
     SelectPresentationComponent,
-    PaginationComponent,
     ExportComponent,
   ],
   imports: [
