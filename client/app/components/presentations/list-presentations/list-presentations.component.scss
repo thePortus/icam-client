@@ -1,7 +1,3 @@
-@use "sass:map";
-
-@import './../../../../styles-settings';
-
 // If the screen size is 601px wide or more, set for large screen
 @media screen and (min-width: 601px) {
   :host .presentations-container {
@@ -31,11 +27,6 @@
   z-index: 999;
 }
 
-:host .filter-container .title, :host .filter-container label, :host .filter-container input {
-  color: map.get($mat-icam-primary, 300);
-  border-color: map.get($mat-icam-primary, 300);
-}
-
 :host .filter-input-wrapper {
   padding-top: 2px;
   padding-bottom: 2px;
@@ -43,12 +34,6 @@
 
 :host .filter-input-wrapper:not(:last-child) {
   padding-right: 5px;
-}
-
-:host .color-row {
-  background-color: map.get($mat-icam-primary, 200);
-  color: map.get($mat-icam-primary, 'contrast', 300);
-  width: 100%;
 }
 
 :host .chip-container {

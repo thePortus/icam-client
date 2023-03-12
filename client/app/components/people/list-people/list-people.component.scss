@@ -1,7 +1,3 @@
-@use "sass:map";
-
-@import './../../../../styles-settings';
-
 // If the screen size is 601px wide or more, set for large screen
 @media screen and (min-width: 601px) {
   :host .people-container {
@@ -29,11 +25,6 @@
   position: fixed;
   width: 100%;
   z-index: 999;
-}
-
-:host .filter-container .title, :host .filter-container label, :host .filter-container input {
-  color: map.get($mat-icam-primary, 300);
-  border-color: map.get($mat-icam-primary, 300);
 }
 
 :host .filter-input-wrapper {
