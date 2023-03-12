@@ -1,15 +1,24 @@
+@use "sass:map";
+
+@import './../../../../styles-settings';
+
 :host .filter-container {
-    position: fixed;
-    width: 100%;
-    z-index: 999;
-  }
+  position: fixed;
+  width: 100%;
+  z-index: 999;
+}
+
+:host .filter-container .title, :host .filter-container label, :host .filter-container input {
+  color: map.get($mat-icam-primary, 300);
+  border-color: map.get($mat-icam-primary, 300);
+}
   
-  :host .filter-input-wrapper {
-    padding-top: 2px;
-    padding-bottom: 2px;
-  }
+:host .filter-input-wrapper {
+  padding-top: 2px;
+  padding-bottom: 2px;
+}
   
-  :host .filter-input-wrapper:not(:last-child) {
-    padding-right: 5px;
-  }
+:host .filter-input-wrapper:not(:last-child) {
+  padding-right: 5px;
+}
   

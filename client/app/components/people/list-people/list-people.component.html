@@ -15,10 +15,11 @@
       <div class="filter-container">
         <mat-card>
           <mat-card-content>
-            <div class="max-sm:text-sm">
+            <div class="title max-sm:text-sm">
               Filter
             </div>
-            <div class="flex flex-row justify-start items-center max-sm:flex-col max-sm:items-start max-sm:text-xs">
+            <mat-divider class="full-width padded-content"></mat-divider>
+            <div class="flex flex-row justify-evenly items-center max-sm:flex-col max-sm:items-start max-sm:text-xs">
               <div class="filter-input-wrapper">
                 <label for="nameFilter">Name: </label>
                 <input type="text" id="nameFilter" (input)="refreshData()" [(ngModel)]="filterByName" />
@@ -34,7 +35,7 @@
             </div>
           </mat-card-content>
         </mat-card>
-        <mat-paginator class="flex flex-row justify-start items-center" (page)="changePagination($event)" [length]="totalItems" [pageSize]="itemsPerPage" [showFirstLastButtons]="true" [pageSizeOptions]="[5, 10, 25, 50]" [pageIndex]="currentPage - 1"></mat-paginator>      </div>
+        <mat-paginator class="flex flex-row framed-content margin-content-sides-wide justify-start items-center" (page)="changePagination($event)" [length]="totalItems" [pageSize]="itemsPerPage" [showFirstLastButtons]="true" [pageSizeOptions]="[5, 10, 25, 50]" [pageIndex]="currentPage - 1"></mat-paginator>      </div>
       <div class="people-container">
         <mat-card *ngFor="let person of protectedData" (click)="navigate(person.id)">
           <mat-card-content>

@@ -5,8 +5,11 @@
         <!-- item filter -->
         <mat-card>
           <mat-card-content>
-            <mat-card-title>Filter</mat-card-title>
-            <div class="flex flex-row justify-start items-center xs:max-md:flex-col ms:max-md:items-start">
+            <div class="title max-sm:text-sm">
+              Filter
+            </div>
+            <mat-divider class="full-width padded-content"></mat-divider>
+            <div class="flex flex-row justify-evenly items-center xs:max-md:flex-col ms:max-md:items-start">
               <div class="filter-input-wrapper">
                 <label for="titleFilter">Title: </label>
                 <input type="text" id="titleFilter" (input)="refreshData()" [(ngModel)]="filterByUsername" />
@@ -14,8 +17,7 @@
             </div>
           </mat-card-content>
         </mat-card>
-        <!-- item pagination -->
-        <app-pagination [page]="currentPage" [size]="itemsPerPage" [totalItems]="totalItems" (paginationSet)="changePagination($event)"></app-pagination>
+        <mat-paginator class="flex flex-row framed-content margin-content-sides-wide justify-start items-center" (page)="changePagination($event)" [length]="totalItems" [pageSize]="itemsPerPage" [showFirstLastButtons]="true" [pageSizeOptions]="[5, 10, 25, 50]" [pageIndex]="currentPage - 1"></mat-paginator>
       </div>
       <!-- users table -->
       <table class="full-width contrast-table">
