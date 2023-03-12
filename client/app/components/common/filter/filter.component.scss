@@ -1,0 +1,8 @@
+@use "sass:map";
+
+@import './../../../../styles-settings';
+
+:host .title, :host label, :host input {
+    color: map.get($mat-icam-primary, 300);
+    border-color: map.get($mat-icam-primary, 300);
+}
