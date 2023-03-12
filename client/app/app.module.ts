@@ -129,6 +129,7 @@ import { EditPresentationViewComponent } from './components/presentations/edit-p
 import { EditPresentationComponent } from './components/presentations/edit-presentation/edit-presentation.component';
 import { SelectPresentationComponent } from './components/presentations/select-presentation/select-presentation.component';
 import { ExportComponent } from './components/export/export.component';
+import { FilterComponent } from './components/common/filter/filter.component';
 
 
 @NgModule({
@@ -229,6 +230,7 @@ import { ExportComponent } from './components/export/export.component';
     EditPresentationComponent,
     SelectPresentationComponent,
     ExportComponent,
+    FilterComponent,
   ],
   imports: [
     BrowserModule,

@@ -18,6 +18,17 @@ export class ListPanelsComponent implements OnInit {
   filterByTitle: any;
   filterByType: any;
   filterByConference: any;
+  // fields to send to the filter widget
+  filterFields = [{
+    keyword: 'title',
+    label: 'Title'
+  }, {
+    keyword: 'type',
+    label: 'Type'
+  }, {
+    keyword: 'conference',
+    label: 'Conference'
+  }];
   // pagination data
   currentPage = 1;
   itemsPerPage = 5;
@@ -45,6 +56,19 @@ export class ListPanelsComponent implements OnInit {
    */
   navigate(path: string) {
     this._router.navigate(['/panels/' + path]);
+  }
+
+  /**
+   * Executed upon event emission by child filter widget. Copies
+   * data from emitted object to filter fields.
+   * 
+   * @param filterInfo - Object with fields corresponding to each filter
+   */
+  updateFilter(filterInfo: any) {
+    this.filterByTitle = filterInfo.title;
+    this.filterByType = filterInfo.type;
+    this.filterByConference = filterInfo.conference;
+    this.refreshData();
   }
 
   /**

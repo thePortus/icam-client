@@ -13,28 +13,7 @@
   <div class="list-container">
     <!-- filter -->
     <div class="filter-container">
-      <mat-card>
-        <mat-card-content>
-          <div class="title max-sm:text-sm">
-            Filter
-          </div>
-          <mat-divider class="full-width padded-content"></mat-divider>
-          <div class="flex flex-row justify-evenly items-center max-sm:flex-col max-sm:items-start max-sm:text-xs">
-            <div class="filter-input-wrapper">
-              <label for="titleFilter">Title: </label>
-              <input type="text" id="titleFilter" (input)="refreshData()" [(ngModel)]="filterByTitle" />
-            </div>
-            <div class="filter-input-wrapper">
-              <label for="conferenceFilter">Conference: </label>
-              <input type="text" id="conferenceFilter" (input)="refreshData()" [(ngModel)]="filterByConference" />
-            </div>
-            <div class="filter-input-wrapper">
-              <label for="titleFilter">Type: </label>
-              <input type="text" id="typeFilter" (input)="refreshData()" [(ngModel)]="filterByType" />
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+      <app-filter [fields]="filterFields" (filterUpdated)="updateFilter($event)"></app-filter>
       <mat-paginator class="flex flex-row framed-content margin-content-sides-wide justify-start items-center" (page)="changePagination($event)" [length]="totalItems" [pageSize]="itemsPerPage" [showFirstLastButtons]="true" [pageSizeOptions]="[5, 10, 25, 50]" [pageIndex]="currentPage - 1"></mat-paginator>    </div>
     <div class="panels-container">
       <mat-card *ngFor="let panel of protectedData" (click)="navigate(panel.id)">

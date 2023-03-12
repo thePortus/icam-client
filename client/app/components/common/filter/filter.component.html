@@ -1,0 +1,14 @@
+<mat-card>
+    <mat-card-content>
+      <div class="title max-sm:text-sm">
+        Filter
+      </div>
+      <mat-divider class="full-width padded-content"></mat-divider>
+      <div class=" flex flex-row justify-evenly items-center max-sm:flex-col max-sm:items-start max-sm:text-xs">
+        <div *ngFor="let field of fields" class="filter-input-wrapper">
+          <label for="{{ field.keyword }} + 'Filter'"> {{ field.label }}: </label>
+          <input type="text" id="{{ field.keyword }} + 'Filter'" (input)="updateFilter()"  [(ngModel)]="protectedData[field.keyword]" />
+        </div>
+      </div>
+    </mat-card-content>
+</mat-card>

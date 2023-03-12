@@ -19,6 +19,20 @@ export class ListConferencesComponent implements OnInit {
   filterByInstitution: any;
   filterByDiscipline: any;
   filterByLocation: any;
+  // fields to send to the filter widget
+  filterFields = [{
+    keyword: 'title',
+    label: 'Title'
+  }, {
+    keyword: 'institution',
+    label: 'Institutions'
+  }, {
+    keyword: 'discipline',
+    label: 'Disciplines'
+  }, {
+    keyword: 'location',
+    label: 'Location'
+  }];
   // pagination data
   currentPage = 1;
   itemsPerPage = 5;
@@ -46,6 +60,20 @@ export class ListConferencesComponent implements OnInit {
    */
   navigate(path: string) {
     this._router.navigate(['/conferences/' + path]);
+  }
+
+  /**
+   * Executed upon event emission by child filter widget. Copies
+   * data from emitted object to filter fields.
+   * 
+   * @param filterInfo - Object with fields corresponding to each filter
+   */
+  updateFilter(filterInfo: any) {
+    this.filterByTitle = filterInfo.title;
+    this.filterByInstitution = filterInfo.institution;
+    this.filterByDiscipline = filterInfo.discipline;
+    this.filterByLocation = filterInfo.location;
+    this.refreshData();
   }
 
   /**

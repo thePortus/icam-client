@@ -16,6 +16,11 @@ export class ListLocationsComponent implements OnInit {
   totalItems: any;
   // strings to filter results by (server-side)
   filterByTitle: any;
+  // fields to send to the filter widget
+  filterFields = [{
+    keyword: 'title',
+    label: 'Title'
+  }];
   // pagination data
   currentPage = 1;
   itemsPerPage = 5;
@@ -42,6 +47,17 @@ export class ListLocationsComponent implements OnInit {
    */
   navigate(path: string) {
     this._router.navigate(['/locations/' + path]);
+  }
+
+  /**
+   * Executed upon event emission by child filter widget. Copies
+   * data from emitted object to filter fields.
+   * 
+   * @param filterInfo - Object with fields corresponding to each filter
+   */
+  updateFilter(filterInfo: any) {
+    this.filterByTitle = filterInfo.title;
+    this.refreshData();
   }
 
   /**
