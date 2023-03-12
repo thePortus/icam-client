@@ -259,6 +259,11 @@ input {
   width: 100%;
 }
 
+// to stop paginator widgets from justifying-end
+.mat-paginator-container {
+  justify-content: center !important;
+}
+
 // for encapsulating details
 .framed-content {
   border-radius: 5px;

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
+import {PageEvent} from '@angular/material/paginator';
 
 import { ApiService } from './../../../services/api.service';
 
@@ -47,14 +48,14 @@ export class ListInstitutionsComponent implements OnInit {
 
   /**
    * Executed upon event emission from child pagination widget.
-   * Gets paginationData from child widget and applies it to
+   * Gets PageEvent from child widget and applies it to
    * component, then refreshes data.
    * 
-   * @param paginationData 
+   * @param e 
    */
-  changePagination(paginationData: any) {
-    this.currentPage = paginationData.page;
-    this.itemsPerPage = paginationData.size;
+  changePagination(e: PageEvent) {
+    this.currentPage = e.pageIndex + 1;
+    this.itemsPerPage = e.pageSize;
     this.refreshData();
   }
 

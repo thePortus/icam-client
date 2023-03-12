@@ -26,6 +26,7 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatGridListModule } from '@angular/material/grid-list';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 // service imports
 import { InterceptorService } from './services/interceptor.service';
@@ -256,7 +257,8 @@ import { ExportComponent } from './components/export/export.component';
     MatNativeDateModule,
     MatDatepickerModule,
     MatProgressSpinnerModule,
-    MatGridListModule
+    MatGridListModule,
+    MatPaginatorModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
