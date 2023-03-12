@@ -26,8 +26,7 @@
             </div>
           </mat-card-content>
         </mat-card>
-        <app-pagination [page]="currentPage" [size]="itemsPerPage" [totalItems]="totalItems" (paginationSet)="changePagination($event)"></app-pagination>
-      </div>
+        <mat-paginator class="flex flex-row justify-start items-center" (page)="changePagination($event)" [length]="totalItems" [pageSize]="itemsPerPage" [showFirstLastButtons]="true" [pageSizeOptions]="[5, 10, 25, 50]" [pageIndex]="currentPage - 1"></mat-paginator>      </div>
       <div class="topics-container">
         <mat-card *ngFor="let topic of protectedData" (click)="navigate(topic.id)">
           <mat-card-content>
