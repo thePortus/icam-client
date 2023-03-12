@@ -21,6 +21,26 @@ export class ListPresentationsComponent implements OnInit {
   filterByPresenterName: any;
   filterByTopicTitle: any;
   filterByPlaceTitle: any;
+  // fields to send to the filter widget
+  filterFields = [{
+    keyword: 'title',
+    label: 'Title'
+  }, {
+    keyword: 'panel',
+    label: 'Panel'
+  }, {
+    keyword: 'conference',
+    label: 'Conference'
+  }, {
+    keyword: 'presenter',
+    label: 'Presenter'
+  }, {
+    keyword: 'topic',
+    label: 'Topic'
+  }, {
+    keyword: 'place',
+    label: 'Place'
+  }];
   // pagination data
   currentPage = 1;
   itemsPerPage = 5;
@@ -48,6 +68,22 @@ export class ListPresentationsComponent implements OnInit {
    */
   navigate(path: string) {
     this._router.navigate(['/presentations/' + path]);
+  }
+
+  /**
+   * Executed upon event emission by child filter widget. Copies
+   * data from emitted object to filter fields.
+   * 
+   * @param filterInfo - Object with fields corresponding to each filter
+   */
+  updateFilter(filterInfo: any) {
+    this.filterByTitle = filterInfo.title;
+    this.filterByPanelTitle = filterInfo.panel;
+    this.filterByConferenceTitle = filterInfo.conference;
+    this.filterByPresenterName = filterInfo.presenter;
+    this.filterByTopicTitle = filterInfo.topic;
+    this.filterByPlaceTitle = filterInfo.place;
+    this.refreshData();
   }
 
   /**

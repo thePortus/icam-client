@@ -18,6 +18,17 @@ export class ListPeopleComponent implements OnInit {
   filterByName: any;
   filterByPanelTitle: any;
   filterByPresentationTitle: any;
+  // fields to send to the filter widget
+  filterFields = [{
+    keyword: 'name',
+    label: 'Name'
+  }, {
+    keyword: 'panel',
+    label: 'Panels'
+  }, {
+    keyword: 'presentation',
+    label: 'Presentations'
+  }];
   // pagination data
   currentPage = 1;
   itemsPerPage = 5;
@@ -45,6 +56,19 @@ export class ListPeopleComponent implements OnInit {
    */
   navigate(path: string) {
     this._router.navigate(['/people/' + path]);
+  }
+
+  /**
+   * Executed upon event emission by child filter widget. Copies
+   * data from emitted object to filter fields.
+   * 
+   * @param filterInfo - Object with fields corresponding to each filter
+   */
+  updateFilter(filterInfo: any) {
+    this.filterByName = filterInfo.name;
+    this.filterByPanelTitle = filterInfo.panel;
+    this.filterByPresentationTitle = filterInfo.presentation;
+    this.refreshData();
   }
 
   /**

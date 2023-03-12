@@ -35,6 +35,11 @@ export class UsersComponent implements OnInit {
   confirm: boolean = false;
   // string to filter user results server-side
   filterByUsername: string = '';
+  // fields to send to the filter widget
+  filterFields = [{
+    keyword: 'username',
+    label: 'Username'
+  }];
 
   constructor(
     private _user: UserService,
@@ -69,6 +74,17 @@ export class UsersComponent implements OnInit {
     // update user
     this._api.putTypeRequest('user/' + username, requestObj).subscribe();
     // refresh data
+    this.refreshData();
+  }
+
+  /**
+   * Executed upon event emission by child filter widget. Copies
+   * data from emitted object to filter fields.
+   * 
+   * @param filterInfo - Object with fields corresponding to each filter
+   */
+  updateFilter(filterInfo: any) {
+    this.filterByUsername = filterInfo.username;
     this.refreshData();
   }
 
