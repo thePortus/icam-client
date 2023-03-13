@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 
@@ -11,6 +11,9 @@ import { User, UserService } from './../../../services/user.service';
   styleUrls: ['./nav-menu.component.scss']
 })
 export class NavMenuComponent implements OnInit {
+  // event emitter to signal when nav menus selection made
+  @Output() navMenuSelected = new EventEmitter<string>();
+
   // links for the nav menu, label is what displays, path is where it points
   // and booleans on if path requires user to be login, editor, or owner
   menuLinks = [{
@@ -121,12 +124,13 @@ export class NavMenuComponent implements OnInit {
   }
 
   /**
-   * Navigates router to specified path
+   * Navigates router to specified path, calls event emitter to signal choice has been made.
    * 
    * @param path - URL of desired route
    */
   navigate(path: string) {
     this._router.navigate([path]);
+    this.navMenuSelected.emit();
   }
   
   /**
