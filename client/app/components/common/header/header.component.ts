@@ -1,11 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { Settings } from '../../../app.settings';
-
-import { AuthService } from './../../../services/auth.service';
-import { User, UserService } from './../../../services/user.service';
 
 @Component({
   selector: 'app-header',
@@ -13,115 +9,15 @@ import { User, UserService } from './../../../services/user.service';
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
+  @Output() navMenuToggle = new EventEmitter<string>();
   // general app settings, for title and credit info
   settings = Settings;
-  // links for the nav menu, label is what displays, path is where it points
-  // and booleans on if path requires user to be login, editor, or owner
-  menuLinks = [{
-    'label': 'Home',
-    'path': '',
-    'requiresLogin': false,
-    'requiresEditor': false,
-    'requiresOwner': false
-  }, {
-    'label': 'Conferences',
-    'path': '/conferences',
-    'requiresLogin': false,
-    'requiresEditor': false,
-    'requiresOwner': false
-  }, {
-    'label': 'Panels',
-    'path': '/panels',
-    'requiresLogin': false,
-    'requiresEditor': false,
-    'requiresOwner': false
-  }, {
-    'label': 'Presentations',
-    'path': '/presentations',
-    'requiresLogin': false,
-    'requiresEditor': false,
-    'requiresOwner': false
-  }, {
-    'label': 'People',
-    'path': '/people',
-    'requiresLogin': false,
-    'requiresEditor': false,
-    'requiresOwner': false
-  }, {
-    'label': 'Institutions',
-    'path': '/institutions',
-    'requiresLogin': false,
-    'requiresEditor': false,
-    'requiresOwner': false
-  }, {
-    'label': 'Topics',
-    'path': '/topics',
-    'requiresLogin': false,
-    'requiresEditor': false,
-    'requiresOwner': false
-  }, {
-    'label': 'Places',
-    'path': '/places',
-    'requiresLogin': false,
-    'requiresEditor': false,
-    'requiresOwner': false
-  }, {
-    'label': 'Disciplines',
-    'path': '/disciplines',
-    'requiresLogin': true,
-    'requiresEditor': true,
-    'requiresOwner': false
-  }, {
-    'label': 'Locations',
-    'path': '/locations',
-    'requiresLogin': true,
-    'requiresEditor': true,
-    'requiresOwner': false
-  }, {
-    'label': 'Export',
-    'path': '/export',
-    'requiresLogin': true,
-    'requiresEditor': true,
-    'requiresOwner': false
-  }];
-  // observable and local object for user data
-  userDetails$: Observable<User>;
-  user: any;
 
   constructor(
     private _router: Router,
-    private _auth: AuthService,
-    private _user: UserService
   ) { }
 
-  /**
-   * Checks if the user is logged in, and gets user details as an
-   * observable if so.
-   */
   ngOnInit(): void {
-    // check local storage data whether user is already logged in
-    this.isUserLogin();
-    this.userDetails$ = this._user.user$;
-    this.userDetails$.subscribe(result => {
-      this.user = result;
-    });
-  }
-
-  /**
-   * Uses auth service to see if user already has stored login data
-   * in local storage. If so, then uses the user service to
-   * store that data for the application.
-   */
-  isUserLogin() {
-    if(this._auth.getUserDetails() != null) {
-      const userDetails = JSON.parse(this._auth.getUserDetails()!);
-      this._user.login({
-        username: userDetails.username,
-        email: userDetails.email,
-        role: userDetails.role,
-        token: userDetails.token
-      });
-    }
   }
 
   /**
@@ -134,11 +30,10 @@ export class HeaderComponent implements OnInit {
   }
 
   /**
-   * Clears user data both from user service and from local storage
+   * Calls event emitter to signal when nav men button was toggled
    */
-  logout() {
-    this._auth.clearStorage();
-    this._user.logout();
-    this._router.navigate(['']);
+  toggleNav() {
+    this.navMenuToggle.emit();
   }
+
 }
