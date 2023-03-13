@@ -9,46 +9,8 @@
   <!-- Nav Menu -->
   <div>
     <!-- button for nav menu -->
-    <button mat-raised-button color="accent" [matMenuTriggerFor]="navmenu" aria-label="Navigation Menu">
+    <button mat-raised-button color="accent" (click)="toggleNav()" aria-label="Navigation Menu">
       <mat-icon>menu</mat-icon>
     </button>
-
-    <!-- items for nav menu once button is clicked-->
-    <mat-menu #navmenu="matMenu">
-
-      <!-- general links -->
-      <span *ngFor="let menuLink of menuLinks">
-        <!-- check if you need to be logged in to display -->
-        <span *ngIf="menuLink.requiresLogin == false || this.user.loggedIn">
-          <!-- check if you need to be editor to display -->
-          <span *ngIf="menuLink.requiresEditor == false || (this.user.role == 'Owner' || this.user.role == 'Editor')">
-            <!-- check if you need to be owner to display -->
-            <span *ngIf="menuLink.requiresOwner == false || this.user.role == 'Editor'">
-              <button mat-menu-item (click)="navigate(menuLink.path)" aria-label="Navigation Button">{{ menuLink.label }}</button>
-            </span>
-          </span>
-        </span>  
-      </span>
-
-      <!-- only show login/register buttons if user is not logged in -->
-      <div *ngIf="!this.user.loggedIn">
-        <span>
-          <button mat-menu-item (click)="navigate('/login')" aria-label="Login Button">Login</button>
-        </span>
-        <span>
-          <button mat-menu-item (click)="navigate('/register')" aria-label="Register Button">Register</button>
-        </span>
-      </div>
-
-      <!-- only show profile/logout buttons if user is logged in-->
-      <div *ngIf="this.user.loggedIn">
-        <span>
-          <button mat-menu-item (click)="navigate('/profile')" aria-label="Profile Button">Profile</button>
-        </span>
-        <span>
-          <button mat-menu-item (click)="logout()" aria-label="Logout Button">Logout</button>
-        </span>
-      </div>
-    </mat-menu>
   </div>
 </mat-toolbar>

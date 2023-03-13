@@ -27,6 +27,7 @@ import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 // service imports
 import { InterceptorService } from './services/interceptor.service';
@@ -130,6 +131,7 @@ import { EditPresentationComponent } from './components/presentations/edit-prese
 import { SelectPresentationComponent } from './components/presentations/select-presentation/select-presentation.component';
 import { ExportComponent } from './components/export/export.component';
 import { FilterComponent } from './components/common/filter/filter.component';
+import { NavMenuComponent } from './components/common/nav-menu/nav-menu.component';
 
 
 @NgModule({
@@ -231,6 +233,7 @@ import { FilterComponent } from './components/common/filter/filter.component';
     SelectPresentationComponent,
     ExportComponent,
     FilterComponent,
+    NavMenuComponent,
   ],
   imports: [
     BrowserModule,
@@ -258,7 +261,8 @@ import { FilterComponent } from './components/common/filter/filter.component';
     MatDatepickerModule,
     MatProgressSpinnerModule,
     MatGridListModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSidenavModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,
