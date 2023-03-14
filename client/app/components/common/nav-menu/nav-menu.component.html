@@ -32,7 +32,7 @@
             </span>
             <mat-divider class="full-width"></mat-divider>
         </mat-list-item>
-        <mat-list-item>
+        <mat-list-item *ngIf="this.user.loggedIn">
             <span class="full-width">
                 <button class="full-width" mat-raised-button color="primary" (click)="logout()" aria-label="Logout Button">Logout</button>
             </span>
