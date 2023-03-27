@@ -29,6 +29,7 @@ import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 // service imports
 import { InterceptorService } from './services/interceptor.service';
@@ -282,7 +283,8 @@ import { ConfirmDeleteTopicDialog } from './components/topics/topic-detail/topic
     MatGridListModule,
     MatPaginatorModule,
     MatSidenavModule,
-    MatSnackBarModule
+    MatSnackBarModule,
+    MatSlideToggleModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

@@ -165,7 +165,8 @@ export class AddPresentationComponent implements OnInit {
           const presenterLinkReqObject = {
             personId: presenterToLink.personId,
             presentationId: res.id,
-            name: presenterToLink.name
+            name: presenterToLink.name,
+            isRespondent: presenterToLink.isRespondent
           };
           this._api.postTypeRequest('people-presenting', presenterLinkReqObject).subscribe();
         }
@@ -267,7 +268,8 @@ export class AddPresentationComponent implements OnInit {
     if (!isDuplicate) {
       this.presentersToLink.push({
         personId: person.id,
-        name: person.name
+        name: person.name,
+        isRepondent: person.isRepondent
       });
     }
     // if a person was added during selection, requery people and update acceptable people list

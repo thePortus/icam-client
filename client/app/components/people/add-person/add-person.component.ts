@@ -213,7 +213,8 @@ export class AddPersonComponent implements OnInit {
           const presentationLinkReqObject = {
             personId: personRes.id,
             presentationId: presentationToLink.presentationId,
-            name: presentationToLink.name || null
+            name: presentationToLink.name || null,
+            isRespondent: presentationToLink.isRespondent || false
           };
           this._api.postTypeRequest('people-presenting', presentationLinkReqObject).subscribe();
         }
@@ -332,7 +333,8 @@ export class AddPersonComponent implements OnInit {
     if (!isDuplicate) {
       this.presentationsToLink.push({
         presentationId: presentation.id,
-        name: presentation.personName || null
+        name: presentation.personName || null,
+        isRespondent: presentation.isRespondent || false
       });
     }
     // hide linking UI
