@@ -1,14 +1,39 @@
 <mat-card>
     <mat-card-content>
       <div class="title max-sm:text-sm">
-        Filter
-      </div>
-      <mat-divider class="full-width padded-content"></mat-divider>
-      <div class=" flex flex-row justify-evenly items-center max-sm:flex-col max-sm:items-start max-sm:text-xs">
-        <div *ngFor="let field of fields" class="filter-input-wrapper">
-          <label for="{{ field.keyword }} + 'Filter'"> {{ field.label }}: </label>
-          <input type="text" id="{{ field.keyword }} + 'Filter'" (input)="updateFilter()"  [(ngModel)]="protectedData[field.keyword]" />
+        <div *ngIf="isHidden" class="flex flex-row" (click)="toggleDisplay()" aria-label="Show filter">
+          <div class="full-width">Filter</div>
+          <mat-icon>arrow_drop_up</mat-icon>
         </div>
+        <div *ngIf="!isHidden" class="flex flex-row" (click)="toggleDisplay()" aria-label="Hide filter">
+          <div class="full-width">Filter</div>
+          <mat-icon>arrow_drop_down</mat-icon>
+        </div>
+      </div>
+      <mat-divider *ngIf="!isHidden" class="full-width padded-content"></mat-divider>
+      <div *ngIf="!isHidden" class="full-width">
+        <!-- wide display -->
+        <div class="max-sm:hidden flex flex-row justify-evenly items-center">
+          <div *ngFor="let field of fields" class="filter-input-wrapper">
+            <label for="{{ field.keyword }} + 'Filter'"> {{ field.label }}: </label>
+            <input type="text" id="{{ field.keyword }} + 'Filter'" (input)="updateFilter()"  [(ngModel)]="protectedData[field.keyword]" />
+          </div>
+        </div>
+        <!-- mobile display -->
+        <table class="sm:hidden md:hidden lg:hidden xl:hidden 2xl:hidden table-auto border-collapse max-sm:text-xs">
+          <tbody>
+            <tr *ngFor="let field of fields">
+              <td>
+                <label for="{{ field.keyword }} + 'Filter'">
+                  {{ field.label }}:
+                </label>
+              </td>
+              <td>
+                <input type="text" id="{{ field.keyword }} + 'Filter'" (input)="updateFilter()"  [(ngModel)]="protectedData[field.keyword]" />
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
     </mat-card-content>
 </mat-card>

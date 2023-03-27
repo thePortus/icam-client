@@ -13,9 +13,9 @@
     <div class="list-container">
         <!-- filter -->
         <div class="filter-container">
-            <app-filter [fields]="filterFields" (filterUpdated)="updateFilter($event)"></app-filter>
+            <app-filter [fields]="filterFields" (filterUpdated)="updateFilter($event)" (displayToggled)="toggleFilter($event)"></app-filter>
             <mat-paginator class="flex flex-row framed-content margin-content-sides-wide justify-start items-center" (page)="changePagination($event)" [length]="totalItems" [pageSize]="itemsPerPage" [showFirstLastButtons]="true" [pageSizeOptions]="[5, 10, 25, 50]" [pageIndex]="currentPage - 1"></mat-paginator>        </div>
-        <div class="locations-container">
+        <div [ngClass]="filterHidden == true ? 'list-container-filter-closed' : 'list-container-filter-open'">
             <mat-card *ngFor="let location of protectedData" (click)="navigate(location.id)">
                 <mat-card-content>
                     <div class="flex flex-col justify-start items-start">

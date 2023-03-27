@@ -78,7 +78,7 @@
                 </button>
               </span>
               <div class="add-subfield-container" *ngIf="displayLinkPresentation">
-                <app-select-presentation class="full-width" [includeName]="true" (successfullyAdded)="linkPresentation($event)"></app-select-presentation>
+                <app-select-presentation class="full-width" [includeName]="true" [includeRespondent]="true" (successfullyAdded)="linkPresentation($event)"></app-select-presentation>
               </div>
               <!-- conference participations -->
               <h3 class="left-text">Conferences Participated</h3>

@@ -67,6 +67,11 @@
               <input matInput type="string" name="role" [(ngModel)]="role">
             </mat-form-field>
           </div>
+          <!-- isRespondent, if includeRespondent input is true-->
+          <div *ngIf="includeRespondent" class="full-width">
+            <mat-label>Respondant?</mat-label>
+            <mat-slide-toggle [(ngModel)]="isRespondent"></mat-slide-toggle>
+          </div>
           <mat-divider></mat-divider>
           <!-- add/hide a create new item button-->
           <button type="button" *ngIf="!displayAddPerson" (click)="toggleDisplayAddPerson()" mat-raised-button

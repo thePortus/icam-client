@@ -67,7 +67,7 @@
               </button>
             </span>
             <div class="edit-subfield-container" *ngIf="displayLinkPresenter">
-              <app-select-person class="full-width" [includeName]="true" (successfullyAdded)="linkPresenter($event)" (restrictedIds)="linkedPresenterIds()"></app-select-person>
+              <app-select-person class="full-width" [includeName]="true" [includeRespondent]="true" (successfullyAdded)="linkPresenter($event)" (restrictedIds)="linkedPresenterIds()"></app-select-person>
             </div>
             <!-- presenter affiliations -->
             <h3 *ngIf="presentersToLink.length > 0" class="left-text">Affiliations of Presenters</h3>

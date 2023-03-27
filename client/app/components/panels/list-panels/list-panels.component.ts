@@ -29,6 +29,7 @@ export class ListPanelsComponent implements OnInit {
     keyword: 'conference',
     label: 'Conference'
   }];
+  filterHidden: boolean = true;
   // pagination data
   currentPage = 1;
   itemsPerPage = 5;
@@ -69,6 +70,17 @@ export class ListPanelsComponent implements OnInit {
     this.filterByType = filterInfo.type;
     this.filterByConference = filterInfo.conference;
     this.refreshData();
+  }
+
+  /** 
+   * Executed upon event emission by child filter widget. Toggles
+   * the display status of filter to update CSS classes for 
+   * padding.
+   * 
+   * @param displayStatus - Boolean of new filter display status
+   */
+  toggleFilter(displayStatus: boolean) {
+    this.filterHidden = displayStatus;
   }
 
   /**

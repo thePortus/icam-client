@@ -118,6 +118,7 @@
                                         <span *ngIf="presentation.panel.title == null || presentation.panel.title == ''">No Panel Title - </span>
                                         <span *ngIf="presentation.panel.conference.title !== null && presentation.panel.conference.title !== ''">{{ presentation.panel.conference.title }}</span>
                                         <span *ngIf="presentation.panel.conference.title == null || presentation.panel.conference.title == ''">No Conference Title</span>
+                                        <span *ngIf="presentation.presenterLink.isRespondent"> (as respondent)</span>
                                     </mat-card-subtitle>
                                     <mat-card-subtitle *ngIf="presentation.title == null || presentation.title == ''">
                                         <span>No Title - </span>
@@ -125,6 +126,7 @@
                                         <span *ngIf="presentation.panel.title == null || presentation.panel.title == ''">No Panel Title - </span>
                                         <span *ngIf="presentation.panel.conference.title !== null && presentation.panel.conference.title !== ''">{{ presentation.panel.conference.title }}</span>
                                         <span *ngIf="presentation.panel.conference.title == null || presentation.panel.conference.title == ''">No Conference Title</span>
+                                        <span *ngIf="presentation.presenterLink.isRespondent"> (as respondent)</span>
                                     </mat-card-subtitle>
                                 </div>
                             </mat-card-content>

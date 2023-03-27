@@ -17,7 +17,7 @@ export class ListInstitutionsComponent implements OnInit {
   // strings to filter results by (server-side)
   filterByTitle: any;
   filterByLocation: any;
-   // fields to send to the filter widget
+  // fields to send to the filter widget
   filterFields = [{
     keyword: 'title',
     label: 'Title'
@@ -25,6 +25,7 @@ export class ListInstitutionsComponent implements OnInit {
     keyword: 'location',
     label: 'Location'
   }];
+  filterHidden: boolean = true;
   // pagination data
   currentPage = 1;
   itemsPerPage = 5;
@@ -64,6 +65,17 @@ export class ListInstitutionsComponent implements OnInit {
     this.filterByTitle = filterInfo.title;
     this.filterByLocation = filterInfo.location;
     this.refreshData();
+  }
+
+  /** 
+   * Executed upon event emission by child filter widget. Toggles
+   * the display status of filter to update CSS classes for 
+   * padding.
+   * 
+   * @param displayStatus - Boolean of new filter display status
+   */
+  toggleFilter(displayStatus: boolean) {
+    this.filterHidden = displayStatus;
   }
 
   /**
