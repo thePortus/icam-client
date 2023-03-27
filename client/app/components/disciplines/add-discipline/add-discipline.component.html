@@ -1,0 +1,28 @@
+<div *ngIf="!loading" class="add-wrapper flex flex-col justify-start items-center">
+  <form class="add-container" #myform="ngForm" (ngSubmit)="onSubmit(myform)" *ngIf="user.role == 'Owner' || user.role == 'Editor'">
+    <mat-card>
+      <mat-card-title class="card-title">Add New Discipline</mat-card-title>
+      <mat-card-content>
+        <!-- title -->
+        <div class="flex flex-col justify-start items-center">
+          <mat-form-field appearance="fill">
+            <mat-label>Title</mat-label>
+            <input matInput type="text" name="title" placeholder="Enter Title" ngModel>
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <!-- erorr messages and add button -->
+      <mat-card-actions>
+        <div class="flex flex-col justify-center items-center">
+          <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+            <div *ngFor="let errorMsg of errorMsgs">Error: {{ errorMsg }}</div>
+          </div>
+          <div *ngIf="serverErrorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+            <div *ngFor="let serverErrorMsg of serverErrorMsgs">Error: {{ serverErrorMsg }}</div>
+          </div>
+          <button mat-raised-button type="submit" color="primary" aria-label="Add discipline button">Add Discipline</button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>

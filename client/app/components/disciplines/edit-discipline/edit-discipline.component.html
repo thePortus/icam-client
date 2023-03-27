@@ -1,0 +1,39 @@
+<!-- loading messages -->
+<div *ngIf="loading" class="flex justify-center items-center h-full">
+    <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
+      <mat-spinner></mat-spinner>
+      <p>Loading</p>
+    </div>
+    <div *ngIf="loadingError" class="flex flex-col justify-center items-center">
+      <mat-icon class="red-text">error</mat-icon>
+      <p class="red-text">Error: problem connecting to server</p>
+    </div>
+  </div>
+<div *ngIf="!loading" class="edit-wrapper flex flex-col justify-start items-center">
+    <form class="edit-container" #myform="ngForm" (ngSubmit)="onSubmit(myform)" *ngIf="user.role == 'Owner' || user.role == 'Editor'">
+        <mat-card>
+            <mat-card-title class="card-title">Edit Discipline</mat-card-title>
+            <mat-card-content>
+                <div class="flex flex-col justify-start items-center">
+                    <!-- title -->
+                    <mat-form-field appearance="fill">
+                        <mat-label>Title</mat-label>
+                        <input matInput type="text" name="title" placeholder="Enter Title" [(ngModel)]="protectedData.title">
+                    </mat-form-field>
+                </div>
+            </mat-card-content>
+            <!-- error messages & edit button -->
+            <mat-card-actions>
+                <div class="flex flex-col justify-center items-center">
+                    <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+                        <div *ngFor="let errorMsg of errorMsgs">Error: {{ errorMsg }}</div>
+                    </div>
+                    <div *ngIf="serverErrorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+                        <div *ngFor="let serverErrorMsg of serverErrorMsgs">Error: {{ serverErrorMsg }}</div>
+                    </div>
+                    <button mat-raised-button type="submit" color="primary" aria-label="Submit changes button">Submit Changes</button>
+                </div>
+            </mat-card-actions>
+        </mat-card>
+    </form>
+</div>

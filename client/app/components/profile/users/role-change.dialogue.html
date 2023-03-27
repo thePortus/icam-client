@@ -1,0 +1,12 @@
+<!-- dialogue message -->
+<h1 mat-dialog-title>Change User?</h1>
+<div mat-dialog-content>
+  <p>Do you really want to change <strong>{{ data.username }}</strong> to <strong>{{ data.role }}</strong>?</p>
+</div>
+<!-- cancel/okay buttons -->
+<div mat-dialog-actions>
+  <div class="flex flex-col justify-center items-center">
+    <button mat-raised-button color="primary" [mat-dialog-close]="false">Cancel</button>
+    <button mat-raised-button color="primary" [mat-dialog-close]="true" cdkFocusInitial>Ok</button>
+  </div>
+</div>

@@ -1,0 +1,15 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+authors:
+  - family-names: Thomas
+    given-names: David
+    orcid: https://orcid.org/0000-0001-5494-6297
+  - family-names: King
+    given-names: Mat
+    orcid: https://orcid.org/0000-0003-1632-5400
+title: "ICAM"
+abstract: "ICAM: Compendium of Medieval Conferences."
+version: 0.0.1
+date-released: 2022-07-20
+license: MIT
+repository-code: "https://github.com/thePortus/icam-client"

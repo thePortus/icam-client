@@ -1,0 +1,68 @@
+<div *ngIf="!loading" class="select-wrapper flex flex-col justify-start items-center">
+    <div class="select-container">
+      <mat-card>
+        <mat-card-content>
+          <div class="flex flex-col justify-start items-center">
+            <mat-card class="filter-container">
+              <mat-card-content>
+                <!-- header -->
+                <mat-card-title>
+                  <div class="text-base">
+                    Select Topic
+                  </div>
+                  <mat-divider></mat-divider>
+                  <div class="text-sm">
+                    Filter
+                  </div>
+                </mat-card-title>
+                <!-- filter -->
+                <div class="flex flex-row justify-start items-center max-sm:flex-col max-sm:items-start max-sm:text-xs">
+                  <div class="filter-input-wrapper">
+                    <label for="titleFilter">Title: </label>
+                    <input type="text" id="titleFilter" (input)="refreshData()" [(ngModel)]="filterByTitle" />
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            <div class="full-width flex flex-row max-sm:flex-col">
+              <!-- select items -->
+              <div class="full-width">
+                <mat-form-field class="full-width">
+                  <mat-label>Select Topic</mat-label>
+                  <mat-select [(value)]="selectedTopic">
+                    <mat-option *ngFor="let topic of acceptableTopics" [value]="topic.id">{{ topic.title }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <!-- force refresh data from server -->
+              <div class="padded-content">
+                <button type="button" mat-raised-button color="primary" (click)="refreshData()">
+                  <mat-icon >refresh</mat-icon>
+                </button>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+            <!-- add/hide a create new item button-->
+            <button type="button" *ngIf="!displayAddTopic" (click)="toggleDisplayAddTopic()" mat-raised-button aria-label="Add new topic button">Add New Topic</button>
+            <button type="button" *ngIf="displayAddTopic" (click)="toggleDisplayAddTopic()" mat-raised-button aria-label="Hide new topic button">Cancel New Topic</button>
+            <div class="full-width" *ngIf="displayAddTopic">
+              <app-add-topic class="full-width" (successfullyAdded)="topicAdded($event)"></app-add-topic>
+            </div>
+          </div>
+        </mat-card-content>
+        <!-- error messages & select button -->
+        <mat-card-actions>
+          <div class="flex flex-col justify-center items-center">
+            <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+              <div *ngFor="let errorMsg of errorMsgs">Error: {{ errorMsg }}</div>
+            </div>
+            <div *ngIf="serverErrorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+              <div *ngFor="let serverErrorMsg of serverErrorMsgs">Error: {{ serverErrorMsg }}</div>
+            </div>
+            <button mat-raised-button type="button" color="primary" (click)="onSubmit()" aria-label="Select topic button">Select Topic</button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+  

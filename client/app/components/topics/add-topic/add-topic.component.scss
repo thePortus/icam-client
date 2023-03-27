@@ -1,0 +1,21 @@
+@import './../../../../styles-settings';
+
+:host .add-wrapper {
+  height: 100%;
+  width: 100%;
+}
+
+:host .add-container {
+  width: 100%;
+}
+
+:host .error-msgs {
+  background-color: $error-msg-bg-color;
+  color: $error-msg-color;
+  margin: 5px;
+  padding: 5px;
+}
+
+:host .add-container mat-form-field {
+  width: 100%;
+}

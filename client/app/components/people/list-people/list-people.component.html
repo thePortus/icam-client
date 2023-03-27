@@ -1,0 +1,51 @@
+<!-- loading messages -->
+<div *ngIf="loading" class="flex justify-center items-center h-full">
+  <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
+    <mat-spinner></mat-spinner>
+    <p>Loading</p>
+  </div>
+  <div *ngIf="loadingError" class="flex flex-col justify-center items-center">
+    <mat-icon class="red-text">error</mat-icon>
+    <p class="red-text">Error: problem connecting to server</p>
+  </div>
+</div>
+<div *ngIf="!loading" class="list-wrapper flex flex-col justify-start items-center">
+    <div class="list-container">
+      <!-- filter-->
+      <div class="filter-container">
+        <app-filter [fields]="filterFields" (filterUpdated)="updateFilter($event)"></app-filter>
+        <mat-paginator class="flex flex-row framed-content margin-content-sides-wide justify-start items-center" (page)="changePagination($event)" [length]="totalItems" [pageSize]="itemsPerPage" [showFirstLastButtons]="true" [pageSizeOptions]="[5, 10, 25, 50]" [pageIndex]="currentPage - 1"></mat-paginator>      </div>
+      <div class="people-container">
+        <mat-card *ngFor="let person of protectedData" (click)="navigate(person.id)">
+          <mat-card-content>
+            <div class="flex flex-col justify-start items-start">
+              <!-- name -->
+              <mat-card-subtitle class="card-subtitle" *ngIf="person.name != ''">{{ person.name }}</mat-card-subtitle>
+              <mat-card-subtitle class="card-subtitle" *ngIf="person.name == '' || !person.name">No Name</mat-card-subtitle>
+              <mat-grid-list class="flex full-width" cols="3" rowHeight="3em">
+                <mat-grid-tile class="grid-bg">
+                  <div class="flex flex-col justify-center items-center">
+                    <div>{{ person.chairedPanels.length }}</div>
+                    <div>Chaired Panel<span *ngIf="person.chairedPanels.length > 1 || person.chairedPanels.length === 0">s</span></div>
+                  </div>
+                </mat-grid-tile>
+                <mat-grid-tile class="grid-bg">
+                  <div class="flex flex-col justify-center items-center">
+                    <div>{{ person.presentations.length }}</div>
+                    <div>Presentation<span *ngIf="person.presentations.length > 1 || person.presentations.length === 0">s</span></div>
+                  </div>
+                </mat-grid-tile>
+                <mat-grid-tile class="grid-bg">
+                  <div class="flex flex-col justify-center items-center">
+                    <div>{{ totalInstitutions(person) }}</div>
+                    <div>Institution<span *ngIf="totalInstitutions(person) > 1 || totalInstitutions(person) === 0">s</span></div>
+                  </div>
+                </mat-grid-tile>
+              </mat-grid-list>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  

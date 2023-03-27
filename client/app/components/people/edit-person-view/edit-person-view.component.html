@@ -1,0 +1,7 @@
+<div class="single-col" *ngIf="!loading">
+    <button type="button" routerLink="/people" color="primary" mat-raised-button aria-label="Back to view people">
+      <mat-icon>keyboard_arrow_up</mat-icon>
+    </button>
+   <app-edit-person personId="{{ personId }}"></app-edit-person>
+</div>
+  

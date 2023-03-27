@@ -1,0 +1,111 @@
+<!-- loading messages -->
+<div *ngIf="loading" class="flex justify-center items-center h-full">
+  <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
+    <mat-spinner></mat-spinner>
+    <p>Loading</p>
+  </div>
+  <div *ngIf="loadingError" class="flex flex-col justify-center items-center">
+    <mat-icon class="red-text">error</mat-icon>
+    <p class="red-text">Error: problem connecting to server</p>
+  </div>
+</div>
+<div *ngIf="!loading" class="list-wrapper flex flex-col justify-start items-center">
+  <div class="list-container">
+    <!-- filter -->
+    <div class="filter-container">
+      <app-filter [fields]="filterFields" (filterUpdated)="updateFilter($event)"></app-filter>
+      <mat-paginator class="flex flex-row framed-content margin-content-sides-wide justify-start items-center" (page)="changePagination($event)" [length]="totalItems" [pageSize]="itemsPerPage" [showFirstLastButtons]="true" [pageSizeOptions]="[5, 10, 25, 50]" [pageIndex]="currentPage - 1"></mat-paginator>
+    </div>
+    <div class="conferences-container">
+      <mat-card *ngFor="let conference of protectedData" (click)="navigate(conference.id)">
+        <mat-card-content>
+          <div class="flex flex-col justify-start items-start">
+            <!-- title -->
+            <mat-card-subtitle class="card-subtitle">{{ conference.title }}</mat-card-subtitle>
+            <div class="framed-content full-width flex flex-row max-sm:flex-col justify-center items-center max-sm:items-start">
+              <!-- location -->
+              <div class="full-width flex flex-row max-sm:flex-col justify-center items-center max-sm:items-start">
+                <div>
+                  Location:  
+                </div>
+                <div class="full-width padded-content-dense">
+                  {{ conference.location.title }}
+                </div>
+                <mat-divider class="full-width invisible max-sm:visible"></mat-divider>
+              </div>
+              <!-- date -->
+              <div class="full-width flex flex-row max-sm:flex-col justify-center items-center max-sm:items-start">
+                <div>
+                  Date:  
+                </div>
+                <div class="full-width padded-content-dense">
+                    <!-- date display if conference begins/ends same day -->
+                    <span *ngIf="conference.startMonth == conference.endMonth && conference.startDay == conference.endDay">
+                      {{ conference.startMonth }}/{{ conference.startDay }}/{{ conference.year }}
+                    </span>
+                    <!-- date display if conference begins/ends same month but different days-->
+                    <span *ngIf="conference.startMonth == conference.endMonth && conference.startDay != conference.endDay">
+                      {{ conference.startMonth }}/{{ conference.startDay }}-{{ conference.endDay }}, {{ conference.year }}
+                    </span>
+                    <!-- date display if conference begins.ends in different month -->
+                    <span *ngIf="conference.startMonth != conference.endMonth && conference.startDay != conference.endDay">
+                      {{ conference.startMonth }}/{{ conference.startDay }} -
+                      {{ conference.endMonth }}/{{ conference.endDay }}, {{ conference.year }}
+                    </span>
+                </div>
+              </div>
+            </div>
+            <mat-grid-list class="flex full-width margin-content-top" cols="3" rowHeight="3em">
+              <mat-grid-tile class="grid-bg">
+                <div class="flex flex-col justify-center items-center">
+                  <div>{{ conference.panels.length }}</div>
+                  <div>Panel<span *ngIf="conference.panels.length > 1 || conference.panels.length === 0">s</span></div>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile class="grid-bg">
+                <div class="flex flex-col justify-center items-center">
+                  <div>{{ totalPresentations(conference) }}</div>
+                  <div>Presentation<span *ngIf="totalPresentations(conference) > 1 || totalPresentations(conference) === 0">s</span></div>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile class="grid-bg">
+                <div class="flex flex-col justify-center items-center">
+                  <div>{{ conference.institutions.length }}</div>
+                  <div>Institution<span *ngIf="conference.institutions.length > 1 || conference.institutions.length === 0">s</span></div>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile class="grid-bg">
+                <div class="flex flex-col justify-center items-center">
+                  <div>{{ totalChairs(conference) }}</div>
+                  <div>Chair<span *ngIf="totalChairs(conference) > 1 || totalChairs(conference) === 0">s</span></div>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile class="grid-bg">
+                <div class="flex flex-col justify-center items-center">
+                  <div>{{ totalPresenters(conference) }}</div>
+                  <div>Presenter<span *ngIf="totalPresenters(conference) > 1 || totalPresenters(conference) === 0">s</span></div>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile class="grid-bg">
+                <div class="flex flex-col justify-center items-center">
+                  <div>{{ conference.participants.length }}</div>
+                  <div>Participant<span *ngIf="conference.participants.length > 1 || conference.participants.length === 0">s</span></div>
+                </div>
+              </mat-grid-tile>
+            </mat-grid-list>
+            <mat-divider class="divider"></mat-divider>
+            <!-- disciplines -->
+            <div class="full-width">
+              <span>Disciplines: </span>
+              <div class="padded-content-dense">
+                <mat-chip-list class="chip-container" aria-label="Conference disciplines">
+                  <mat-chip *ngFor="let discipline of conference.disciplines" color="primary">{{discipline.title}}</mat-chip>
+                </mat-chip-list>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,60 @@
+<!-- loading messages -->
+<div *ngIf="loading" class="flex justify-center items-center h-full">
+  <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
+    <mat-spinner></mat-spinner>
+    <p>Loading</p>
+  </div>
+  <div *ngIf="loadingError" class="flex flex-col justify-center items-center">
+    <mat-icon class="red-text">error</mat-icon>
+    <p class="red-text">Error: problem connecting to server</p>
+  </div>
+</div>
+<div *ngIf="!loading" class="list-wrapper flex flex-col justify-start items-center">
+    <div class="list-container">
+      <!-- filter -->
+      <div class="filter-container">
+        <app-filter [fields]="filterFields" (filterUpdated)="updateFilter($event)"></app-filter>
+        <mat-paginator class="flex flex-row framed-content margin-content-sides-wide justify-start items-center" (page)="changePagination($event)" [length]="totalItems" [pageSize]="itemsPerPage" [showFirstLastButtons]="true" [pageSizeOptions]="[5, 10, 25, 50]" [pageIndex]="currentPage - 1"></mat-paginator>
+      </div> 
+      <div class="institutions-container">
+        <mat-card *ngFor="let institution of protectedData" (click)="navigate(institution.id)">
+          <mat-card-content >
+            <div class="flex flex-col justify-start items-start">
+              <!-- title -->
+              <mat-card-subtitle class="card-subtitle">{{ institution.title }}</mat-card-subtitle>
+              <div class="full-width framed-content">
+              <!-- location -->
+                <div class="full-width">
+                  Location:  
+                </div>
+                <div class="padded-content-dense">
+                  {{ institution.location.title }}
+                </div>
+              </div>
+              <mat-grid-list class="flex full-width margin-content-top" cols="3" rowHeight="3em">
+                <mat-grid-tile class="grid-bg">
+                  <div class="flex flex-col justify-center items-center">
+                    <div>{{ institution.conferences.length }}</div>
+                    <div>Conference<span *ngIf="institution.conferences.length > 1 || institution.conferences.length === 0">s</span></div>
+                  </div>
+                </mat-grid-tile>
+                <mat-grid-tile class="grid-bg">
+                  <div class="flex flex-col justify-center items-center">
+                    <div>{{ institution.chairs.length }}</div>
+                    <div>Chair<span *ngIf="institution.chairs.length > 1 || institution.chairs.length === 0">s</span></div>
+                  </div>
+                </mat-grid-tile>
+                <mat-grid-tile class="grid-bg">
+                  <div class="flex flex-col justify-center items-center">
+                    <div>{{ institution.presenters.length }}</div>
+                    <div>Presenter<span *ngIf="institution.presenters.length > 1 || institution.presenters.length === 0">s</span></div>
+                  </div>
+                </mat-grid-tile>
+              </mat-grid-list>
+            </div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+    </div>
+  </div>
+  

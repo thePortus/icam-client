@@ -1,0 +1,283 @@
+@use "sass:map";
+
+// include angular material styles
+@use '@angular/material' as mat;
+@include mat.core();
+
+// include tailwind directives
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+// import google material icons
+@import 'https://fonts.googleapis.com/icon?family=Material+Icons';
+
+// import google fonts
+@import url('https://fonts.googleapis.com/css2?family=Julius+Sans+One&family=Lato&display=swap');
+
+// import project styles settings
+@import "styles-settings";
+
+/* setting app container */
+html, body {height: 100%; }
+body {
+  margin: 0;
+  background: rgb(238,238,230);
+  background: radial-gradient(circle, rgba(238,238,230,1) 0%, rgba(247,247,243,1) 35%, rgba(255,255,255,1) 100%);
+}
+
+a:link, a:visited {
+  color: map.get($mat-icam-primary, A400);
+}
+
+a:hover, a:active {
+  color: map.get($mat-icam-accent, A400);
+}
+
+/* start of Angular Material color and font theming */
+$body-typography: 'Lato';
+$title-typography: mat.define-typography-level(32px, 32px, 600, 'Julius Sans One');
+$headline-typography: mat.define-typography-level(26px, 26px, 600, 'Julius Sans One');
+$title-typography-family: 'Julius Sans One';
+
+$my-primary: mat.define-palette($mat-icam-primary, 500);
+$my-accent: mat.define-palette($mat-icam-accent, A200, A100, A400);
+$my-typography: mat.define-typography-config(
+    $font-family: $body-typography,
+    $title: $title-typography,
+    $headline: $headline-typography,
+    $subheading-2: $headline-typography,
+    $subheading-1: $headline-typography
+);
+
+$my-theme: mat.define-light-theme((
+ color: (
+   primary: $my-primary,
+   accent: $my-accent,
+ ),
+ typography: $my-typography
+));
+
+@include mat.all-component-themes($my-theme);
+/* end of Angular Material color and font theming */
+
+/* site-wide styles */
+// If the screen size is 601px wide or more, set for large screen
+@media screen and (min-width: 601px) {
+  mat-card {
+    margin: 20px;
+  }
+}
+
+// If the screen size is 600px wide or less, set for mobile
+@media screen and (max-width: 600px) {
+  mat-card {
+    margin: 10px;
+    padding: 10px !important;
+  }
+}
+
+input {
+  border-style: solid;
+  border-width: 1px;
+  border-color: #000000;
+  border-radius: 4px;
+}
+
+.full-width {
+  width: 100%;
+}
+
+.full-width-sans-padding {
+  width: calc(100% - 40px);
+}
+
+.full-width-sans-wide-padding {
+  width: calc(100% - 60px);
+}
+
+.full-width-sans-dense-padding {
+  width: calc(100% - 30px);
+}
+
+.center-text {
+  text-align: center;
+}
+
+.left-text {
+  width: 100%;
+  text-align: left;
+}
+
+// green & red text for check marks
+.green-text {
+  color: #00DD00;
+}
+
+.red-text {
+  color: #DD0000;
+}
+
+.float-left {
+  float: left;
+}
+
+.float-right {
+  float: right;
+}
+
+.border {
+  margin: 0px;
+  padding: 0px;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #000000;
+}
+
+.border-img {
+  margin: 15px;
+}
+
+.padded-content {
+  padding: 10px;
+}
+
+.padded-content-dense {
+  padding: 5px;
+}
+
+.padded-children-content-horizontal * {
+  padding: 0px 5px 0px 5px;
+}
+
+.margin-content {
+  margin: 10px;
+}
+
+.margin-content-dense {
+  margin: 5px;
+}
+
+.margin-content-wide {
+  margin: 20px;
+}
+
+.margin-content-sides-wide {
+  margin: 0px 20px 0px 20px;
+}
+
+.margin-content-top {
+  margin: 10px 0px 0px 0px;
+}
+
+.side-margins {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.divider {
+  padding-bottom: 10px;
+  width: 100%;
+}
+
+.has-dropcap:first-letter {
+  font-size: 6rem;
+  line-height: 0.65;
+  margin: 0.1em 0.1em 0.2em 0;
+  float: left;
+}
+
+.single-col {
+  height: 100%;
+  padding-top: 75px;
+  width: 100%;
+  position: absolute;
+}
+
+.left-col {
+  height: 100%;
+  padding-top: 75px;
+  width: 50%;
+  position: absolute;
+  float: left;
+  overflow-y: scroll;
+}
+
+.right-col {
+  height: 100%;
+  padding-top: 75px;
+  width: 50%;
+  right: 0px;
+  position: absolute;
+  float: right;
+  overflow-y: scroll;
+}
+
+// for contrasting color on data rows
+.color-row {
+  background-color: map.get($mat-icam-primary, 100);
+  color: map.get($mat-icam-primary, 'contrast', 300);
+  width: 100%;
+}
+
+// table with contrasting color on rows
+.contrast-table {
+  border-collapse: collapse;
+  padding-top: 10px;
+  width: 100%;
+  border-style: solid;
+  border-width: 1px 1px 1px 1px;
+  border-color: map.get($mat-icam-primary, 100);
+}
+
+.contrast-table tr:nth-child(even) {
+  background-color: map.get($mat-icam-primary, 100);
+  color: map.get($mat-icam-primary, 'contrast', 300);
+}
+
+.contrast-table td:nth-child(1) {
+  white-space: pre;
+}
+
+.contrast-table td:nth-child(2) {
+  width: 100%;
+}
+
+.contrast-table td {
+  padding: 3px;
+}
+
+// accent color for titles and subtitles of cards
+.card-title {
+  background-color: map.get($mat-icam-accent, 50);
+  color: map.get($mat-icam-accent, 900);
+  padding: 10px 5px 10px 5px;
+  font-family: $title-typography-family;
+}
+
+.card-subtitle {
+  background-color: map.get($mat-icam-accent, 100);
+  color: map.get($mat-icam-accent, 900);
+  padding: 10px 5px 10px 5px;
+  font-family: $title-typography-family;
+  width: 100%;
+}
+
+// to stop paginator widgets from justifying-end
+.mat-paginator-container {
+  justify-content: center !important;
+}
+
+// for encapsulating details
+.framed-content {
+  border-radius: 5px;
+  border-style: solid;
+  border-width: 1px;
+  padding: 5px;
+  border-color: map.get($mat-icam-primary, 50);
+}
+
+// for grid list backgrounds
+.grid-bg {
+  background-color: map.get($mat-icam-primary, 50);
+}

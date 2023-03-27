@@ -1,0 +1,26 @@
+:host .select-wrapper {
+    height: 100%;
+    width: 100%;
+  }
+  
+  :host .select-container {
+    width: 100%;
+  }
+  
+  :host button {
+    width: 100%;
+  }
+  
+  :host .filter-container {
+    width: 100%;
+  }
+  
+  :host .filter-input-wrapper {
+    padding-top: 2px;
+    padding-bottom: 2px;
+  }
+  
+  :host .filter-input-wrapper:not(:last-child) {
+    padding-right: 5px;
+  }
+  

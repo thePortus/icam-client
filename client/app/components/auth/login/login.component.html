@@ -1,0 +1,62 @@
+<div class="single-col">
+  <div class="auth-wrapper flex flex-col justify-center items-center">
+    <!-- only displayed if not logged in -->
+    <form #myform="ngForm" (ngSubmit)="onSubmit(myform)" *ngIf="!this.user.loggedIn">
+      <mat-card class="auth-container">
+        <mat-card-title>Login</mat-card-title>
+        <mat-card-content>
+          <div class="flex flex-col justify-center items-center">
+            <!-- username -->
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Username</mat-label>
+                <input matInput type="text" name="username" placeholder="Enter Username" ngModel>
+              </mat-form-field>
+            </div>
+            <!-- password -->
+            <div>
+              <mat-form-field appearance="fill">
+                <mat-label>Password</mat-label>
+                <input matInput type="password" name="password" placeholder="Enter Password" ngModel>
+              </mat-form-field>
+            </div>
+          </div>
+        </mat-card-content>
+        <!-- error messages -->
+        <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-center items-start">
+          <div *ngFor="let errorMsg of errorMsgs">Error: {{ errorMsg }}</div>
+        </div>
+        <div *ngIf="serverErrorMsgs.length > 0" class="error-msgs flex flex-col justify-center items-start">
+          <div *ngFor="let serverErrorMsg of serverErrorMsgs">Error: {{ serverErrorMsg }}</div>
+        </div>
+        <!-- login button -->
+        <mat-card-actions>
+          <div class="flex flex-col justify-center items-center">
+            <button mat-raised-button type="submit" color="primary" aria-label="Login Button">Login</button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+      <div class="policy-links flex flex-col justify-center items-center">
+          <span><small><a routerLink='/privacy-policy'>View Privacy Policy</a></small></span>
+      </div>
+    </form>
+    <!-- displayed if logged in -->
+    <mat-card class="auth-container" *ngIf="this.user.loggedIn">
+      <mat-card-content>
+        <div class="flex flex-col justify-center items-center">
+          <h1>You are logged in</h1>
+          <div class="policy-links flex flex-col justify-center items-center">
+            <div class="policy-links flex flex-col justify-center items-center">
+                <span><small><a routerLink='/privacy-policy'>View Privacy Policy</a></small></span>
+            </div>
+          </div>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <div class="flex flex-col justify-center items-center">
+          <button mat-raised-button type="submit" color="primary" (click)="logout()" aria-label="Logout Button">Logout</button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </div>
+</div>

@@ -1,0 +1,41 @@
+@import './../../../../styles-settings';
+
+:host .edit-wrapper {
+  height: 100%;
+  width: 100%;
+}
+
+:host .edit-container {
+  width: 100%;
+}
+
+:host .checkbox-option {
+  padding-left: 15px;
+}
+
+:host .error-msgs {
+  background-color: $error-msg-bg-color;
+  color: $error-msg-color;
+  margin: 5px;
+  padding: 5px;
+}
+
+:host .edit-subfield-container {
+  padding-left: 5px;
+  padding-right: 5px;
+  width: 100%;
+}
+
+:host .edit-container mat-form-field {
+  width: 100%;
+}
+
+:host mat-divider {
+  width: 100%;
+}
+
+:host button {
+  margin-top: 5px;
+  margin-bottom: 5px;
+  width: 100%;
+}

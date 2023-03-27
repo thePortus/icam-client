@@ -1,0 +1,136 @@
+<!-- loading messages -->
+<div *ngIf="loading" class="flex justify-center items-center h-full">
+    <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
+      <mat-spinner></mat-spinner>
+      <p>Loading</p>
+    </div>
+    <div *ngIf="loadingError" class="flex flex-col justify-center items-center">
+      <mat-icon class="red-text">error</mat-icon>
+      <p class="red-text">Error: problem connecting to server</p>
+    </div>
+  </div>
+<div *ngIf="!loading" class="list-wrapper flex flex-col justify-start items-center">
+    <div class="list-container">
+        <mat-card>
+            <mat-card-content>
+                <div class="flex flex-col justify-start items-start">
+                    <!-- title -->
+                    <mat-card-subtitle class="card-subtitle" *ngIf="protectedData.title != ''">{{ protectedData.title }}</mat-card-subtitle>
+                    <mat-card-subtitle class="card-subtitle" *ngIf="protectedData.title == ''">No Title</mat-card-subtitle>
+                     <!-- edit / delete buttons -->
+                    <div class="button-container flex flex-row justify-start items-center" *ngIf="user.role == 'Owner' || user.role == 'Editor'">
+                        <button class="full-width" routerLink="{{'/institutions/edit/' + protectedData.id}}" color="accent" mat-raised-button aria-label="Edit institution">
+                            <mat-icon>edit</mat-icon>
+                        </button>
+                        <button (click)="deleteItem()" color="warn" mat-raised-button aria-label="Delete institution">
+                            <mat-icon>delete_forever</mat-icon>
+                        </button>
+                    </div>
+                    <!-- location -->
+                    <div class="location-container">
+                        <span>
+                            Location: {{ protectedData.location.title }}
+                        </span>
+                    </div>
+                    <mat-divider class="divider"></mat-divider>
+                    <!-- conferences -->
+                    <mat-card *ngIf="protectedData.conferences.length > 0" class="full-width-sans-wide-padding">
+                        <mat-card-content class="full-width">
+                        <div (click)="toggleDisplay.conferences = !toggleDisplay.conferences" class="full-width flex flex-row">
+                            <span class="flex grow">Conferenes:</span>
+                            <button type="button" color="primary" mat-raised-button aria-label="Show/Hide Conferences">
+                            <mat-icon *ngIf="toggleDisplay.conferences">keyboard_arrow_down</mat-icon>
+                            <mat-icon *ngIf="!toggleDisplay.conferences">keyboard_arrow_up</mat-icon>
+                            </button>
+                        </div>
+                        <div *ngIf="toggleDisplay.conferences" class="full-width">
+                            <mat-card routerLink="/conferences/{{ conference.id }}" *ngFor="let conference of protectedData.conferences">
+                            <mat-card-content>
+                                <div class="flex flex-col justify-start items-start">
+                                    <mat-card-subtitle class="full-width flex flex-row justify-start items-center" *ngIf="conference.title !== null && conference.title !== ''">
+                                        <span class="flex grow">
+                                            {{ conference.title }}
+                                        </span>
+                                        <span class="roles-container">
+                                            <span>
+                                                Host:
+                                            </span>
+                                            <span>
+                                                <mat-icon fontIcon="check" *ngIf="conference.roles.host"></mat-icon>
+                                                <mat-icon fontIcon="close" *ngIf="!conference.roles.host"></mat-icon>
+                                            </span>
+                                            <span>
+                                                Sponsor:
+                                            </span>
+                                            <span>
+                                                <mat-icon fontIcon="check" *ngIf="conference.roles.sponsor"></mat-icon>
+                                                <mat-icon fontIcon="close" *ngIf="!conference.roles.sponsor"></mat-icon>
+                                            </span>
+                                            <span>
+                                                Society:
+                                            </span>
+                                            <span>
+                                                <mat-icon fontIcon="check" *ngIf="conference.roles.society"></mat-icon>
+                                                <mat-icon fontIcon="close" *ngIf="!conference.roles.society"></mat-icon>
+                                            </span>
+                                        </span>
+                                    </mat-card-subtitle>
+                                    <mat-card-subtitle *ngIf="conference.title == null || conference.title == ''">
+                                        No Title
+                                    </mat-card-subtitle>
+                                </div>
+                            </mat-card-content>
+                            </mat-card>
+                        </div>
+                        </mat-card-content>
+                    </mat-card>
+                    <!-- chairs -->
+                    <mat-card *ngIf="protectedData.chairs.length > 0" class="full-width-sans-wide-padding">
+                        <mat-card-content class="full-width">
+                            <div (click)="toggleDisplay.chairs = !toggleDisplay.chairs" class="full-width flex flex-row">
+                                <span class="flex grow">Chairs:</span>
+                                <button type="button" color="primary" mat-raised-button aria-label="Show/Hide Chairs">
+                                <mat-icon *ngIf="toggleDisplay.chairs">keyboard_arrow_down</mat-icon>
+                                <mat-icon *ngIf="!toggleDisplay.chairs">keyboard_arrow_up</mat-icon>
+                                </button>
+                            </div>
+                        <div *ngIf="toggleDisplay.chairs" class="full-width">
+                            <mat-card routerLink="/people/{{ person.id }}" *ngFor="let person of protectedData.chairs">
+                            <mat-card-content>
+                                <div class="flex flex-col justify-start items-start">
+                                    <mat-card-subtitle *ngIf="person.name !== null && person.name !== ''">{{ person.name }}</mat-card-subtitle>
+                                    <mat-card-subtitle *ngIf="person.name == null || person.name == ''">No Name</mat-card-subtitle>
+                                </div>
+                            </mat-card-content>
+                            </mat-card>
+                        </div>
+                        </mat-card-content>
+                    </mat-card>
+                    <!-- presenters -->
+                    <mat-card *ngIf="protectedData.presenters.length > 0" class="full-width-sans-wide-padding">
+                        <mat-card-content class="full-width">
+                        <div (click)="toggleDisplay.presenters = !toggleDisplay.presenters" class="full-width flex flex-row">
+                            <span class="flex grow">Presenters:</span>
+                            <button type="button" color="primary" mat-raised-button aria-label="Show/Hide Presenters">
+                            <mat-icon *ngIf="toggleDisplay.presenters">keyboard_arrow_down</mat-icon>
+                            <mat-icon *ngIf="!toggleDisplay.presenters">keyboard_arrow_up</mat-icon>
+                            </button>
+                        </div>
+                        <div *ngIf="toggleDisplay.presenters" class="full-width">
+                            <mat-card routerLink="/people/{{ person.id }}" *ngFor="let person of protectedData.presenters">
+                            <mat-card-content>
+                                <div class="flex flex-col justify-start items-start">
+                                    <mat-card-subtitle *ngIf="person.name !== null && person.name !== ''">{{ person.name }}</mat-card-subtitle>
+                                    <mat-card-subtitle *ngIf="person.name == null || person.name == ''">No Name</mat-card-subtitle>
+                                </div>
+                            </mat-card-content>
+                            </mat-card>
+                        </div>
+                        </mat-card-content>
+                    </mat-card>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+  </div>
+  

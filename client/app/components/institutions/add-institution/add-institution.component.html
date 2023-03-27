@@ -1,0 +1,48 @@
+<div *ngIf="!loading" class="add-wrapper flex flex-col justify-start items-center">
+  <form class="add-container" #myform="ngForm" (ngSubmit)="onSubmit(myform)" *ngIf="user.role == 'Owner' || user.role == 'Editor'">
+    <mat-card>
+      <mat-card-title class="card-title">Add New Institution</mat-card-title>
+      <mat-card-content>
+        <!-- title -->
+        <div class="flex flex-col justify-start items-center">
+          <mat-form-field appearance="fill">
+            <mat-label>Title</mat-label>
+            <input matInput type="text" name="title" placeholder="Enter Title" ngModel>
+          </mat-form-field>
+          <!-- type -->
+          <mat-form-field>
+            <mat-label>Type</mat-label>
+            <mat-select [(value)]="selectedType">
+              <mat-option *ngFor="let type of acceptableTypes" [value]="type">{{ type }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- funding -->
+          <mat-form-field>
+            <mat-label>Funding</mat-label>
+            <mat-select [(value)]="selectedFunding">
+              <mat-option *ngFor="let funding of acceptableFunding" [value]="funding">{{ funding }}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <!-- location -->
+          <app-select-location *ngIf="!selectedLocation" class="full-width" (successfullyAdded)="locationSelected($event)"></app-select-location>
+          <div *ngIf="selectedLocation" class="full-width flex flex-row">
+            <span class="padded-content">{{ selectedLocation.title }}</span>
+            <span class="padded-content"><mat-icon (click)="selectedLocation = null">cancel</mat-icon></span>
+          </div>
+        </div>
+      </mat-card-content>
+      <!-- error messages & add button -->
+      <mat-card-actions>
+        <div class="flex flex-col justify-center items-center">
+          <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+            <div *ngFor="let errorMsg of errorMsgs">Error: {{ errorMsg }}</div>
+          </div>
+          <div *ngIf="serverErrorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+            <div *ngFor="let serverErrorMsg of serverErrorMsgs">Error: {{ serverErrorMsg }}</div>
+          </div>
+          <button mat-raised-button type="submit" color="primary" aria-label="Add institution button">Add Institution</button>
+        </div>
+      </mat-card-actions>
+    </mat-card>
+  </form>
+</div>

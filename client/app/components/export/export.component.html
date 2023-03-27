@@ -1,0 +1,57 @@
+<div class="single-col">
+    <!-- loading and error indicators -->
+    <div *ngIf="loading" class="flex justify-center items-center h-full">
+      <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
+        <mat-spinner></mat-spinner>
+        <p>Loading</p>
+      </div>
+      <div *ngIf="loadingError" class="flex flex-col justify-center items-center">
+        <mat-icon class="red-text">error</mat-icon>
+        <p class="red-text">Error: problem connecting to server</p>
+      </div>
+    </div>
+    <div *ngIf="!loading" class="export-wrapper h-full flex justify-center items-start">
+      <!-- download links -->
+      <div class="export-container flex flex-col justify-center items-start">
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.conferences" download="conferences.json">Download conferences.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.disciplines" download="disciplines.json">Download disciplines.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.institutions" download="institutions.json">Download institutions.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.locations" download="locations.json">Download locations.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.panels" download="panels.json">Download panels.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.people" download="people.json">Download people.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.presentations" download="presentations.json">Download presentations.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.topics" download="topics.json">Download topics.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.geographies" download="geographies.json">Download geographies.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.chairAffiliations" download="chair-affiliations.json">Download chair-affiliations.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.conferenceDisciplines" download="conference-disciplines.json">Download conference-disciplines.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.conferenceInstitutions" download="conference-institutions.json">Download conference-institutions.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.peopleChairing" download="people-chairing.json">Download people-chairing.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.peoplePresenting" download="people-presenting.json">Download people-presenting.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.peopleParticipating" download="people-participating.json">Download people-participating.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.presentationGeographies" download="presentation-geographies.json">Download presentation-geographies.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.presentationTopics" download="presentation-topics.json">Download presentation-topics.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.presenterAffiliations" download="presenter-affiliations.json">Download presenter-affiliations.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+        <button mat-raised-button color="primary"><a [href]="downloadJsonHrefs.participantAffiliations" download="participant-affiliations.json">Download participant-affiliations.json</a></button>
+        <mat-divider class="padded-content-dense"></mat-divider>
+      </div>
+    </div>
+  </div>
+  

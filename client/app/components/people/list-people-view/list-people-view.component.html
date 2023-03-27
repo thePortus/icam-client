@@ -1,0 +1,9 @@
+<div class="single-col" *ngIf="!loading">
+    <app-list-people></app-list-people>
+    <div class="add-button-container">
+        <button *ngIf="user.role == 'Owner' || user.role == 'Editor'" color="primary" routerLink="/people/add" mat-fab aria-label="Add new people">
+          <mat-icon>add</mat-icon>
+        </button>
+    </div>
+</div>
+

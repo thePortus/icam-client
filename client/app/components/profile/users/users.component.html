@@ -1,0 +1,35 @@
+<div *ngIf="!loading">
+  <mat-card>
+    <mat-card-content>
+      <div>
+        <!-- filter -->
+        <app-filter [fields]="filterFields" (filterUpdated)="updateFilter($event)"></app-filter>
+        <mat-paginator class="flex flex-row framed-content margin-content-sides-wide justify-start items-center" (page)="changePagination($event)" [length]="totalItems" [pageSize]="itemsPerPage" [showFirstLastButtons]="true" [pageSizeOptions]="[5, 10, 25, 50]" [pageIndex]="currentPage - 1"></mat-paginator>
+      </div>
+      <!-- users table -->
+      <table class="full-width contrast-table">
+        <!-- header -->
+        <thead>
+          <tr>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Role</th>
+            <th>Edit User</th>
+          </tr>
+        </thead>
+        <!-- data rows -->
+        <tbody>
+          <tr *ngFor="let row of protectedData">
+            <td>{{ row.username }}</td>
+            <td>{{ row.email }}</td>
+            <td>{{ row.role }}</td>
+            <td>
+              <button *ngIf="row.role == 'User'" mat-raised-button color="primary" (click)="openDialog(row.username, 'Editor')" aria-label="Promote user to editor">Promote to Editor</button>
+              <button *ngIf="row.role == 'Editor'" mat-raised-button color="primary" (click)="openDialog(row.username, 'User')" aria-label="Demote editor to user">Demote to User</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </mat-card-content>
+  </mat-card>
+</div>

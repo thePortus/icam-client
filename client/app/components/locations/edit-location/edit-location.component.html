@@ -1,0 +1,68 @@
+<!-- loading messages -->
+<div *ngIf="loading" class="flex justify-center items-center h-full">
+  <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
+    <mat-spinner></mat-spinner>
+    <p>Loading</p>
+  </div>
+  <div *ngIf="loadingError" class="flex flex-col justify-center items-center">
+    <mat-icon class="red-text">error</mat-icon>
+    <p class="red-text">Error: problem connecting to server</p>
+  </div>
+</div>
+<div *ngIf="!loading" class="edit-wrapper flex flex-col justify-start items-center">
+    <form class="edit-container" #myform="ngForm" (ngSubmit)="onSubmit(myform)" *ngIf="user.role == 'Owner' || user.role == 'Editor'">
+        <mat-card>
+            <mat-card-title class="card-title">Edit Location</mat-card-title>
+            <mat-card-content>
+              <!-- title -->
+              <div class="flex flex-col justify-start items-center">
+                <mat-form-field appearance="fill">
+                  <mat-label>Title</mat-label>
+                  <input matInput type="text" name="title" placeholder="Enter Title" [(ngModel)]="protectedData.title">
+              </mat-form-field>
+              <!-- city -->
+              <mat-form-field appearance="fill">
+                  <mat-label>City</mat-label>
+                  <input matInput type="text" name="city" placeholder="Enter City" ngModel required>
+                </mat-form-field>
+                <!-- state -->
+                <mat-form-field>
+                  <mat-label>State</mat-label>
+                  <mat-select [(value)]="selectedState">
+                    <mat-option *ngFor="let state of acceptableStates" [value]="state.name">{{ state.name }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <!-- state (other )-->
+                <mat-form-field appearance="fill">
+                  <mat-label>State (other)</mat-label>
+                  <input matInput type="text" name="state" placeholder="Enter State" ngModel>
+                </mat-form-field>
+                <!-- country -->
+                <mat-form-field>
+                  <mat-label>Country</mat-label>
+                  <mat-select [(value)]="selectedCountry">
+                    <mat-option *ngFor="let country of acceptableCountries" [value]="country.name">{{ country.name }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <!-- country (other) -->
+                <mat-form-field appearance="fill">
+                  <mat-label>Country (other)</mat-label>
+                  <input matInput type="text" name="country" placeholder="Enter Country" ngModel>
+                </mat-form-field>
+              </div>
+            </mat-card-content>
+            <!-- error messages & edit button -->
+            <mat-card-actions>
+              <div class="flex flex-col justify-center items-center">
+                <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+                  <div *ngFor="let errorMsg of errorMsgs">Error: {{ errorMsg }}</div>
+              </div>
+              <div *ngIf="serverErrorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+                  <div *ngFor="let serverErrorMsg of serverErrorMsgs">Error: {{ serverErrorMsg }}</div>
+              </div>
+              <button mat-raised-button type="submit" color="primary" aria-label="Submit changes button">Submit Changes</button>
+              </div>
+            </mat-card-actions>
+        </mat-card>
+    </form>
+</div>

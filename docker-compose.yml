@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+    client:
+      build: client/
+      restart: always
+      ports:
+        - 80:80
+        - 443:443
+      environment:
+        - WEB_PORT=80
+      networks:
+        - client-network
+      volumes:
+        - ./nginx/conf:/etc/nginx/conf.d/:ro
+        - ./certbot/www:/var/www/certbot/:ro
+        - ./certbot/conf/:/etc/nginx/ssl/:ro
+    certbot:
+      image: certbot/certbot:latest
+      volumes:
+        - ./certbot/www/:/var/www/certbot/:rw
+        - ./certbot/conf/:/etc/letsencrypt/:rw
+      # PUT YOUR EMAIL AND DOMAIN NAME BELOW
+      command: certonly --webroot --webroot-path /var/www/html/ --email sample@your_domain --agree-tos --no-eff-email -d your_domain -d www.your_domain
+
+networks:
+    client-network:

@@ -1,0 +1,94 @@
+<div *ngIf="!loading" class="select-wrapper flex flex-col justify-start items-center">
+    <div class="select-container">
+      <mat-card>
+        <mat-card-content>
+          <div class="flex flex-col justify-start items-center">
+            <mat-card class="filter-container">
+              <mat-card-content>
+                <!-- header -->
+                <mat-card-title>
+                  <div class="text-base">
+                    Select Presentation
+                  </div>
+                  <mat-divider></mat-divider>
+                  <div class="text-sm">
+                    Filter
+                  </div>
+                </mat-card-title>
+                <!-- filter -->
+                <div class="flex flex-row justify-start items-center max-sm:flex-col max-sm:items-start max-sm:text-xs">
+                  <div class="filter-input-wrapper">
+                    <label for="titleFilter">Title: </label>
+                    <input type="text" id="titleFilter" (input)="refreshData()" [(ngModel)]="filterByTitle" />
+                  </div>
+                  <div class="filter-input-wrapper">
+                    <label for="conferenceFilter">Conference: </label>
+                    <input type="text" id="conferenceFilter" (input)="refreshData()" [(ngModel)]="filterByConferenceTitle" />
+                  </div>
+                  <div class="filter-input-wrapper">
+                      <label for="panelFilter">Panel: </label>
+                      <input type="text" id="panelFilter" (input)="refreshData()" [(ngModel)]="filterByPanelTitle" />
+                  </div>
+                  <div class="filter-input-wrapper">
+                    <label for="presenterFilter">Presenter: </label>
+                    <input type="text" id="presenterFilter" (input)="refreshData()" [(ngModel)]="filterByPresenterName" />
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            <div class="full-width flex flex-row max-sm:flex-col">
+              <!-- select items -->
+              <div class="full-width">
+                <mat-form-field class="full-width">
+                  <mat-label>Select Presentation</mat-label>
+                  <mat-select [(value)]="selectedPresentation">
+                    <mat-option *ngFor="let presentation of acceptablePresentations" [value]="presentation.id">
+                      <span *ngIf="presentation.title !== null && presentation.title !== ''">{{ presentation.title }}</span>
+                      <span *ngIf="presentation.title == null || presentation.title == ''">No Title</span>
+                      <span> - </span>
+                      <span *ngIf="presentation.panel.title !== null && presentation.panel.title !== ''">{{ presentation.panel.title }}</span>
+                      <span *ngIf="presentation.panel.title == null || presentation.panel.title == ''">No Panel Title</span>
+                      <span> - </span>
+                      <span *ngIf="presentation.panel.conference.title !== null && presentation.panel.conference.title !== ''">{{ presentation.panel.conference.title }}</span>
+                      <span *ngIf="presentation.panel.conference.title == null || presentation.panel.conference.title == ''">No Conference Title</span>
+                    </mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <!-- force refresh data from server -->
+              <div class="padded-content">
+                <button type="button" mat-raised-button color="primary" (click)="refreshData()">
+                  <mat-icon >refresh</mat-icon>
+                </button>
+              </div>
+            </div>
+            <!-- name, if includeName input is true-->
+            <mat-form-field class="full-width" appearance="fill" *ngIf="includeName">
+              <mat-label>Person name (optional)</mat-label>
+              <input matInput type="text" name="chairName" [(ngModel)]="personName">
+            </mat-form-field>
+            <mat-divider></mat-divider>
+            <!-- add/hide a create new item button-->
+            <button type="button" *ngIf="!displayAddPresentation" (click)="toggleDisplayAddPresentation()" mat-raised-button aria-label="Add new presentation button">Add New Presentation</button>
+            <button type="button" *ngIf="displayAddPresentation" (click)="toggleDisplayAddPresentation()" mat-raised-button aria-label="Hide new presentation button">Cancel New Presentation</button>
+            <div class="full-width" *ngIf="displayAddPresentation">
+              <app-add-presentation class="full-width" (successfullyAdded)="presentationAdded($event)"></app-add-presentation>
+            </div>
+          </div>
+        </mat-card-content>
+        <!-- error messages & select button -->
+        <mat-card-actions>
+          <div class="flex flex-col justify-center items-center">
+            <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+              <div *ngFor="let errorMsg of errorMsgs">Error: {{ errorMsg }}</div>
+            </div>
+            <div *ngIf="serverErrorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+              <div *ngFor="let serverErrorMsg of serverErrorMsgs">Error: {{ serverErrorMsg }}</div>
+            </div>
+            <button mat-raised-button type="button" color="primary" (click)="onSubmit()" aria-label="Select presentation button">Select Presentation</button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+  

@@ -1,0 +1,75 @@
+<div *ngIf="!loading" class="select-wrapper flex flex-col justify-start items-center">
+    <div class="select-container">
+      <mat-card>
+        <mat-card-content>
+          <div class="flex flex-col justify-start items-center">
+            <mat-card class="filter-container">
+              <mat-card-content>
+                <!-- header -->
+                <mat-card-title>
+                  <div class="text-base">
+                    Select Conference
+                  </div>
+                  <mat-divider></mat-divider>
+                  <div class="text-sm">
+                    Filter
+                  </div>
+                </mat-card-title>
+                <!-- filter -->
+                <div class="flex flex-row justify-start items-center max-sm:flex-col max-sm:items-start">
+                  <div class="filter-input-wrapper">
+                    <label for="titleFilter">Title: </label>
+                    <input type="text" id="titleFilter" (input)="refreshData()" [(ngModel)]="filterByTitle" />
+                  </div>
+                </div>
+              </mat-card-content>
+            </mat-card>
+            <div class="full-width flex flex-row max-sm:flex-col">
+              <!-- select items -->
+              <div class="full-width">
+                <mat-form-field class="full-width">
+                  <mat-label>Select Conference</mat-label>
+                  <mat-select [(value)]="selectedConference">
+                    <mat-option *ngFor="let conference of acceptableConferences" [value]="conference.id">{{ conference.title }}</mat-option>
+                  </mat-select>
+                </mat-form-field>
+              </div>
+              <!-- force refresh data from server -->
+              <div class="padded-content">
+                <button type="button" mat-raised-button color="primary" (click)="refreshData()">
+                  <mat-icon >refresh</mat-icon>
+                </button>
+              </div>
+            </div>
+            <!-- roles, if includeRole input is true-->
+            <div *ngIf="includeRole" class="full-width">
+              <mat-form-field class="full-width" appearance="fill">
+                <mat-label>Role</mat-label>
+                <input matInput type="string" name="role" [(ngModel)]="role">
+              </mat-form-field>
+            </div>
+            <mat-divider></mat-divider>
+            <!-- add/hide a create new item button-->
+            <button type="button" *ngIf="!displayAddConference" (click)="toggleDisplayAddConference()" mat-raised-button aria-label="Add new conference button">Add New Conference</button>
+            <button type="button" *ngIf="displayAddConference" (click)="toggleDisplayAddConference()" mat-raised-button aria-label="Hide new conference button">Cancel New Conference</button>
+            <div class="full-width" *ngIf="displayAddConference">
+              <app-add-conference class="full-width" (successfullyAdded)="conferenceAdded($event)"></app-add-conference>
+            </div>
+          </div>
+        </mat-card-content>
+        <!-- error messages & select button -->
+        <mat-card-actions>
+          <div class="flex flex-col justify-center items-center">
+            <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+              <div *ngFor="let errorMsg of errorMsgs">Error: {{ errorMsg }}</div>
+            </div>
+            <div *ngIf="serverErrorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+              <div *ngFor="let serverErrorMsg of serverErrorMsgs">Error: {{ serverErrorMsg }}</div>
+            </div>
+            <button mat-raised-button type="button" color="primary" (click)="onSubmit()" aria-label="Select conference button">Select Conference</button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </div>
+  </div>
+  

@@ -1,0 +1,29 @@
+<!-- loading messages -->
+<div *ngIf="loading" class="flex justify-center items-center h-full">
+    <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
+      <mat-spinner></mat-spinner>
+      <p>Loading</p>
+    </div>
+    <div *ngIf="loadingError" class="flex flex-col justify-center items-center">
+      <mat-icon class="red-text">error</mat-icon>
+      <p class="red-text">Error: problem connecting to server</p>
+    </div>
+  </div>
+<div *ngIf="!loading" class="list-wrapper flex flex-col justify-start items-center">
+    <div class="list-container">
+        <!-- filter -->
+        <div class="filter-container">
+            <app-filter [fields]="filterFields" (filterUpdated)="updateFilter($event)"></app-filter>
+            <mat-paginator class="flex flex-row framed-content margin-content-sides-wide justify-start items-center" (page)="changePagination($event)" [length]="totalItems" [pageSize]="itemsPerPage" [showFirstLastButtons]="true" [pageSizeOptions]="[5, 10, 25, 50]" [pageIndex]="currentPage - 1"></mat-paginator>        </div>
+        <div class="locations-container">
+            <mat-card *ngFor="let location of protectedData" (click)="navigate(location.id)">
+                <mat-card-content>
+                    <div class="flex flex-col justify-start items-start">
+                        <!-- title -->
+                        <mat-card-subtitle class="card-subtitle">{{ location.title }}</mat-card-subtitle>
+                    </div>
+                </mat-card-content>
+            </mat-card>
+        </div>
+    </div>
+</div>

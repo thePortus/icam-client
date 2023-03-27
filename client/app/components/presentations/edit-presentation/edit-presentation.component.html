@@ -1,0 +1,226 @@
+<!-- loading messages -->
+<div *ngIf="loading" class="flex justify-center items-center h-full">
+  <div *ngIf="!loadingError" class="flex flex-col justify-center items-center">
+    <mat-spinner></mat-spinner>
+    <p>Loading</p>
+  </div>
+  <div *ngIf="loadingError" class="flex flex-col justify-center items-center">
+    <mat-icon class="red-text">error</mat-icon>
+    <p class="red-text">Error: problem connecting to server</p>
+  </div>
+</div>
+<div *ngIf="!loading" class="add-wrapper flex flex-col justify-start items-center">
+    <form class="edit-container" #myform="ngForm" (ngSubmit)="onSubmit(myform)" *ngIf="user.role == 'Owner' || user.role == 'Editor'">
+      <mat-card>
+        <mat-card-title class="card-title">Edit Presentation</mat-card-title>
+        <mat-card-content>
+          <div class="flex flex-col justify-start items-center">
+            <!-- title -->
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Title</mat-label>
+              <input matInput type="text" name="title" placeholder="Enter Title" [(ngModel)]="protectedData.title">
+            </mat-form-field>
+            <!-- panel -->
+            <app-select-panel *ngIf="!selectedPanel" class="full-width" (successfullyAdded)="panelSelected($event)"></app-select-panel>
+            <div *ngIf="selectedPanel" class="full-width flex flex-row">
+              <span class="padded-content">{{ selectedPanel.title }}</span>
+              <span class="padded-content"><mat-icon (click)="selectedPanel = null">cancel</mat-icon></span>
+            </div>
+            <mat-divider></mat-divider>
+            <!-- description -->
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Description</mat-label>
+              <textarea matInput type="text" name="description" placeholder="Enter Description"  [(ngModel)]="protectedData.description"></textarea>
+            </mat-form-field>
+            <!-- text -->
+            <mat-form-field class="full-width" appearance="fill">
+              <mat-label>Text</mat-label>
+              <textarea matInput type="text" name="text" placeholder="Enter Text"  [(ngModel)]="protectedData.text"></textarea>
+            </mat-form-field>
+            <!-- presenters -->
+            <h3 class="left-text">Presenters</h3>
+            <div class="left-text flex flex-row justify-start items-start">
+              <table class="full-width contrast-table" aria-label="Presenters">
+                <tbody>
+                  <tr *ngFor="let presenter of presentersToLink">
+                    <td class="padded-content">
+                      <mat-icon (click)="removePresenter(presenter.personId)">cancel</mat-icon>
+                    </td>
+                    <td class="padded-content">
+                      <span *ngIf="getPresenterNameById(presenter.personId) != '' && getPresenterNameById(presenter.personId)">
+                        {{ getPresenterNameById(presenter.personId) }}
+                      </span>
+                      <span *ngIf="getPresenterNameById(presenter.personId) == '' || !getPresenterNameById(presenter.personId)">
+                          No Name
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <span class="left-text">
+              <button mat-raised-button *ngIf="!displayLinkPresenter" (click)="toggleDisplayLinkPresenter()" aria-label="Link presenter">
+                Link Presenter
+              </button>
+              <button mat-raised-button *ngIf="displayLinkPresenter" (click)="toggleDisplayLinkPresenter()" aria-label="Cancel link presenter">
+                Cancel Link Presenter
+              </button>
+            </span>
+            <div class="edit-subfield-container" *ngIf="displayLinkPresenter">
+              <app-select-person class="full-width" [includeName]="true" (successfullyAdded)="linkPresenter($event)" (restrictedIds)="linkedPresenterIds()"></app-select-person>
+            </div>
+            <!-- presenter affiliations -->
+            <h3 *ngIf="presentersToLink.length > 0" class="left-text">Affiliations of Presenters</h3>
+            <div *ngIf="presentersToLink.length > 0" class="left-text flex flex-row justify-start items-start">
+              <table class="full-width contrast-table" aria-label="Conference chair">
+                <tbody>
+                  <tr *ngFor="let presenterAffiliation of presenterAffiliationsToLink">
+                    <td class="padded-content">
+                      <mat-icon (click)="removePresenterAffiliation(presenterAffiliation.personId, presenterAffiliation.institutionId)">cancel</mat-icon>
+                    </td>
+                    <td class="padded-content">
+                      <span *ngIf="getPresenterNameById(presenterAffiliation.personId) != '' && getPresenterNameById(presenterAffiliation.personId)">
+                        {{ getPresenterNameById(presenterAffiliation.personId) }},
+                      </span>
+                      <span *ngIf="getPresenterNameById(presenterAffiliation.personId) == '' || !getPresenterNameById(presenterAffiliation.personId)">
+                          No Name,
+                      </span>
+                      <span>
+                        {{ getInstitutionTitleById(presenterAffiliation.institutionId) }}
+                      </span>
+                      <span>
+                        ({{ presenterAffiliation.department }})
+                      </span>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <span *ngIf="presentersToLink.length > 0" class="left-text">
+              <button mat-raised-button *ngIf="!displayLinkPresenterAffiliation" (click)="toggleDisplayPresenterAffiliation()" aria-label="Link affiliation of presenter">
+                Link Affiliation as Presenter
+              </button>
+              <button mat-raised-button *ngIf="displayLinkPresenterAffiliation" (click)="toggleDisplayPresenterAffiliation()" aria-label="Cancel link affiliation of presenter">
+                Cancel Link Affiliation as Presenter
+              </button>
+            </span>
+            <div class="edit-subfield-container" *ngIf="displayLinkPresenterAffiliation">
+              <mat-card>
+                <mat-card-content>
+                  <div class="flex flex-col justify-start items-center">
+                    <mat-form-field>
+                      <mat-label>Affiliate Institution with Presenter</mat-label>
+                      <mat-select class="margin-content" [(value)]="selectedPerson">
+                        <mat-option *ngFor="let presenter of filterPresentersByLinked()" [value]="presenter.id">
+                            <span *ngIf="presenter.name != '' && presenter.name">
+                                {{ presenter.name }}
+                            </span>
+                            <span *ngIf="presenter.name == '' || !presenter.name">
+                                No Name
+                            </span>
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field>
+                      <mat-select class="margin-content" [(value)]="selectedInstitution">
+                        <mat-option *ngFor="let institution of acceptableInstitutions" [value]="institution.id">
+                            <span *ngIf="institution.title != '' && institution.title">
+                                {{ institution.title }}
+                            </span>
+                            <span *ngIf="institution.title == '' || !institution.title">
+                                No Title
+                            </span>
+                        </mat-option>
+                      </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="fill">
+                      <mat-label>Department</mat-label>
+                      <input matInput type="text" name="department" placeholder="Enter Department" [(ngModel)]="affiliationDepartment">
+                    </mat-form-field>
+                  </div>
+                </mat-card-content>
+                <mat-card-actions>
+                  <div class="flex flex-col justify-center items-center">
+                    <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+                      <div *ngFor="let errorMsg of errorMsgs">Error: {{ errorMsg }}</div>
+                    </div>
+                    <div *ngIf="serverErrorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+                      <div *ngFor="let serverErrorMsg of serverErrorMsgs">Error: {{ serverErrorMsg }}</div>
+                    </div>
+                    <button mat-raised-button type="button" color="primary" (click)="linkPresenterAffiliation(selectedPerson, selectedInstitution, affiliationDepartment)" aria-label="Link affiliation as presenter">Select Affiliation of Presenter</button>
+                  </div>
+                </mat-card-actions>
+              </mat-card>
+            </div>
+            <!-- topics -->
+            <h3 class="left-text">Topics</h3>
+            <div class="left-text flex flex-row justify-start items-start">
+              <table class="full-width contrast-table" aria-label="Presentation topics">
+                <tbody>
+                  <tr *ngFor="let topic of topicsToLink">
+                    <td class="padded-content">
+                      <mat-icon (click)="removeTopic(topic.id)">cancel</mat-icon>
+                    </td>
+                    <td class="padded-content">
+                      {{ topic.title }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <span class="left-text">
+              <button mat-raised-button *ngIf="!displayLinkTopic" (click)="toggleDisplayLinkTopic()" aria-label="Tag topic">
+                Tag Topic
+              </button>
+              <button mat-raised-button *ngIf="displayLinkTopic" (click)="toggleDisplayLinkTopic()" aria-label="Cancel tag topic">
+                Cancel Tag Topic
+              </button>
+            </span>
+            <div class="edit-subfield-container" *ngIf="displayLinkTopic">
+              <app-select-topic (successfullyAdded)="topicSelected($event)" [restrictedIds]="selectedTopicIds"></app-select-topic>
+            </div>
+            <!-- places -->
+            <h3 class="left-text">Places</h3>
+            <div class="left-text flex flex-row justify-start items-start">
+              <table class="full-width contrast-table" aria-label="Presentation places">
+                <tbody>
+                  <tr *ngFor="let place of placesToLink">
+                    <td class="padded-content">
+                      <mat-icon (click)="removePlace(place.id)">cancel</mat-icon>
+                    </td>
+                    <td class="padded-content">
+                      {{ place.title }}
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <span class="left-text">
+              <button mat-raised-button *ngIf="!displayLinkPlace" (click)="toggleDisplayLinkPlace()" aria-label="Link place">
+                Link Place
+              </button>
+              <button mat-raised-button *ngIf="displayLinkPlace" (click)="toggleDisplayLinkPlace()" aria-label="Cancel link place">
+                Cancel Link Place
+              </button>
+            </span>
+            <div class="edit-subfield-container" *ngIf="displayLinkPlace">
+              <app-select-place (successfullyAdded)="placeSelected($event)" [restrictedIds]="selectedPlaceIds"></app-select-place>
+            </div>
+          </div>
+        </mat-card-content>
+        <!-- error messages & edit button -->
+        <mat-card-actions>
+          <div class="flex flex-col justify-center items-center">
+            <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+              <div *ngFor="let errorMsg of errorMsgs">Error: {{ errorMsg }}</div>
+            </div>
+            <div *ngIf="serverErrorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+              <div *ngFor="let serverErrorMsg of serverErrorMsgs">Error: {{ serverErrorMsg }}</div>
+            </div>
+            <button mat-raised-button type="submit" color="primary" aria-label="Edit presentation button">Edit Presentation</button>
+          </div>
+        </mat-card-actions>
+      </mat-card>
+    </form>
+  </div>
+  
