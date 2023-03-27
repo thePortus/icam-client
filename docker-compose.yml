@@ -21,7 +21,7 @@ services:
         - ./certbot/www/:/var/www/certbot/:rw
         - ./certbot/conf/:/etc/letsencrypt/:rw
       # PUT YOUR EMAIL AND DOMAIN NAME BELOW
-      command: certonly --webroot --webroot-path /var/www/html/ --email sample@your_domain --agree-tos --no-eff-email -d your_domain -d www.your_domain
+      command: certonly --webroot --webroot-path /var/www/certbot/ --email sample@your_domain --agree-tos --no-eff-email -d your_domain -d www.your_domain
 
 networks:
     client-network:
