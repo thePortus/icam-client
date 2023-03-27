@@ -22,6 +22,7 @@ export class ListDisciplinesComponent implements OnInit {
     keyword: 'title',
     label: 'Title'
   }];
+  filterHidden: boolean = true;
   // pagination data
   currentPage = 1;
   itemsPerPage = 5;
@@ -59,6 +60,17 @@ export class ListDisciplinesComponent implements OnInit {
   updateFilter(filterInfo: any) {
     this.filterByTitle = filterInfo.title;
     this.refreshData();
+  }
+
+  /** 
+   * Executed upon event emission by child filter widget. Toggles
+   * the display status of filter to update CSS classes for 
+   * padding.
+   * 
+   * @param displayStatus - Boolean of new filter display status
+   */
+  toggleFilter(displayStatus: boolean) {
+    this.filterHidden = displayStatus;
   }
 
   /**

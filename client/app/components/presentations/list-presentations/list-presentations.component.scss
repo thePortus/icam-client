@@ -1,14 +1,22 @@
 // If the screen size is 601px wide or more, set for large screen
 @media screen and (min-width: 601px) {
-  :host .presentations-container {
+  :host .list-container-filter-open {
     padding-top: 205px;
+  }
+
+  :host .list-container-filter-closed {
+    padding-top: 160px;
   }
 }
 
 // If the screen size is 600px wide or less, set for mobile
 @media screen and (max-width: 600px) {
-  :host .presentations-container {
+  :host .list-container-filter-open {
     padding-top: 320px;
+  }
+
+  :host .list-container-filter-closed {
+    padding-top: 170px;
   }
 }
 

@@ -41,6 +41,7 @@ export class ListPresentationsComponent implements OnInit {
     keyword: 'place',
     label: 'Place'
   }];
+  filterHidden: boolean = true;
   // pagination data
   currentPage = 1;
   itemsPerPage = 5;
@@ -84,6 +85,17 @@ export class ListPresentationsComponent implements OnInit {
     this.filterByTopicTitle = filterInfo.topic;
     this.filterByPlaceTitle = filterInfo.place;
     this.refreshData();
+  }
+
+  /** 
+   * Executed upon event emission by child filter widget. Toggles
+   * the display status of filter to update CSS classes for 
+   * padding.
+   * 
+   * @param displayStatus - Boolean of new filter display status
+   */
+  toggleFilter(displayStatus: boolean) {
+    this.filterHidden = displayStatus;
   }
 
   /**

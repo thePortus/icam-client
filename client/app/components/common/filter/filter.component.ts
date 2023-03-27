@@ -6,13 +6,15 @@ import { Component, OnInit, Output, EventEmitter, Input, SimpleChanges } from '@
   styleUrls: ['./filter.component.scss']
 })
 export class FilterComponent implements OnInit {
-  // event emitter
+  // event emitters
   @Output() filterUpdated = new EventEmitter<string>();
+  @Output() displayToggled = new EventEmitter<boolean>();
   // list of fields, each defined as object w key and label of each field
   // e.g. [{ keyword: 'title', label: 'Title' }, {...}]
   @Input() fields: any[] = [];
 
   protectedData: any = {};
+  isHidden: boolean = true;
 
   constructor() { }
 
@@ -43,10 +45,19 @@ export class FilterComponent implements OnInit {
   }
 
   /**
-   * Upon update of input field, emits new data
+   * Upon update of input field, emits new data.
    */
   updateFilter() {
     this.filterUpdated.emit(this.protectedData);
+  }
+
+  /**
+   * Toggles the display of filter fields and emits
+   * display status.
+   */
+  toggleDisplay() {
+    this.isHidden = !this.isHidden;
+    this.displayToggled.emit(this.isHidden);
   }
 
 }
