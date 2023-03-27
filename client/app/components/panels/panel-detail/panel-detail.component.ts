@@ -2,6 +2,7 @@ import { Component, OnInit, Input, SimpleChanges, Inject } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
 import { ApiService } from './../../../services/api.service';
 import { User, UserService } from './../../../services/user.service';
@@ -49,7 +50,8 @@ export class PanelDetailComponent implements OnInit {
     private _api: ApiService,
     private _user: UserService,
     private _router: Router,
-    public dialog: MatDialog
+    public dialog: MatDialog,
+    private _snackBar: MatSnackBar
   ) { }
 
   /**
@@ -88,7 +90,7 @@ export class PanelDetailComponent implements OnInit {
   }
 
   /**
-   * Asks to confirm via alert. Then unlinks all linked items and finally
+   * Asks to confirm via dialog. Then unlinks all linked items and finally
    * deletes the item itself. Navigates back to list of items.
    * 
    * @returns true
@@ -103,7 +105,12 @@ export class PanelDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe((results) => {
       if (results == true) {
         this._api.deleteTypeRequest('panels/' + this.panelId).subscribe((res:any) => {
-          alert('Item successfully deleted!');
+          if (typeof res.messages !== 'undefined') {
+            this._snackBar.open('Item successfully deleted!', '', { duration: 3000 });
+          }
+          else {
+            this._snackBar.open('Problem deleting item!', '', { duration: 5000 });
+          }
           this._router.navigate(['/panels']);
         });
       }

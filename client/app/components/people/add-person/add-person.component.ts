@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NgForm } from '@angular/forms';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
 import { ApiService } from './../../../services/api.service';
 import { User, UserService } from './../../../services/user.service';
@@ -59,7 +60,8 @@ export class AddPersonComponent implements OnInit {
 
   constructor(
     private _api: ApiService,
-    private _user: UserService
+    private _user: UserService,
+    private _snackBar: MatSnackBar
   ) { }
 
   /**
@@ -244,11 +246,10 @@ export class AddPersonComponent implements OnInit {
             department: affiliationToLink.department
           };
           this._api.postTypeRequest('participant-affiliations', affiliationLinkReqObject).subscribe(res => {
-            console.log(res);
           });
         }
         if (personRes.status !== 0) {
-          alert('Person successfully added!');
+          this._snackBar.open('Person successfully added!', '', { duration: 3000 });
           this.successfullyAdded.emit(personRes);
         }
         else {

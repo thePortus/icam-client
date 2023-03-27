@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NgForm } from '@angular/forms';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
 import { ApiService } from './../../../services/api.service';
 import { User, UserService } from './../../../services/user.service';
@@ -49,7 +50,8 @@ export class AddPanelComponent implements OnInit {
 
   constructor(
     private _api: ApiService,
-    private _user: UserService
+    private _user: UserService,
+    private _snackBar: MatSnackBar
   ) { }
 
   /**
@@ -175,7 +177,7 @@ export class AddPanelComponent implements OnInit {
           this._api.postTypeRequest('chair-affiliations', chairAffiliationLinkReqObject).subscribe();
         }
         if (res.status !== 0) {
-          alert('Panel successfully added!');
+          this._snackBar.open('Panel successfully added!', '', { duration: 3000 });
           this.successfullyAdded.emit(res);
         }
         else {

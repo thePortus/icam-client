@@ -1,6 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
 import { ApiService } from './../../../services/api.service';
 import { User, UserService } from './../../../services/user.service';
@@ -109,7 +110,8 @@ export class EditPersonComponent implements OnInit {
   constructor(
     private _api: ApiService,
     private _user: UserService,
-    private _router: Router
+    private _router: Router,
+    private _snackBar: MatSnackBar
   ) { }
 
   /**
@@ -400,7 +402,7 @@ export class EditPersonComponent implements OnInit {
             };
             this._api.postTypeRequest('participant-affiliations', affiliationLinkReqObject).subscribe();
           }
-          alert('Item successfully updated!');
+          this._snackBar.open('Item successfully updated!', '', { duration: 3000 });
           // navigate to people
           this._router.navigate(['/people/' + this.protectedData.id]);
         }

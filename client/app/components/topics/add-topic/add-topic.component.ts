@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NgForm } from '@angular/forms';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
 import { ApiService } from './../../../services/api.service';
 import { User, UserService } from './../../../services/user.service';
@@ -24,7 +25,8 @@ export class AddTopicComponent implements OnInit {
 
   constructor(
     private _api: ApiService,
-    private _user: UserService
+    private _user: UserService,
+    private _snackBar: MatSnackBar
   ) { }
 
   /**
@@ -89,7 +91,7 @@ export class AddTopicComponent implements OnInit {
     if (this._validate(reqObject)) {
       this._api.postTypeRequest('topics', reqObject).subscribe((res: any) => {
         if (res.status !== 0) {
-          alert('Topic successfully added!');
+          this._snackBar.open('Topic successfully added!', '', { duration: 3000 });
           this.successfullyAdded.emit(res);
         }
         else {

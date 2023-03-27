@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter, Input } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NgForm } from '@angular/forms';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
 import { ApiService } from './../../../services/api.service';
 import { User, UserService } from './../../../services/user.service';
@@ -33,7 +34,8 @@ export class AddLocationComponent implements OnInit {
 
   constructor(
     private _api: ApiService,
-    private _user: UserService
+    private _user: UserService,
+    private _snackBar: MatSnackBar
   ) { }
 
   /**
@@ -113,7 +115,7 @@ export class AddLocationComponent implements OnInit {
     if (this._validate(reqObject)) {
       this._api.postTypeRequest('locations', reqObject).subscribe((res: any) => {
         if (res.status !== 0) {
-          alert('Location successfully added!');
+          this._snackBar.open('Location successfully added!', '', { duration: 3000 });
           this.successfullyAdded.emit(res);
         }
         else {

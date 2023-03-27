@@ -28,6 +28,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // service imports
 import { InterceptorService } from './services/interceptor.service';
@@ -280,7 +281,8 @@ import { ConfirmDeleteTopicDialog } from './components/topics/topic-detail/topic
     MatProgressSpinnerModule,
     MatGridListModule,
     MatPaginatorModule,
-    MatSidenavModule
+    MatSidenavModule,
+    MatSnackBarModule
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

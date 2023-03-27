@@ -1,6 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NgForm, FormGroup, FormControl } from '@angular/forms';
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
 import { ApiService } from './../../../services/api.service';
 import { User, UserService } from './../../../services/user.service';
@@ -84,7 +85,8 @@ export class AddConferenceComponent implements OnInit {
 
   constructor(
     private _api: ApiService,
-    private _user: UserService
+    private _user: UserService,
+    private _snackBar: MatSnackBar
   ) { }
 
   /**
@@ -290,7 +292,7 @@ export class AddConferenceComponent implements OnInit {
             this._api.postTypeRequest('participant-affiliations', pariticpantAffiliationLinkReqObject).subscribe();
           }
           if (conferenceRes.status !== 0) {
-            alert('Conference successfully added!');
+            this._snackBar.open('Conference successfully added!', '', { duration: 3000 });
             this.successfullyAdded.emit(conferenceRes);
           }
           else {
