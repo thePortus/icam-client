@@ -91,7 +91,7 @@ export class DisciplineDetailComponent implements OnInit {
           this._api.deleteTypeRequest('conference-disciplines/' + conference.id + '/' + this.disciplineId).subscribe();
         }
         this._api.deleteTypeRequest('disciplines/' + this.disciplineId).subscribe((res:any) => {
-          if (typeof res.messages !== 'undefined') {
+          if (res.message == 'Discipline was deleted successfully!') {
             this._snackBar.open('Item successfully deleted!', '', { duration: 3000 });
           }
           else {

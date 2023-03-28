@@ -97,7 +97,7 @@ export class InstitutionDetailComponent implements OnInit {
           this._api.deleteTypeRequest('conference-institutions/' + conference.id + '/' + this.institutionId).subscribe();
         }
         this._api.deleteTypeRequest('institutions/' + this.institutionId).subscribe((res:any) => {
-          if (typeof res.messages !== 'undefined') {
+          if (res.message == 'Institution was deleted successfully!') {
             this._snackBar.open('Item successfully deleted!', '', { duration: 3000 });
           }
           else {
