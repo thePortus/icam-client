@@ -88,7 +88,7 @@ export class TopicDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe((results) => {
       if (results == true) {
         this._api.deleteTypeRequest('topics/' + this.topicId).subscribe((res:any) => {
-          if (typeof res.messages !== 'undefined') {
+          if (res.message == 'Topic was deleted successfully!') {
             this._snackBar.open('Item successfully deleted!', '', { duration: 3000 });
           }
           else {

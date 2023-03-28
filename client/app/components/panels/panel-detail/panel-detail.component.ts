@@ -105,7 +105,7 @@ export class PanelDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe((results) => {
       if (results == true) {
         this._api.deleteTypeRequest('panels/' + this.panelId).subscribe((res:any) => {
-          if (typeof res.messages !== 'undefined') {
+          if (res.message == 'Panel was deleted successfully!') {
             this._snackBar.open('Item successfully deleted!', '', { duration: 3000 });
           }
           else {

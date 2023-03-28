@@ -93,7 +93,7 @@ export class PresentationDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe((results) => {
       if (results == true) {
         this._api.deleteTypeRequest('presentations/' + this.presentationId).subscribe((res:any) => {
-          if (typeof res.messages !== 'undefined') {
+          if (res.message == 'Presentation was deleted successfully!') {
             this._snackBar.open('Item successfully deleted!', '', { duration: 3000 });
           }
           else {

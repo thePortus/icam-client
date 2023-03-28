@@ -88,7 +88,7 @@ export class PlaceDetailComponent implements OnInit {
     dialogRef.afterClosed().subscribe((results) => {
       if (results == true) {
         this._api.deleteTypeRequest('geographies/' + this.placeId).subscribe((res:any) => {
-          if (typeof res.messages !== 'undefined') {
+          if (res.message == 'Geography was deleted successfully!') {
             this._snackBar.open('Item successfully deleted!', '', { duration: 3000 });
           }
           else {
