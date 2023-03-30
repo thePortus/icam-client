@@ -26,9 +26,6 @@
         <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-center items-start">
           <div *ngFor="let errorMsg of errorMsgs">Error: {{ errorMsg }}</div>
         </div>
-        <div *ngIf="serverErrorMsgs.length > 0" class="error-msgs flex flex-col justify-center items-start">
-          <div *ngFor="let serverErrorMsg of serverErrorMsgs">Error: {{ serverErrorMsg }}</div>
-        </div>
         <!-- login button -->
         <mat-card-actions>
           <div class="flex flex-col justify-center items-center">

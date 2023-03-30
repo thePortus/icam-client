@@ -6,6 +6,7 @@ import { HttpClient, HttpHandler } from '@angular/common/http';
 import { NgForm } from '@angular/forms';
 import { MatCardModule } from '@angular/material/card';
 import { MatInputModule } from '@angular/material/input';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -26,6 +27,7 @@ describe('LoginComponent', () => {
       imports: [
         MatCardModule,
         MatInputModule,
+        MatSnackBarModule,
         MatFormFieldModule,
         BrowserAnimationsModule
       ]
