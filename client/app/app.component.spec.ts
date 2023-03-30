@@ -2,14 +2,30 @@ import { TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppComponent } from './app.component';
 
+import { HeaderComponent } from './components/common/header/header.component';
+import { NavMenuComponent } from './components/common/nav-menu/nav-menu.component';
+
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatToolbarModule } from '@angular/material/toolbar';
+
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [
-        RouterTestingModule
+        RouterTestingModule,
+        MatSidenavModule,
+        BrowserAnimationsModule,
+        MatListModule,
+        MatIconModule,
+        MatToolbarModule
       ],
       declarations: [
-        AppComponent
+        AppComponent,
+        HeaderComponent,
+        NavMenuComponent
       ],
     }).compileComponents();
   });
@@ -26,10 +42,4 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('icam');
   });
 
-  it('should render title', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('.content span')?.textContent).toContain('icam app is running!');
-  });
 });

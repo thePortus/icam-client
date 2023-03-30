@@ -2,13 +2,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomeIntroComponent } from './home-intro.component';
 
+import { MatCardModule } from '@angular/material/card';
+
 describe('HomeIntroComponent', () => {
   let component: HomeIntroComponent;
   let fixture: ComponentFixture<HomeIntroComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HomeIntroComponent ]
+      declarations: [ HomeIntroComponent ],
+      imports: [ MatCardModule ]
     })
     .compileComponents();
 

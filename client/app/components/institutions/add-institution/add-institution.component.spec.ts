@@ -2,13 +2,23 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddInstitutionComponent } from './add-institution.component';
 
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+
 describe('AddInstitutionComponent', () => {
   let component: AddInstitutionComponent;
   let fixture: ComponentFixture<AddInstitutionComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddInstitutionComponent ]
+      declarations: [ AddInstitutionComponent ],
+      providers: [
+        HttpClient,
+        HttpHandler
+      ],
+      imports: [
+        MatSnackBarModule
+      ]
     })
     .compileComponents();
 

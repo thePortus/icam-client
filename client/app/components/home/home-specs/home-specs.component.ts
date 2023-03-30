@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
 
 import { Specs } from './specs';
 
@@ -8,12 +9,17 @@ import { Specs } from './specs';
   styleUrls: ['./home-specs.component.scss']
 })
 export class HomeSpecsComponent implements OnInit {
-  // project specs
   specs = Specs;
   
-  constructor() { }
+  constructor(
+    private sanitizer: DomSanitizer
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  safeUrl(url: string) {
+    return this.sanitizer.bypassSecurityTrustResourceUrl(url);
   }
 
 }

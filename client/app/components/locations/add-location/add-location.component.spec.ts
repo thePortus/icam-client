@@ -2,13 +2,23 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddLocationComponent } from './add-location.component';
 
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+
 describe('AddLocationComponent', () => {
   let component: AddLocationComponent;
   let fixture: ComponentFixture<AddLocationComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddLocationComponent ]
+      declarations: [ AddLocationComponent ],
+      providers: [
+        HttpClient,
+        HttpHandler
+      ],
+      imports: [
+        MatSnackBarModule
+      ]
     })
     .compileComponents();
 

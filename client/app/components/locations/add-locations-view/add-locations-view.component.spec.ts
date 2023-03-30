@@ -1,6 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddLocationsViewComponent } from './add-locations-view.component';
+import { AddLocationComponent } from '../add-location/add-location.component';
+
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { MatIconModule} from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('AddLocationsViewComponent', () => {
   let component: AddLocationsViewComponent;
@@ -8,7 +13,18 @@ describe('AddLocationsViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddLocationsViewComponent ]
+      declarations: [
+        AddLocationsViewComponent,
+        AddLocationComponent
+      ],
+      providers: [
+        HttpClient,
+        HttpHandler
+      ],
+      imports:[
+        MatIconModule,
+        MatSnackBarModule
+      ]
     })
     .compileComponents();
 

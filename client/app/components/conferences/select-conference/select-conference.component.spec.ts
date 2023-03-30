@@ -2,13 +2,19 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SelectConferenceComponent } from './select-conference.component';
 
+import { HttpClient, HttpHandler } from '@angular/common/http';
+
 describe('SelectConferenceComponent', () => {
   let component: SelectConferenceComponent;
   let fixture: ComponentFixture<SelectConferenceComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SelectConferenceComponent ]
+      declarations: [ SelectConferenceComponent ],
+      providers: [
+        HttpClient,
+        HttpHandler
+      ]
     })
     .compileComponents();
 
