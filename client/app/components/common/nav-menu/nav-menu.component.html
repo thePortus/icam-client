@@ -1,4 +1,4 @@
-<div class="full-width h-max flex flex-col justify-around items-center nav-menu">
+<div class="full-width h-max flex flex-col justify-around items-center nav-menu p-1">
     <div class="full-width" *ngFor="let menuLink of menuLinks">
         <ng-container *ngIf="menuLink.requiresLogin == false || this.user.loggedIn">
             <ng-container *ngIf="menuLink.requiresEditor == false || (this.user.role == 'Owner' || this.user.role == 'Editor')">
@@ -26,7 +26,6 @@
         <span class="full-width my-1">
             <button class="full-width" mat-raised-button color="primary" (click)="navigate('/profile')" aria-label="Profile Button">Profile</button>
         </span>
-        <mat-divider class="full-width"></mat-divider>
         <span class="full-width my-1">
             <button class="full-width" mat-raised-button color="primary" (click)="logout()" aria-label="Logout Button">Logout</button>
         </span>

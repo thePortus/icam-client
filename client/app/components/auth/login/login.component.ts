@@ -63,6 +63,7 @@ export class LoginComponent implements OnInit {
           role: res.data.role,
           token: res.token
         });
+        this._snackBar.open('Successfully logged in!', '', { duration: 2000 });
         // navigate home
         this._router.navigate(['']);
       }
