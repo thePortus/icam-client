@@ -2,13 +2,23 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddPanelComponent } from './add-panel.component';
 
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { HttpClient, HttpHandler } from '@angular/common/http';
+
 describe('AddPanelComponent', () => {
   let component: AddPanelComponent;
   let fixture: ComponentFixture<AddPanelComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddPanelComponent ]
+      declarations: [ AddPanelComponent ],
+      providers: [
+        HttpClient,
+        HttpHandler
+      ],
+      imports: [
+        MatSnackBarModule
+      ]
     })
     .compileComponents();
 

@@ -3,6 +3,8 @@ import { Observable } from 'rxjs';
 import { NgForm } from '@angular/forms';
 import { Router } from '@angular/router';
 
+import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+
 import { ApiService } from './../../../services/api.service';
 import { AuthService } from './../../../services/auth.service';
 import { User, UserService } from './../../../services/user.service';
@@ -15,7 +17,6 @@ import { User, UserService } from './../../../services/user.service';
 export class LoginComponent implements OnInit {
   // local and server error messages
   errorMsgs: string[] = [];
-  serverErrorMsgs: string[] = [];
   // observable and local object for user data
   userDetails$: Observable<User>;
   user: any;
@@ -24,7 +25,8 @@ export class LoginComponent implements OnInit {
     private _api: ApiService,
     private _auth: AuthService,
     private _user: UserService,
-    private _router: Router
+    private _router: Router,
+    private _snackBar: MatSnackBar
   ) { }
 
   /**
@@ -47,7 +49,6 @@ export class LoginComponent implements OnInit {
    * @param form Form data with user login info
    */
   onSubmit(form: NgForm) {
-    this.serverErrorMsgs = [];
     this._api.postTypeRequest('user/login', form.value).subscribe((res: any) => {
       // if successful
       if (res.status) {
@@ -67,8 +68,10 @@ export class LoginComponent implements OnInit {
       }
       // send error message
       else {
-        this.serverErrorMsgs = ['There was a problem logging in, perhaps you entered the wrong username/password'];
+        this._snackBar.open('There was a problem logging in, perhaps you entered the wrong username/password', '', { duration: 5000 });
       }
+    }, (error: any) => {
+      this._snackBar.open('Problem connecting to server, perhaps server is down?!', '', { duration: 5000 });
     });
   }
 

@@ -1,6 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListInstitutionsViewComponent } from './list-institutions-view.component';
+import { ListInstitutionsComponent } from '../list-institutions/list-institutions.component';
+
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { MatIconModule} from '@angular/material/icon';
 
 describe('ListInstitutionsViewComponent', () => {
   let component: ListInstitutionsViewComponent;
@@ -8,7 +12,15 @@ describe('ListInstitutionsViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListInstitutionsViewComponent ]
+      declarations: [
+        ListInstitutionsViewComponent,
+        ListInstitutionsComponent
+      ],
+      providers: [
+        HttpClient,
+        HttpHandler
+      ],
+      imports:[ MatIconModule ]
     })
     .compileComponents();
 

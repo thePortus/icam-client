@@ -2,13 +2,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HomeSpecsComponent } from './home-specs.component';
 
+import { MatCardModule } from '@angular/material/card';
+import { MatListModule } from '@angular/material/list';
+
 describe('HomeSpecsComponent', () => {
   let component: HomeSpecsComponent;
   let fixture: ComponentFixture<HomeSpecsComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ HomeSpecsComponent ]
+      declarations: [ HomeSpecsComponent ],
+      imports: [
+        MatCardModule,
+        MatListModule
+      ]
     })
     .compileComponents();
 

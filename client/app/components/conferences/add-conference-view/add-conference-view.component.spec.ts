@@ -1,6 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AddConferenceViewComponent } from './add-conference-view.component';
+import { AddConferenceComponent } from '../add-conference/add-conference.component';
+
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { MatIconModule} from '@angular/material/icon';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 describe('AddConferenceViewComponent', () => {
   let component: AddConferenceViewComponent;
@@ -8,7 +13,18 @@ describe('AddConferenceViewComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ AddConferenceViewComponent ]
+      declarations: [
+        AddConferenceViewComponent,
+        AddConferenceComponent
+      ],
+      providers: [
+        HttpClient,
+        HttpHandler
+      ],
+      imports:[
+        MatIconModule,
+        MatSnackBarModule
+      ]
     })
     .compileComponents();
 

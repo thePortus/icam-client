@@ -2,13 +2,23 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ListConferencesComponent } from './list-conferences.component';
 
+import { HttpClient, HttpHandler } from '@angular/common/http';
+import { MatIconModule} from '@angular/material/icon';
+
 describe('ListConferencesComponent', () => {
   let component: ListConferencesComponent;
   let fixture: ComponentFixture<ListConferencesComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ListConferencesComponent ]
+      declarations: [ ListConferencesComponent ],
+      providers: [
+        HttpClient,
+        HttpHandler
+      ],
+      imports:[
+        MatIconModule
+      ]
     })
     .compileComponents();
 
