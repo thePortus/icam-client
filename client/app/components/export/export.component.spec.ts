@@ -1,9 +1,11 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { of } from 'rxjs';
 
 import { ExportComponent } from './export.component';
 
 import { HttpClient, HttpHandler } from '@angular/common/http';
 import { MatIconModule } from '@angular/material/icon';
+import { ApiService } from 'app/services/api.service';
 
 describe('ExportComponent', () => {
   let component: ExportComponent;
@@ -14,7 +16,8 @@ describe('ExportComponent', () => {
       declarations: [ ExportComponent ],
       providers: [
         HttpClient,
-        HttpHandler
+        HttpHandler,
+        ApiService,
       ],
       imports: [ MatIconModule ]
     })
@@ -28,4 +31,36 @@ describe('ExportComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should render title', () => {
+    const mockData: any = {
+      body: {
+        conferences: [],
+        disciplines: [],
+        institutions: [],
+        locations: [],
+        panels: [],
+        people: [],
+        presentations: [],
+        topics: [],
+        geographies: [],
+        chairAffiliations: [],
+        conferenceDisciplines: [],
+        conferenceInstitutions: [],
+        peopleChairing: [],
+        peoplePresenting: [],
+        peopleParticipating: [],
+        presentationGeographies: [],
+        presentationTopics: [],
+        presenterAffiliations: [],
+        participantAffiliations: []
+      }
+    };
+    const apiService = TestBed.inject(ApiService)
+    spyOn(apiService, 'getTypeRequest').and.returnValue(of(mockData));
+    component.ngOnInit();
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('.single-col')?.textContent).toContain('Download conferences.json');
+  });
+
 });

@@ -40,4 +40,9 @@ describe('HomeComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should render tabs', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('mat-tab-body:nth-of-type(1)')?.textContent).toContain('Introduction');
+  });
 });
