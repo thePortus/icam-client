@@ -23,4 +23,12 @@ describe('HomeIntroComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should render title', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('mat-card-title')?.textContent).toContain('Introduction');
+    expect(compiled.querySelector('mat-card-subtitle')?.textContent).toContain('A Background');
+    expect(compiled.querySelector('p.has-dropcap')?.textContent).toContain('Welcome to the Index Conventionum Aevorum Mediorum!');
+  });
+
 });

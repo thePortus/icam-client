@@ -103,9 +103,9 @@ export class EditPresentationComponent implements OnInit {
       for (let presenter of res.presenters) {
         this.presentersToLink.push({
           presentationId: this.protectedData.id,
-          personId: presenter.presenterLink.personId,
-          name: presenter.presenterLink.name,
-          isRespondent: presenter.presenterLink.isRespondent
+          personId: presenter.PersonPresenting.personId,
+          name: presenter.PersonPresenting.name,
+          isRespondent: presenter.PersonPresenting.isRespondent
         });
         for (let presenterAffiliation of presenter.affiliationsAsPresenter) {
           // only copy affiliations associated with this specific presentation

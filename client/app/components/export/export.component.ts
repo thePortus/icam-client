@@ -34,6 +34,7 @@ export class ExportComponent implements OnInit {
   // flags to store whether component has loaded fully and is error free
   loading: boolean = true;
   loadingError: boolean = false;
+  errMsg: string = '';
   // property to store data retreived from server
   protectedData: any;
   // stores generated links for jsons created with downloaded server data

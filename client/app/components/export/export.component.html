@@ -7,6 +7,7 @@
       </div>
       <div *ngIf="loadingError" class="flex flex-col justify-center items-center">
         <mat-icon class="red-text">error</mat-icon>
+        <p>{{ errMsg }}</p>
         <p class="red-text">Error: problem connecting to server</p>
       </div>
     </div>

@@ -23,4 +23,14 @@ describe('HomeCreditsComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should render credits', () => {
+    const compiled = fixture.nativeElement as HTMLElement;
+    expect(compiled.querySelector('mat-card-title')?.textContent).toContain('Credits');
+  });
+
+  it('should have image assets', () => {
+    expect(component.imgs.davidjthomas).toBeInstanceOf(String);
+    expect(component.imgs.mattking).toBeInstanceOf(String);
+  });
 });
