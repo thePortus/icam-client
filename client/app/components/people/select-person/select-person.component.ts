@@ -19,7 +19,6 @@ export class SelectPersonComponent implements OnInit {
   @Input() includeTitle: boolean = false;
   @Input() includeName: boolean = false;
   @Input() includeRole: boolean = false;
-  @Input() includeRespondent: boolean = false;
 
   // loading flag & error messages
   loading: boolean = true;
@@ -42,8 +41,6 @@ export class SelectPersonComponent implements OnInit {
   newPersonWasAdded: boolean = false;
   // role
   role: string = '';
-  // isRespondent
-  isRespondent: boolean = false;
 
   constructor(
     private _api: ApiService
@@ -102,9 +99,6 @@ export class SelectPersonComponent implements OnInit {
         }
         if (this.includeRole) {
           personToAdd.role = this.role;
-        }
-        if (this.includeRespondent) {
-          personToAdd.isRespondent = this.isRespondent;
         }
         break;
       }

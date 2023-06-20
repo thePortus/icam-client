@@ -13,7 +13,6 @@ import { Person } from './../../../interfaces/person.interface';
 interface PresenterToLink {
   panelId: number;
   personId: number;
-  isRespondent: boolean;
 }
 
 // info for linking people to panel as a presenter
@@ -105,7 +104,6 @@ export class EditPresentationComponent implements OnInit {
           presentationId: this.protectedData.id,
           personId: presenter.presenterLink.personId,
           name: presenter.presenterLink.name,
-          isRespondent: presenter.presenterLink.isRespondent
         });
         for (let presenterAffiliation of presenter.affiliationsAsPresenter) {
           // only copy affiliations associated with this specific presentation
@@ -261,7 +259,6 @@ export class EditPresentationComponent implements OnInit {
               personId: presenterToLink.personId,
               presentationId: this.protectedData.id,
               name: presenterToLink.name,
-              isRespondent: presenterToLink.isRespondent
             };
             this._api.postTypeRequest('people-presenting', presenterLinkReqObject).subscribe();
           }
@@ -363,8 +360,7 @@ export class EditPresentationComponent implements OnInit {
     if (!isDuplicate) {
       this.presentersToLink.push({
         personId: person.id,
-        name: person.name,
-        isRespondent: person.isRespondent
+        name: person.name
       });
     }
     // if a person was added during selection, requery people and update acceptable people list

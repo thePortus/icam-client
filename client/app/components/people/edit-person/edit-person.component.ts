@@ -23,7 +23,6 @@ interface PresenterToLink {
   presentationId: number;
   personId: number;
   name: string | null;
-  isRespondent: boolean;
 }
 
 // info for linking conferences to person
@@ -147,7 +146,6 @@ export class EditPersonComponent implements OnInit {
           presentationId: presentation.id,
           personId: this.protectedData.id,
           name: presentation.presenterLink.name,
-          isRespondent: presentation.presenterLink.isRespondent
         });
       }
       // copy affiliations as participant
@@ -360,8 +358,7 @@ export class EditPersonComponent implements OnInit {
             const presentationLinkReqObject = {
               personId: presentationToLink.personId,
               presentationId: presentationToLink.presentationId,
-              name: presentationToLink.name || null,
-              isRespondent: presentationToLink.isRespondent || false
+              name: presentationToLink.name || null
             };
             this._api.postTypeRequest('people-presenting', presentationLinkReqObject).subscribe();
           }
@@ -485,8 +482,7 @@ export class EditPersonComponent implements OnInit {
       this.presentationsToLink.push({
         presentationId: presentation.id,
         personId: this.protectedData.id,
-        name: presentation.personName || null,
-        isRespondent: presentation.isRespondent
+        name: presentation.personName || null
       });
     }
     this.toggleDisplayLinkPresentation();
