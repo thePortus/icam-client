@@ -1,7 +1,7 @@
 import { Component, OnInit, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { NgForm } from '@angular/forms';
-import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ApiService } from './../../../services/api.service';
 import { User, UserService } from './../../../services/user.service';
@@ -36,9 +36,13 @@ export class AddPanelComponent implements OnInit {
   // toggle flags for displaying ui for linking items
   displayLinkChair: boolean = false;
   displayLinkChairAffiliation: boolean = false;
+  displayLinkRespondent: boolean = false;
+  displayLinkRespondentAffiliation: boolean = false;
   // for storing items to link, to be added upon submission
   chairsToLink: any[] =[];
   chairAffiliationsToLink: any[] = [];
+  respondentsToLink: any[] = [];
+  respondentAffiliationsToLink: any[] = [];
   // currently selected items for linking
   selectedPerson: any;
   selectedInstitution: any;
@@ -47,6 +51,7 @@ export class AddPanelComponent implements OnInit {
   acceptableInstitutions: Institution[] = [];
   // for the optional department info of an affiliated chair
   affiliationDepartment: string = '';
+  respondentAffiliationDepartment: string = '';
 
   constructor(
     private _api: ApiService,
@@ -176,6 +181,26 @@ export class AddPanelComponent implements OnInit {
           };
           this._api.postTypeRequest('chair-affiliations', chairAffiliationLinkReqObject).subscribe();
         }
+        // link respondents
+        for (let respondentToLink of this.respondentsToLink) {
+          const respondentLinkReqObject = {
+            personId: respondentToLink.personId,
+            panelId: res.id,
+            name: respondentToLink.name,
+            title: respondentToLink.title
+          };
+          this._api.postTypeRequest('people-responding', respondentLinkReqObject).subscribe();
+        }
+        // link respondent affililations
+        for (let affiliationToLink of this.respondentAffiliationsToLink) {
+          const affiliationLinkReqObject = {
+            respondentId: affiliationToLink.personId,
+            panelId: res.id,
+            institutionId: affiliationToLink.institutionId,
+            department: affiliationToLink.department
+          };
+          this._api.postTypeRequest('respondent-affiliations', affiliationLinkReqObject).subscribe();
+        }
         if (res.status !== 0) {
           this._snackBar.open('Panel successfully added!', '', { duration: 3000 });
           this.successfullyAdded.emit(res);
@@ -298,6 +323,99 @@ export class AddPanelComponent implements OnInit {
   }
 
   /**
+   * Gets respondent info from html fields, ensures it has not already
+   * been added, then adds it to the list of chairs that will be linked
+   * upon submission.
+   * 
+   * @param person - Object with person data
+   */
+  linkRespondent(person: any) {
+    let isDuplicate = false;
+    for (let respondentToLink of this.respondentsToLink) {
+      if (respondentToLink.personId == person.id) {
+        isDuplicate = true;
+      }
+    }
+    if (!isDuplicate) {
+      this.respondentsToLink.push({
+        personId: person.id,
+        name: person.name,
+        title: person.title,
+      });
+    }
+    // if a person was added during selection, requery people and update acceptable people list
+    if (person.newPersonWasAdded === true) {
+      this._api.getTypeRequest('people/').subscribe((peopleRes: any) => {
+        this.acceptablePeople = peopleRes.sort(function(a:any, b:any) {
+          // sort list of panels alphabetically by title
+          let textA = null;
+          let textB = null;
+          if (a.title) {
+            textA = a.title.toUpperCase();
+          }
+          if (b.title) {
+            textB = b.title.toUpperCase();
+          }
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+        });
+        this.selectedPerson = this.acceptablePeople[0] ? this.acceptablePeople[0].id : null;
+        this.loading = false;
+      });
+    }
+    this.toggleDisplayLinkRespondent();
+  }
+
+  /**
+   * Gets affiliation info of a chair from html fields, ensures it has not already
+   * been added, then adds it to the list of chairs that will be linked
+   * upon submission.
+   * 
+   * @param personId - ID of person
+   * @param institutionId - ID of institution
+   * @param respondentAffiliationDepartment - String of optional department, string can be empty
+   */
+  linkRespondentAffiliation(personId: number, institutionId: number, respondentAffiliationDepartment: string) {
+    let isDuplicate = false;
+    for (let respondentAffiliationToLink of this.respondentAffiliationsToLink) {
+      if (respondentAffiliationToLink.personId == personId && respondentAffiliationToLink.institutionId == institutionId) {
+        isDuplicate = true;
+      }
+    }
+    if (!isDuplicate) {
+      this.respondentAffiliationsToLink.push({
+        personId: personId,
+        institutionId: institutionId,
+        department: respondentAffiliationDepartment
+      });
+    }
+    
+    this.toggleDisplayRespondentAffiliation();
+  }
+
+  /**
+   * Removes a respondent that was set to be linked. If item was added
+   * by a selection widget, this removes it.
+   * @param id - ID of the item
+   */
+  removeRespondent(id: number) {
+    this.respondentsToLink = this.respondentsToLink.filter(obj => {
+      return obj.personId != id;
+    });
+  }
+
+  /**
+   * Removes an affiliation of a respondent that was set to be linked.
+   * 
+   * @param personId - ID of the respondent
+   * @param institutionId - ID of the institution
+   */
+  removeRespondentAffiliation(personId: number, institutionId: number) {
+    this.respondentAffiliationsToLink = this.respondentAffiliationsToLink.filter(obj => {
+      return obj.personId != personId || obj.institutionId != institutionId;
+    });
+  }
+
+  /**
    * Toggles display of UI to link existing chairs
    */
   toggleDisplayLinkChair() {
@@ -318,13 +436,33 @@ export class AddPanelComponent implements OnInit {
   }
 
   /**
+   * Toggles display of UI to link existing respondents
+   */
+  toggleDisplayLinkRespondent() {
+    this.displayLinkRespondent = !this.displayLinkRespondent;
+    if (this.displayLinkRespondent) {
+      this.displayLinkRespondentAffiliation = false;
+    }
+  }
+  
+  /**
+   * Toggles display of UI to link affiliations of existing respondents
+   */
+  toggleDisplayRespondentAffiliation() {
+    this.displayLinkRespondentAffiliation = !this.displayLinkRespondentAffiliation;
+    if (this.displayLinkRespondentAffiliation) {
+      this.displayLinkRespondent = false;
+    }
+  }
+
+  /**
    * Helper method to provide means of getting a chair's name by their ID number.
    * Used by portions of the template where the item's ID is exposed by not its name.
    * 
    * @param personId - ID of the chair
    * @returns String of the name of the chair, null if not found
    */
-  getChairNameById(personId: number){
+  getPersonNameById(personId: number){
     for (let person of this.acceptablePeople) {
       if (personId == person.id) {
         return person.name;
@@ -381,6 +519,42 @@ export class AddPanelComponent implements OnInit {
     let idList: number[] = [];
     for (let chairToLink of this.chairsToLink) {
       idList.push(chairToLink.id);
+    }
+    return idList;
+  }
+
+  /**
+   * Returns a list of data that only includes those who have already been
+   * linked. Used by portions of the HTML template for associating institutions
+   * with respondents. This ensures that institutions can only be linked
+   * with those already added to the chair list.
+   * 
+   * @returns Array of objects, each with a chair's data
+   */
+  filterRespondentsByLinked() {
+    let idsToFilter = [];
+    let filteredRespondents: any[] = [];
+    for (let respondentToLink of this.respondentsToLink) {
+      idsToFilter.push(respondentToLink.personId);
+    }
+    for (let acceptableRespondent of this.acceptablePeople) {
+      if (idsToFilter.includes(acceptableRespondent.id)) {
+        filteredRespondents.push(acceptableRespondent);
+      }
+    }
+    return filteredRespondents;
+  }
+
+  /**
+   * Helper function that provides an array of IDs of the current
+   * chairs set to be linked.
+   * 
+   * @returns Array of chair ids
+   */
+  linkedRespondentIds() {
+    let idList: number[] = [];
+    for (let respondentToLink of this.respondentsToLink) {
+      idList.push(respondentToLink.personId);
     }
     return idList;
   }

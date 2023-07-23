@@ -37,13 +37,15 @@ export class PanelDetailComponent implements OnInit {
   totals = {
     'presentations': 0,
     'chairs': 0,
-    'presenters': 0
+    'presenters': 0,
+    'respondents': 0
   };
   // toggle flags for displaying ui for linking items
   toggleDisplay = {
     'presentations': false,
     'chairs': false,
-    'presenters': false
+    'presenters': false,
+    'respondents': false
   };
 
   constructor(
@@ -125,10 +127,14 @@ export class PanelDetailComponent implements OnInit {
     this.totals = {
       'presentations': 0,
       'chairs': 0,
-      'presenters': 0
+      'presenters': 0,
+      'respondents': 0
     };
     for (let chair of this.protectedData.chairs) {
       this.totals.chairs +=1 ;
+    }
+    for (let respondent of this.protectedData.respondents) {
+      this.totals.respondents += 1;
     }
     for (let presentation of this.protectedData.presentations) {
       this.totals.presentations += 1;
@@ -148,7 +154,8 @@ export class PanelDetailComponent implements OnInit {
     this.flattenedData = {
       presentations: [],
       chairs: [],
-      presenters: []
+      presenters: [],
+      respondents: []
     };
     // copy chairs, avoiding duplicates
     for (let chair of this.protectedData.chairs) {
@@ -160,6 +167,18 @@ export class PanelDetailComponent implements OnInit {
       }
       if (!chairFound) {
         this.flattenedData.chairs.push(chair);
+      }
+    }
+    // copy respondents
+    for (let respondent of this.protectedData.respondents) {
+      let respondentFound = false;
+      for (let previousRespondent of this.flattenedData.respondents) {
+        if (respondent.id === previousRespondent.id) {
+          respondentFound = true;
+        }
+      }
+      if (!respondentFound) {
+        this.flattenedData.respondents.push(respondent);
       }
     }
     // copy presentations

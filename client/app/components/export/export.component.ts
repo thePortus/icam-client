@@ -19,10 +19,12 @@ interface jsonHrefs {
   peopleChairing: any;
   peoplePresenting: any;
   peopleParticipating: any;
+  peopleResponding: any;
   presentationGeographies: any;
   presentationTopics: any;
   presenterAffiliations: any;
   participantAffiliations: any;
+  respondentAffiliations: any;
 }
 
 @Component({
@@ -54,10 +56,12 @@ export class ExportComponent implements OnInit {
     peopleChairing: [],
     peoplePresenting: [],
     peopleParticipating: [],
+    peopleResponding: [],
     presentationGeographies: [],
     presentationTopics: [],
     presenterAffiliations: [],
-    participantAffiliations: []
+    participantAffiliations: [],
+    respondentAffiliations: []
   };
 
   constructor(
@@ -131,6 +135,9 @@ export class ExportComponent implements OnInit {
     theJSON = JSON.stringify(this.protectedData.peopleParticipating);
     uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHrefs.peopleParticipating = uri;
+    theJSON = JSON.stringify(this.protectedData.peopleResponding);
+    uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
+    this.downloadJsonHrefs.peopleResponding = uri;
     theJSON = JSON.stringify(this.protectedData.presentationGeographies);
     uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHrefs.presentationGeographies = uri;
@@ -143,6 +150,9 @@ export class ExportComponent implements OnInit {
     theJSON = JSON.stringify(this.protectedData.participantAffiliations);
     uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
     this.downloadJsonHrefs.participantAffiliations = uri;
+    theJSON = JSON.stringify(this.protectedData.respondentAffiliations);
+    uri = this.sanitizer.bypassSecurityTrustUrl('data:text/json;charset=UTF-8,' + encodeURIComponent(theJSON));
+    this.downloadJsonHrefs.respondentAffiliations = uri;
   }
 
 }

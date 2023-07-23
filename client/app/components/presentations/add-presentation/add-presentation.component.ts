@@ -165,8 +165,7 @@ export class AddPresentationComponent implements OnInit {
           const presenterLinkReqObject = {
             personId: presenterToLink.personId,
             presentationId: res.id,
-            name: presenterToLink.name,
-            isRespondent: presenterToLink.isRespondent
+            name: presenterToLink.name
           };
           this._api.postTypeRequest('people-presenting', presenterLinkReqObject).subscribe();
         }

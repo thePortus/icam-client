@@ -1,7 +1,7 @@
 import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { ApiService } from './../../../services/api.service';
 import { User, UserService } from './../../../services/user.service';
@@ -19,6 +19,22 @@ interface ChairToLink {
 
 // info for linking institutions to people as chairs
 interface ChairAffiliationToLink {
+  panelId: number;
+  personId: number;
+  institutionId: number;
+  department: string;
+}
+
+// info for linking respondents to panel
+interface RespondentToLink {
+  panelId: number;
+  personId: number;
+  name: string;
+  title: string;
+}
+
+// info for linking institutions to people as respondents
+interface RespondentAffiliationToLink {
   panelId: number;
   personId: number;
   institutionId: number;
@@ -57,17 +73,22 @@ export class EditPanelComponent implements OnInit {
   // toggle flags for displaying ui for linking items
   displayLinkChair: boolean = false;
   displayLinkChairAffiliation: boolean = false;
+  displayLinkRespondent: boolean = false;
+  displayLinkRespondentAffiliation: boolean = false;
   // for storing items to link, to be added upon submission
   chairsToLink: ChairToLink[] = [];
   chairAffiliationsToLink: ChairAffiliationToLink[] = [];
+  respondentsToLink: ChairToLink[] = [];
+  respondentAffiliationsToLink: ChairAffiliationToLink[] = [];
   // currently selected items for linking
   selectedPerson: any;
   selectedInstitution: any;
   // acceptable items possible for linking
   acceptablePeople: Person[] = [];
   acceptableInstitutions: Institution[] = [];
-  // for the optional department info of an affiliated chair
-  affiliationDepartment: string = '';
+  // for the optional department info of an affiliated chairs & respondents
+  chairAffiliationDepartment: string = '';
+  respondentAffiliationDepartment: string = '';
 
   constructor(
     private _api: ApiService,
@@ -98,6 +119,9 @@ export class EditPanelComponent implements OnInit {
 
       this.protectedData.oldChairs = res.chairs;
       this.protectedData.oldChairAffiliations = [];
+      this.protectedData.oldRespondents = res.respondents;
+      this.protectedData.oldRespondentAffiliations = [];
+      
       for (let chair of res.chairs) {
         this.chairsToLink.push({
           panelId: this.protectedData.id,
@@ -119,6 +143,31 @@ export class EditPanelComponent implements OnInit {
               personId: chair.id,
               institutionId: chairAffiliation.id,
               department: chairAffiliation.chairAffiliationLink.department
+            });
+          }
+        }
+      }
+      for (let respondent of res.respondents) {
+        this.respondentsToLink.push({
+          panelId: this.protectedData.id,
+          personId: respondent.id,
+          name: respondent.PersonRespondings.name,
+          title: respondent.PersonRespondings.title
+        });
+        for (let respondentAffiliation of respondent.affiliationsAsRespondent) {
+          // only copy affiliations associated with this specific panel
+          if (respondentAffiliation.respondentAffiliationLink.panelId == this.protectedData.id) {
+            this.protectedData.oldRespondentAffiliations.push({
+              panelId: this.protectedData.id,
+              personId: respondent.id,
+              institutionId: respondentAffiliation.id,
+              department: respondentAffiliation.respondentAffiliationLink.department
+            });
+            this.respondentAffiliationsToLink.push({
+              panelId: this.protectedData.id,
+              personId: respondent.id,
+              institutionId: respondentAffiliation.id,
+              department: respondentAffiliation.respondentAffiliationLink.department
             });
           }
         }
@@ -229,7 +278,18 @@ export class EditPanelComponent implements OnInit {
             this._api.deleteTypeRequest('people-chairing/' + chairToRemove.PersonChairings.panelId.toString() + '/' + chairToRemove.id.toString()).subscribe(() => {
             });
           }
-          // link panels
+          // remove old respondent affiliations
+          for (let respondentAffiliationToRemove of this.protectedData.oldRespondentAffiliations) {
+            this._api.deleteTypeRequest('respondent-affiliations/' + this.protectedData.id.toString() + '/' + respondentAffiliationToRemove.personId.toString() + '/' + respondentAffiliationToRemove.institutionId.toString()).subscribe(() => {
+
+            });
+          }
+          // remove old respondents
+          for (let respondentToRemove of this.protectedData.oldRespondents) {
+            this._api.deleteTypeRequest('people-responding/' + respondentToRemove.PersonRespondings.panelId.toString() + '/' + respondentToRemove.id.toString()).subscribe(() => {
+            });
+          }
+          // link chairs
           for (let chairToLink of this.chairsToLink) {
             const chairLinkReqObject = {
               personId: chairToLink.personId,
@@ -248,6 +308,26 @@ export class EditPanelComponent implements OnInit {
               department: affiliationToLink.department
             };
             this._api.postTypeRequest('chair-affiliations', affiliationLinkReqObject).subscribe();
+          }
+          // link respondents
+          for (let respondentToLink of this.respondentsToLink) {
+            const respondentLinkReqObject = {
+              personId: respondentToLink.personId,
+              panelId: respondentToLink.panelId,
+              name: respondentToLink.name,
+              title: respondentToLink.title
+            };
+            this._api.postTypeRequest('people-responding', respondentLinkReqObject).subscribe();
+          }
+          // link respondent affililations
+          for (let affiliationToLink of this.respondentAffiliationsToLink) {
+            const affiliationLinkReqObject = {
+              respondentId: affiliationToLink.personId,
+              panelId: affiliationToLink.panelId,
+              institutionId: affiliationToLink.institutionId,
+              department: affiliationToLink.department
+            };
+            this._api.postTypeRequest('respondent-affiliations', affiliationLinkReqObject).subscribe();
           }
           this._snackBar.open('Item successfully updated!', '', { duration: 3000 });
           // navigate to disciplines
@@ -321,9 +401,9 @@ export class EditPanelComponent implements OnInit {
    * 
    * @param personId - ID of person
    * @param institutionId - ID of institution
-   * @param affiliationDepartment - String of optional department, string can be empty
+   * @param chairAffiliationDepartment - String of optional department, string can be empty
    */
-  linkChairAffiliation(personId: number, institutionId: number, affiliationDepartment: string) {
+  linkChairAffiliation(personId: number, institutionId: number, chairAffiliationDepartment: string) {
     let isDuplicate = false;
     for (let chairAffiliationToLink of this.chairAffiliationsToLink) {
       if (chairAffiliationToLink.personId == personId && chairAffiliationToLink.institutionId == institutionId) {
@@ -335,7 +415,7 @@ export class EditPanelComponent implements OnInit {
         personId: personId,
         institutionId: institutionId,
         panelId: this.protectedData.id,
-        department: affiliationDepartment
+        department: chairAffiliationDepartment
       });
     }
     
@@ -366,6 +446,101 @@ export class EditPanelComponent implements OnInit {
   }
 
   /**
+   * Gets respondent info from html fields, ensures it has not already
+   * been added, then adds it to the list of chairs that will be linked
+   * upon submission.
+   * 
+   * @param person - Object with person data
+   */
+  linkRespondent(person: any) {
+    let isDuplicate = false;
+    for (let respondentToLink of this.respondentsToLink) {
+      if (respondentToLink.personId == person.id) {
+        isDuplicate = true;
+      }
+    }
+    if (!isDuplicate) {
+      this.respondentsToLink.push({
+        personId: person.id,
+        panelId: this.protectedData.id,
+        name: person.name,
+        title: person.title,
+      });
+    }
+    // if a person was added during selection, requery people and update acceptable people list
+    if (person.newPersonWasAdded === true) {
+      this._api.getTypeRequest('people/').subscribe((peopleRes: any) => {
+        this.acceptablePeople = peopleRes.sort(function(a:any, b:any) {
+          // sort list of panels alphabetically by title
+          let textA = null;
+          let textB = null;
+          if (a.title) {
+            textA = a.title.toUpperCase();
+          }
+          if (b.title) {
+            textB = b.title.toUpperCase();
+          }
+          return (textA < textB) ? -1 : (textA > textB) ? 1 : 0;
+        });
+        this.selectedPerson = this.acceptablePeople[0] ? this.acceptablePeople[0].id : null;
+        this.loading = false;
+      });
+    }
+    this.toggleDisplayLinkRespondent();
+  }
+
+  /**
+   * Gets affiliation info of a chair from html fields, ensures it has not already
+   * been added, then adds it to the list of chairs that will be linked
+   * upon submission.
+   * 
+   * @param personId - ID of person
+   * @param institutionId - ID of institution
+   * @param respondentAffiliationDepartment - String of optional department, string can be empty
+   */
+  linkRespondentAffiliation(personId: number, institutionId: number, respondentAffiliationDepartment: string) {
+    let isDuplicate = false;
+    for (let respondentAffiliationToLink of this.respondentAffiliationsToLink) {
+      if (respondentAffiliationToLink.personId == personId && respondentAffiliationToLink.institutionId == institutionId) {
+        isDuplicate = true;
+      }
+    }
+    if (!isDuplicate) {
+      this.respondentAffiliationsToLink.push({
+        personId: personId,
+        institutionId: institutionId,
+        panelId: this.protectedData.id,
+        department: respondentAffiliationDepartment
+      });
+    }
+    
+    this.toggleDisplayRespondentAffiliation();
+  }
+
+  /**
+   * Removes a respondent that was set to be linked. If item was added
+   * by a selection widget, this removes it.
+   * @param id - ID of the item
+   */
+  removeRespondent(id: number) {
+    this.respondentsToLink = this.respondentsToLink.filter(obj => {
+      return obj.personId != id;
+    });
+  }
+
+  /**
+   * Removes an affiliation of a respondent that was set to be linked.
+   * 
+   * @param personId - ID of the respondent
+   * @param institutionId - ID of the institution
+   */
+  removeRespondentAffiliation(personId: number, institutionId: number) {
+    this.respondentAffiliationsToLink = this.respondentAffiliationsToLink.filter(obj => {
+      return obj.personId != personId || obj.institutionId != institutionId;
+    });
+  }
+
+  /**
    * Toggles display of UI to link existing chairs
    */
   toggleDisplayLinkChair() {
@@ -386,13 +561,33 @@ export class EditPanelComponent implements OnInit {
   }
 
   /**
+   * Toggles display of UI to link existing respondents
+   */
+  toggleDisplayLinkRespondent() {
+    this.displayLinkRespondent = !this.displayLinkRespondent;
+    if (this.displayLinkRespondent) {
+      this.displayLinkRespondentAffiliation = false;
+    }
+  }
+  
+  /**
+   * Toggles display of UI to link affiliations of existing respondents
+   */
+  toggleDisplayRespondentAffiliation() {
+    this.displayLinkRespondentAffiliation = !this.displayLinkRespondentAffiliation;
+    if (this.displayLinkRespondentAffiliation) {
+      this.displayLinkRespondent = false;
+    }
+  }
+
+  /**
    * Helper method to provide means of getting a chair's name by their ID number.
    * Used by portions of the template where the item's ID is exposed by not its name.
    * 
    * @param personId - ID of the chair
    * @returns String of the name of the chair, null if not found
    */
-  getChairNameById(personId: number){
+  getPersonNameById(personId: number){
     for (let person of this.acceptablePeople) {
       if (personId == person.id) {
         return person.name;
@@ -449,6 +644,42 @@ export class EditPanelComponent implements OnInit {
     let idList: number[] = [];
     for (let chairToLink of this.chairsToLink) {
       idList.push(chairToLink.personId);
+    }
+    return idList;
+  }
+
+  /**
+   * Returns a list of data that only includes those who have already been
+   * linked. Used by portions of the HTML template for associating institutions
+   * with respondents. This ensures that institutions can only be linked
+   * with those already added to the chair list.
+   * 
+   * @returns Array of objects, each with a chair's data
+   */
+  filterRespondentsByLinked() {
+    let idsToFilter = [];
+    let filteredRespondents: any[] = [];
+    for (let respondentToLink of this.respondentsToLink) {
+      idsToFilter.push(respondentToLink.personId);
+    }
+    for (let acceptableRespondent of this.acceptablePeople) {
+      if (idsToFilter.includes(acceptableRespondent.id)) {
+        filteredRespondents.push(acceptableRespondent);
+      }
+    }
+    return filteredRespondents;
+  }
+
+  /**
+   * Helper function that provides an array of IDs of the current
+   * chairs set to be linked.
+   * 
+   * @returns Array of chair ids
+   */
+  linkedRespondentIds() {
+    let idList: number[] = [];
+    for (let respondentToLink of this.respondentsToLink) {
+      idList.push(respondentToLink.personId);
     }
     return idList;
   }

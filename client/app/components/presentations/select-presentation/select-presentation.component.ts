@@ -18,8 +18,6 @@ export class SelectPresentationComponent implements OnInit {
   @Input() restrictedIds: number[] = [];
   // toggle to display/hide name data
   @Input() includeName: boolean = false;
-  // toggle to include an isRespondant field when linking people
-  @Input() includeRespondent: boolean = false;
 
   // loading flag & error messages
   loading: boolean = true;
@@ -38,8 +36,6 @@ export class SelectPresentationComponent implements OnInit {
   filterByPresenterName: string = '';
   // optional person name info
   personName: string = '';
-  // whether person is respondent
-  isRespondent: boolean = false;
 
   constructor(
     private _api: ApiService
@@ -98,9 +94,6 @@ export class SelectPresentationComponent implements OnInit {
         presentationToAdd = presentation;
         if (this.includeName) {
           presentationToAdd.personName = this.personName;
-        }
-        if (this.includeRespondent) {
-          presentationToAdd.isRespondant = this.isRespondent;
         }
       }
     }

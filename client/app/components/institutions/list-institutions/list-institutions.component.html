@@ -31,7 +31,7 @@
                   {{ institution.location.title }}
                 </div>
               </div>
-              <mat-grid-list class="flex full-width margin-content-top" cols="3" rowHeight="3em">
+              <mat-grid-list class="flex full-width margin-content-top" cols="4" rowHeight="3em">
                 <mat-grid-tile class="grid-bg">
                   <div class="flex flex-col justify-center items-center">
                     <div>{{ institution.conferences.length }}</div>
@@ -48,6 +48,12 @@
                   <div class="flex flex-col justify-center items-center">
                     <div>{{ institution.presenters.length }}</div>
                     <div>Presenter<span *ngIf="institution.presenters.length > 1 || institution.presenters.length === 0">s</span></div>
+                  </div>
+                </mat-grid-tile>
+                <mat-grid-tile class="grid-bg">
+                  <div class="flex flex-col justify-center items-center">
+                    <div>{{ institution.respondents.length }}</div>
+                    <div>Respondent<span *ngIf="institution.respondents.length > 1 || institution.respondents.length === 0">s</span></div>
                   </div>
                 </mat-grid-tile>
               </mat-grid-list>

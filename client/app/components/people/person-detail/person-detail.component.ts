@@ -33,7 +33,8 @@ export class PersonDetailComponent implements OnInit {
   protectedData: any;
   // toggle flags for displaying ui for linking items
   toggleDisplay = {
-    'panels': false,
+    'chairedPanels': false,
+    'respondentPanels': false,
     'presentations': false,
     'institutions': false
   };
