@@ -20,7 +20,7 @@
 
 // If the screen size is 601px wide or more, set for large screen
 @media screen and (min-width: 601px) {
-  :host .header-title {
+  :host h1 {
     font-size: .7em;
     line-height: 1.5em;
     text-shadow:
@@ -58,7 +58,7 @@
 
 // If the screen size is 600px wide or less, set for mobile
 @media screen and (max-width: 600px) {
-  :host .header-title {
+  :host h1 {
     font-size: .3em;
     line-height: 2.2em;
   }
