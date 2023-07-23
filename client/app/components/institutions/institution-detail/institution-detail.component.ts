@@ -35,7 +35,8 @@ export class InstitutionDetailComponent implements OnInit {
   toggleDisplay = {
     'conferences': false,
     'chairs': false,
-    'presenters': false
+    'presenters': false,
+    'respondents': false
   };
 
   constructor(

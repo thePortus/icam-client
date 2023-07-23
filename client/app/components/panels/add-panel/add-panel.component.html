@@ -33,10 +33,10 @@
                       <mat-icon (click)="removeChair(chair.personId)">cancel</mat-icon>
                     </td>
                     <td class="padded-content">
-                      <span *ngIf="getChairNameById(chair.personId) != '' && getChairNameById(chair.personId)">
-                        {{ getChairNameById(chair.personId) }}
+                      <span *ngIf="getPersonNameById(chair.personId) != '' && getPersonNameById(chair.personId)">
+                        {{ getPersonNameById(chair.personId) }}
                       </span>
-                      <span *ngIf="getChairNameById(chair.personId) == '' || !getChairNameById(chair.personId)">
+                      <span *ngIf="getPersonNameById(chair.personId) == '' || !getPersonNameById(chair.personId)">
                           No Name
                       </span>
                     </td>
@@ -65,10 +65,10 @@
                       <mat-icon (click)="removeChairAffiliation(chairAffiliation.personId, chairAffiliation.institutionId)">cancel</mat-icon>
                     </td>
                     <td class="padded-content">
-                      <span *ngIf="getChairNameById(chairAffiliation.personId) != '' && getChairNameById(chairAffiliation.personId)">
-                        {{ getChairNameById(chairAffiliation.personId) }},
+                      <span *ngIf="getPersonNameById(chairAffiliation.personId) != '' && getPersonNameById(chairAffiliation.personId)">
+                        {{ getPersonNameById(chairAffiliation.personId) }},
                       </span>
-                      <span *ngIf="getChairNameById(chairAffiliation.personId) == '' || !getChairNameById(chairAffiliation.personId)">
+                      <span *ngIf="getPersonNameById(chairAffiliation.personId) == '' || !getPersonNameById(chairAffiliation.personId)">
                           No Name,
                       </span>
                       <span>
@@ -141,6 +141,121 @@
                 </mat-card-actions>
               </mat-card>
             </div>
+          </div>
+          <!-- respondents -->
+          <h3 class="left-text">Respondents</h3>
+          <div class="left-text flex flex-row justify-start items-start">
+            <table class="full-width contrast-table" aria-label="Conference respondent">
+              <tbody>
+                <tr *ngFor="let respondent of respondentsToLink">
+                  <td class="padded-content">
+                    <mat-icon (click)="removeRespondent(respondent.personId)">cancel</mat-icon>
+                  </td>
+                  <td class="padded-content">
+                    <span *ngIf="getPersonNameById(respondent.personId) != '' && getPersonNameById(respondent.personId)">
+                      {{ getPersonNameById(respondent.personId) }}
+                    </span>
+                    <span *ngIf="getPersonNameById(respondent.personId) == '' || !getPersonNameById(respondent.personId)">
+                        No Name
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <span class="left-text">
+            <button mat-raised-button *ngIf="!displayLinkRespondent" (click)="toggleDisplayLinkRespondent()" aria-label="Link respondent">
+              Link Respondent
+            </button>
+            <button mat-raised-button *ngIf="displayLinkRespondent" (click)="toggleDisplayLinkRespondent()" aria-label="Cancel link respondent">
+              Cancel Link Respondent
+            </button>
+          </span>
+          <div class="edit-subfield-container" *ngIf="displayLinkRespondent">
+            <app-select-person class="full-width" (successfullyAdded)="linkRespondent($event)" (restrictedIds)="linkedRespondentIds()" [includeTitle]="true" [includeName]="true"></app-select-person>
+          </div>
+          <!-- respondent affiliations -->
+          <h3 *ngIf="respondentsToLink.length > 0" class="left-text">Affiliations of Respondents</h3>
+          <div *ngIf="respondentsToLink.length > 0" class="left-text flex flex-row justify-start items-start">
+            <table class="full-width contrast-table" aria-label="Conference respondent">
+              <tbody>
+                <tr *ngFor="let respondentAffiliation of respondentAffiliationsToLink">
+                  <td class="padded-content">
+                    <mat-icon (click)="removeRespondentAffiliation(respondentAffiliation.personId, respondentAffiliation.institutionId)">cancel</mat-icon>
+                  </td>
+                  <td class="padded-content">
+                    <span *ngIf="getPersonNameById(respondentAffiliation.personId) != '' && getPersonNameById(respondentAffiliation.personId)">
+                      {{ getPersonNameById(respondentAffiliation.personId) }},
+                    </span>
+                    <span *ngIf="getPersonNameById(respondentAffiliation.personId) == '' || !getPersonNameById(respondentAffiliation.personId)">
+                        No Name,
+                    </span>
+                    <span>
+                      {{ getInstitutionTitleById(respondentAffiliation.institutionId) }}
+                    </span>
+                    <span>
+                      ({{ respondentAffiliation.department }})
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <span *ngIf="respondentsToLink.length > 0" class="left-text">
+            <button mat-raised-button *ngIf="!displayLinkRespondentAffiliation" (click)="toggleDisplayRespondentAffiliation()" aria-label="Link affiliation of respondent">
+              Link Affiliation as Respondent
+            </button>
+            <button mat-raised-button *ngIf="displayLinkRespondentAffiliation" (click)="toggleDisplayRespondentAffiliation()" aria-label="Cancel link affiliation of respondent">
+              Cancel Link Affiliation as Respondent
+            </button>
+          </span>
+          <div class="edit-subfield-container" *ngIf="displayLinkRespondentAffiliation">
+            <mat-card>
+              <mat-card-content>
+                <div class="flex flex-col justify-start items-center">
+                  <mat-form-field>
+                    <mat-label>Affiliate Institution with Respondent</mat-label>
+                    <mat-select class="margin-content" [(value)]="selectedPerson">
+                      <mat-option *ngFor="let respondent of filterRespondentsByLinked()" [value]="respondent.id">
+                          <span *ngIf="respondent.name != '' && respondent.name">
+                              {{ respondent.name }}
+                          </span>
+                          <span *ngIf="respondent.name == '' || !respondent.name">
+                              No Name
+                          </span>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field>
+                    <mat-select class="margin-content" [(value)]="selectedInstitution">
+                      <mat-option *ngFor="let institution of acceptableInstitutions" [value]="institution.id">
+                          <span *ngIf="institution.title != '' && institution.title">
+                              {{ institution.title }}
+                          </span>
+                          <span *ngIf="institution.title == '' || !institution.title">
+                              No Title
+                          </span>
+                      </mat-option>
+                    </mat-select>
+                  </mat-form-field>
+                  <mat-form-field appearance="fill">
+                    <mat-label>Department</mat-label>
+                    <input matInput type="text" name="department" placeholder="Enter Department" [(ngModel)]="respondentAffiliationDepartment">
+                  </mat-form-field>
+                </div>
+              </mat-card-content>
+              <mat-card-actions>
+                <div class="flex flex-col justify-center items-center">
+                  <div *ngIf="errorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+                    <div *ngFor="let errorMsg of errorMsgs">Error: {{ errorMsg }}</div>
+                  </div>
+                  <div *ngIf="serverErrorMsgs.length > 0" class="error-msgs flex flex-col justify-start items-center">
+                    <div *ngFor="let serverErrorMsg of serverErrorMsgs">Error: {{ serverErrorMsg }}</div>
+                  </div>
+                  <button mat-raised-button type="button" color="primary" (click)="linkRespondentAffiliation(selectedPerson, selectedInstitution, respondentAffiliationDepartment)" aria-label="Link affiliation as respondent">Select Affiliation of Respondent</button>
+                </div>
+              </mat-card-actions>
+            </mat-card>
           </div>
         </mat-card-content>
         <mat-card-actions>

@@ -43,7 +43,7 @@
                 Type: {{ panel.type }}
               </div>
             </div>
-            <mat-grid-list class="flex full-width margin-content-top" cols="3" rowHeight="3em">
+            <mat-grid-list class="flex full-width margin-content-top" cols="4" rowHeight="3em">
               <mat-grid-tile class="grid-bg">
                 <div class="flex flex-col justify-center items-center">
                   <div>{{ panel.presentations.length }}</div>
@@ -60,6 +60,12 @@
                 <div class="flex flex-col justify-center items-center">
                   <div>{{ totalPresenters(panel) }}</div>
                   <div>Presenter<span *ngIf="totalPresenters(panel) > 1 || totalPresenters(panel) === 0">s</span></div>
+                </div>
+              </mat-grid-tile>
+              <mat-grid-tile class="grid-bg">
+                <div class="flex flex-col justify-center items-center">
+                  <div>{{ panel.respondents.length }}</div>
+                  <div>Respondent<span *ngIf="panel.respondents.length > 1 || panel.respondents.length === 0">s</span></div>
                 </div>
               </mat-grid-tile>
             </mat-grid-list>

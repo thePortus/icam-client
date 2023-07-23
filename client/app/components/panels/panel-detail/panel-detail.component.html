@@ -107,6 +107,28 @@
                      </mat-card-content>
                     </mat-card>
                 </div>
+                <!-- respondents -->
+                <mat-card *ngIf="flattenedData.respondents.length > 0" class="full-width-sans-wide-padding">
+                    <mat-card-content class="full-width">
+                    <div (click)="toggleDisplay.respondents = !toggleDisplay.respondents" class="full-width flex flex-row">
+                        <span class="flex grow">Respondents:</span>
+                        <button type="button" color="primary" mat-raised-button aria-label="Show/Hide Respondents">
+                        <mat-icon *ngIf="toggleDisplay.respondents">keyboard_arrow_down</mat-icon>
+                        <mat-icon *ngIf="!toggleDisplay.respondents">keyboard_arrow_up</mat-icon>
+                        </button>
+                    </div>
+                    <div *ngIf="toggleDisplay.respondents" class="full-width">
+                        <mat-card routerLink="/people/{{ respondent.id }}" *ngFor="let respondent of flattenedData.respondents">
+                        <mat-card-content>
+                            <div class="flex flex-col justify-start items-start">
+                                <mat-card-subtitle *ngIf="respondent.name !== null && respondent.title !== ''">{{ respondent.name }}</mat-card-subtitle>
+                                <mat-card-subtitle *ngIf="respondent.name == null || respondent.title == ''">No Name</mat-card-subtitle>
+                            </div>
+                        </mat-card-content>
+                        </mat-card>
+                    </div>
+                    </mat-card-content>
+                </mat-card>
             </mat-card-content>
         </mat-card>
     </div>

@@ -22,7 +22,7 @@
               <!-- name -->
               <mat-card-subtitle class="card-subtitle" *ngIf="person.name != ''">{{ person.name }}</mat-card-subtitle>
               <mat-card-subtitle class="card-subtitle" *ngIf="person.name == '' || !person.name">No Name</mat-card-subtitle>
-              <mat-grid-list class="flex full-width" cols="3" rowHeight="3em">
+              <mat-grid-list class="flex full-width" cols="4" rowHeight="3em">
                 <mat-grid-tile class="grid-bg">
                   <div class="flex flex-col justify-center items-center">
                     <div>{{ person.chairedPanels.length }}</div>
@@ -39,6 +39,12 @@
                   <div class="flex flex-col justify-center items-center">
                     <div>{{ totalInstitutions(person) }}</div>
                     <div>Institution<span *ngIf="totalInstitutions(person) > 1 || totalInstitutions(person) === 0">s</span></div>
+                  </div>
+                </mat-grid-tile>
+                <mat-grid-tile class="grid-bg">
+                  <div class="flex flex-col justify-center items-center">
+                    <div>{{ person.respondentPanels.length }}</div>
+                    <div>Respondent Panel<span *ngIf="person.respondentPanels.length > 1 || person.respondentPanels.length === 0">s</span></div>
                   </div>
                 </mat-grid-tile>
               </mat-grid-list>

@@ -70,14 +70,14 @@
                     <!-- chaired panels -->
                     <mat-card *ngIf="protectedData.chairedPanels.length > 0" class="full-width-sans-wide-padding">
                         <mat-card-content class="full-width">
-                        <div (click)="toggleDisplay.panels = !toggleDisplay.panels" class="full-width flex flex-row">
+                        <div (click)="toggleDisplay.chairedPanels = !toggleDisplay.chairedPanels" class="full-width flex flex-row">
                             <span class="flex grow">Chaired Panels:</span>
                             <button type="button" color="primary" mat-raised-button aria-label="Show/Hide chaired panels">
-                            <mat-icon *ngIf="toggleDisplay.panels">keyboard_arrow_down</mat-icon>
-                            <mat-icon *ngIf="!toggleDisplay.panels">keyboard_arrow_up</mat-icon>
+                            <mat-icon *ngIf="toggleDisplay.chairedPanels">keyboard_arrow_down</mat-icon>
+                            <mat-icon *ngIf="!toggleDisplay.chairedPanels">keyboard_arrow_up</mat-icon>
                             </button>
                         </div>
-                        <div *ngIf="toggleDisplay.panels" class="full-width">
+                        <div *ngIf="toggleDisplay.chairedPanels" class="full-width">
                             <mat-card routerLink="/panels/{{ panel.id }}" *ngFor="let panel of protectedData.chairedPanels">
                             <mat-card-content>
                                 <div class="flex flex-col justify-start items-start">
@@ -132,6 +132,38 @@
                         </div>
                         </mat-card-content>
                     </mat-card>
+                    <mat-divider *ngIf="protectedData.presentations.length > 0" class="full-width"></mat-divider>
+                    <!-- respondent panels -->
+                    <mat-card *ngIf="protectedData.respondentPanels.length > 0" class="full-width-sans-wide-padding">
+                        <mat-card-content class="full-width">
+                        <div (click)="toggleDisplay.respondentPanels = !toggleDisplay.respondentPanels" class="full-width flex flex-row">
+                            <span class="flex grow">Respondent Panels:</span>
+                            <button type="button" color="primary" mat-raised-button aria-label="Show/Hide respondent panels">
+                            <mat-icon *ngIf="toggleDisplay.respondentPanels">keyboard_arrow_down</mat-icon>
+                            <mat-icon *ngIf="!toggleDisplay.respondentPanels">keyboard_arrow_up</mat-icon>
+                            </button>
+                        </div>
+                        <div *ngIf="toggleDisplay.respondentPanels" class="full-width">
+                            <mat-card routerLink="/panels/{{ panel.id }}" *ngFor="let panel of protectedData.respondentPanels">
+                            <mat-card-content>
+                                <div class="flex flex-col justify-start items-start">
+                                    <mat-card-subtitle *ngIf="panel.title !== null && panel.title !== ''">
+                                        <span>{{ panel.title }} - </span>
+                                        <span *ngIf="panel.conference.title !== null && panel.conference.title !== ''">{{ panel.conference.title }}</span>
+                                        <span *ngIf="panel.conference.title == null || panel.conference.title == ''">No Conference Title</span>
+                                    </mat-card-subtitle>
+                                    <mat-card-subtitle *ngIf="panel.title == null || panel.title == ''">
+                                        <span>No Title - </span>
+                                        <span *ngIf="panel.conference.title !== null && panel.conference.title !== ''">{{ panel.conference.title }}</span>
+                                        <span *ngIf="panel.conference.title == null || panel.conference.title == ''">No Conference Title</span>
+                                    </mat-card-subtitle>
+                                </div>
+                            </mat-card-content>
+                            </mat-card>
+                        </div>
+                        </mat-card-content>
+                    </mat-card>
+                    
                 </div>
             </div>
         </mat-card-content>
